@@ -15,13 +15,8 @@
 (setq casey-linux (featurep 'x))
 (setq casey-win32 (not (or casey-aquamacs casey-linux)))
 
-<<<<<<< HEAD
-(setq casey-todo-file "z:/hmh/todo.txt")
+(setq casey-todo-file "Z:/hmh/todo.txt")
 (setq casey-log-file "z:/hmh/log.txt")
-=======
-(setq casey-todo-file "z:/handmade/code/todo.txt")
-(setq casey-log-file "z:/handmade/code/log.txt")
->>>>>>> origin/master
 
 (global-hl-line-mode 1)
 (set-face-background 'hl-line "midnight blue")
@@ -243,11 +238,7 @@
      (insert "   $Date: $\n")
      (insert "   $Revision: $\n")
      (insert "   $Creator: Sebastian Meier zu Biesen $\n")
-<<<<<<< HEAD
-     (insert "   $Notice: (C) Copyright 2000-2014 by Joker Solutions, Inc. All Rights Reserved. $\n")
-=======
-     (insert "   $Notice: (C) Copyright 2000-2016 by SMzB, All Rights Reserved. $\n")
->>>>>>> origin/master
+     (insert "   $Notice: (C) Copyright 2000-2016 by Joker Solutions, Inc. All Rights Reserved. $\n")
      (insert "   ======================================================================== */\n")
      (insert "\n")
      (insert "#define ")
@@ -268,11 +259,7 @@
      (insert "   $Date: $\n")
      (insert "   $Revision: $\n")
      (insert "   $Creator: Sebastian Meier zu Biesen $\n")
-<<<<<<< HEAD
-     (insert "   $Notice: (C) Copyright 2000-2014 by Joker Solutions, Inc. All Rights Reserved. $\n")
-=======
-     (insert "   $Notice: (C) Copyright 2000-2016 by SMzB, All Rights Reserved. $\n")
->>>>>>> origin/master
+     (insert "   $Notice: (C) Copyright 2000-2016 by Joker Solutions, Inc. All Rights Reserved. $\n")
      (insert "   ======================================================================== */\n")
   )
 
@@ -327,10 +314,10 @@
 
   (define-key c++-mode-map "\e/" 'c-mark-function)
 
-;  (define-key c++-mode-map "\e " 'set-mark-command)
-;  (define-key c++-mode-map "\eq" 'append-as-kill)
-;  (define-key c++-mode-map "\ea" 'yank)
-;  (define-key c++-mode-map "\ez" 'kill-region)
+  (define-key c++-mode-map "\e " 'set-mark-command)
+  (define-key c++-mode-map "\eq" 'append-as-kill)
+  (define-key c++-mode-map "\ea" 'yank)
+  (define-key c++-mode-map "\ez" 'kill-region)
 
   ; devenv.com error parsing
   (add-to-list 'compilation-error-regexp-alist 'casey-devenv)
@@ -428,10 +415,10 @@
   (append-next-kill) 
   (copy-region-as-kill (mark) (point))
 )
-;(define-key global-map "\e " 'set-mark-command)
-;(define-key global-map "\eq" 'append-as-kill)
-;(define-key global-map "\ea" 'yank)
-;(define-key global-map "\ez" 'kill-region)
+(define-key global-map "\e " 'set-mark-command)
+(define-key global-map "\eq" 'append-as-kill)
+(define-key global-map "\ea" 'yank)
+(define-key global-map "\ez" 'kill-region)
 (define-key global-map [M-up] 'previous-blank-line)
 (define-key global-map [M-down] 'next-blank-line)
 (define-key global-map [M-right] 'forward-word)
@@ -452,7 +439,7 @@
 
 ; Editting
 (define-key global-map "" 'copy-region-as-kill)
-;(define-key global-map "" 'yank)
+(define-key global-map "" 'yank)
 (define-key global-map "" 'nil)
 (define-key global-map "" 'rotate-yank-pointer)
 (define-key global-map "\eu" 'undo)
