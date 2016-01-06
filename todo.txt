@@ -1,5 +1,5 @@
-code/win32_handmade.cpp   2 
-code/win32_handmade.cpp  69 : Check wether HREDRAW and VREDRAW are still necessary
-code/win32_handmade.cpp 105 
-code/win32_handmade.cpp 110 
-misc/shell.bat 1 : make script more robust for different environments
+- [x] code/win32_handmade.cpp   2 
+- [x] code/win32_handmade.cpp  69 : Check wether HREDRAW and VREDRAW are still necessary
+- [x] code/win32_handmade.cpp 105 
+- [x] code/win32_handmade.cpp 110 
+- [x] misc/shell.bat 1 : make script more robust for different environments

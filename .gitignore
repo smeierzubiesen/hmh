@@ -33,3 +33,7 @@
 *~
 *.cpp~
 *.h~
+build/**
+build/vc140.pdb
+build/win32_handmade.pdb
+build/win32_handmade.ilk
