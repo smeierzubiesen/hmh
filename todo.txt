@@ -1,5 +1,5 @@
-- [x] code/win32_handmade.cpp   2 
-- [x] code/win32_handmade.cpp  69 : Check wether HREDRAW and VREDRAW are still necessary
-- [x] code/win32_handmade.cpp 105 
-- [x] code/win32_handmade.cpp 110 
-- [x] misc/shell.bat 1 : make script more robust for different environments
+ - [X] code/win32_handmade.cpp   2 : Add a better comment template for new .cpp and .h files
+ - [ ] code/win32_handmade.cpp  69 : Check wether HREDRAW and VREDRAW are still necessary
+ - [ ] code/win32_handmade.cpp 105 : Log this event !WindowHandle
+ - [ ] code/win32_handmade.cpp 110 : Log this event !RegisterClass
+ - [ ] misc/shell.bat 1 : make script more robust for different environments
