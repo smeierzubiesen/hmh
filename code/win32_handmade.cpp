@@ -70,14 +70,14 @@ WinMain(
     WindowClass.style = CS_OWNDC|CS_HREDRAW|CS_VREDRAW;
     WindowClass.lpfnWndProc = MainWindowCallBack;
     WindowClass.hInstance = Instance;
-//    WindowClass.hIcon;
+//    WindowClass.hIcon; // TODO(smzb): Make an icon and stick it in here.
     WindowClass.lpszClassName = "HandmadeHeroWindowClass";
 
     if(RegisterClass(&WindowClass))
     {
         HWND WindowHandle = CreateWindowEx(0,
                                            WindowClass.lpszClassName,
-                                           "Handmade Hero",
+                                           "Handmade Hero", // TODO(smzb): maybe some versioning here?
                                            WS_OVERLAPPEDWINDOW|WS_VISIBLE,
                                            CW_USEDEFAULT,
                                            CW_USEDEFAULT,
