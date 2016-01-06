@@ -1,2 +1,4 @@
-# hmh
-Handmade Hero by Molly Rocket
+# Handmade Hero
+by Molly Rocket
+
+This is my take on and progress of the above mentioned (lol)
