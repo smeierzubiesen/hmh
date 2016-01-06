@@ -23,7 +23,7 @@ Please make sure you check all .bat scripts for your personal paths, as these ar
 
 ### Step-by-step
 
-Make a shortcut to cmd.exe and append something like this to the commandline `/k "<project path>\misc\shell.bat"`
+Make a shortcut to cmd.exe and append something like this to the commandline `/k "<project path>\misc\shell.bat"`  
 *(where <project path> = the path where you cloned __HMH__ to*  
 That way, when you click on that link you will end up with an almost ready-to-go dev environment on drive z:
 
