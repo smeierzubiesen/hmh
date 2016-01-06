@@ -1,5 +1,5 @@
 REM @Echo off
 c:
-cd "C:\Users\smeierzubiesen\Documents\Github\hmh\misc\"
+cd "%HOMEDRIVE%%HOMEPATH%\Documents\Github\hmh\misc\"
 call kill.bat
 exit
