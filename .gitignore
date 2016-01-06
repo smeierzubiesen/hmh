@@ -38,3 +38,4 @@ build/**
 #build/win32_handmade.pdb
 #build/win32_handmade.ilk
 #build/win32_handmade.pdb
+build
