@@ -34,9 +34,8 @@
 *.cpp~
 *.h~
 build/**
-build/vc140.pdb
-build/win32_handmade.pdb
-build/win32_handmade.ilk
-build/win32_handmade.pdb
-build/win32_handmade.ilk
-build/vc140.pdb
+#build/vc140.pdb
+#build/win32_handmade.pdb
+#build/win32_handmade.ilk
+#build/win32_handmade.pdb
+build
