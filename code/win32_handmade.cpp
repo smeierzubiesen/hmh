@@ -23,7 +23,7 @@ LRESULT CALLBACK MainWindowCallBack(
         } break;
         case WM_CLOSE:
         {
-            OutputDebugStringA("WM_CLOSE\n");
+            OutputDebugStringA("WM_CLOSE\n"); // TODO(smzb): This message gets called when the window is getting closed.
         } break;
         case WM_ACTIVATEAPP:
         {
@@ -31,7 +31,7 @@ LRESULT CALLBACK MainWindowCallBack(
         } break;
         case WM_PAINT:
         {
-            OutputDebugStringA("WM_PAINT");
+            //OutputDebugStringA("WM_PAINT"); // TODO(smzb): This won't be needed anymore
             PAINTSTRUCT Paint;
             HDC DeviceContext = BeginPaint(Window, &Paint);
             int X = Paint.rcPaint.left;

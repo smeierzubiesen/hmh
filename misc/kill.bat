@@ -1,4 +1,4 @@
-REM @Echo off
+@Echo off
 c:
 cd \
 subst z: /d
