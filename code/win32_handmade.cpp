@@ -1,5 +1,5 @@
 /*
-
+ //TODO(smzb): Add a better comment template for new .cpp and .h files (emacs/lisp?)
  */
 
 #include <windows.h>
@@ -102,12 +102,12 @@ WinMain(
                 }
             }
         } else {
-            // TODO(smzb): Log this event
+            // TODO(smzb): Log this event (!WindowHandle)
         }
     }
     else
     {
-        // TODO(smzb): Log this event
+        // TODO(smzb): Log this event (!RegisterClass(&WindowClass))
     }
     
     return(0);
