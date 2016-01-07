@@ -23,7 +23,7 @@ LRESULT CALLBACK MainWindowCallBack(
         } break;
         case WM_CLOSE:
         {
-            OutputDebugStringA("WM_CLOSE\n"); // TODO(smzb): This message gets called when the window is getting closed.
+            OutputDebugStringA("WM_CLOSE\n"); // TODO(smzb): Create function to close window.
         } break;
         case WM_ACTIVATEAPP:
         {
@@ -65,9 +65,7 @@ WinMain(
 	int       ShowCode)
 {
     WNDCLASS WindowClass = {};
-
-    // TODO(smzb): Check wether HREDRAW and VREDRAW are still necessary
-    WindowClass.style = CS_OWNDC|CS_HREDRAW|CS_VREDRAW;
+    WindowClass.style = CS_OWNDC|CS_HREDRAW|CS_VREDRAW; // TODO(smzb): Check wether HREDRAW and VREDRAW are still necessary [confirmed] setting this to 0 didn't work
     WindowClass.lpfnWndProc = MainWindowCallBack;
     WindowClass.hInstance = Instance;
 //    WindowClass.hIcon; // TODO(smzb): Make an icon and stick it in here.
