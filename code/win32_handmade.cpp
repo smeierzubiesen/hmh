@@ -4,7 +4,59 @@
 
 #include <windows.h>
 
-LRESULT CALLBACK MainWindowCallBack(
+#define internal static
+#define local_persist static
+#define global_variable static
+
+global_variable bool Running; // TODO(smzb): This should not be a global in future.
+global_variable BITMAPINFO BitmapInfo;
+global_variable void *BitmapMemory;
+global_variable HBITMAP BitmapHandle;
+global_variable HDC BitmapDeviceContext;
+
+internal void
+Win32ResizeDIBSection(int Width, int Height)
+{
+    // TODO(smzb): Bulletproof this
+    // Free after if possible, if not free first
+
+    if (BitmapHandle)
+    {
+        DeleteObject(BitmapHandle);
+    }
+
+    if (!BitmapDeviceContext)
+    {
+        BitmapDeviceContext = CreateCompatibleDC(0);
+    }
+
+    BitmapInfo.bmiHeader.biSize = sizeof(BitmapInfo.bmiHeader);
+    BitmapInfo.bmiHeader.biWidth = Width;
+    BitmapInfo.bmiHeader.biHeight = Height;
+    BitmapInfo.bmiHeader.biPlanes = 1;
+    BitmapInfo.bmiHeader.biBitCount = 32;
+    BitmapInfo.bmiHeader.biCompression = BI_RGB;
+
+    BitmapHandle = CreateDIBSection(BitmapDeviceContext,
+                                    &BitmapInfo,
+                                    DIB_RGB_COLORS,
+                                    &BitmapMemory,
+                                    NULL, NULL);
+}
+
+internal void Win32UpdateWindow(HDC DeviceContext, int X, int Y, int Width, int Height)
+{
+    StretchDIBits(DeviceContext,
+                  X, Y, Width, Height,
+                  X, Y, Width, Height,
+                  BitmapMemory,
+                  &BitmapInfo,
+                  DIB_RGB_COLORS,
+                  SRCCOPY);
+	//code here
+}
+
+LRESULT CALLBACK Win32MainWindowCallBack(
     HWND   Window,
     UINT   Message,
     WPARAM WParam,
@@ -15,15 +67,20 @@ LRESULT CALLBACK MainWindowCallBack(
     {
         case WM_SIZE:
         {
-            OutputDebugStringA("WM_SIZE\n");
+            RECT ClientRect;
+            GetClientRect(Window, &ClientRect);
+            int Width = ClientRect.right - ClientRect.left;
+            int Height = ClientRect.bottom - ClientRect.top;
+            Win32ResizeDIBSection(Width, Height);
         } break;
         case WM_DESTROY:
         {
-            OutputDebugStringA("WM_DESTROY\n");
+            Running = false; // TODO(smzb): Handle this as error? Re-create Window?
         } break;
         case WM_CLOSE:
         {
-            OutputDebugStringA("WM_CLOSE\n"); // TODO(smzb): Create function to close window.
+            // FIXED(smzb): Create function to close window.
+            Running = false; // TODO(smzb): Throw a message to the user to ask for confirmation?
         } break;
         case WM_ACTIVATEAPP:
         {
@@ -38,14 +95,7 @@ LRESULT CALLBACK MainWindowCallBack(
 			int Y = Paint.rcPaint.top;
 			int Height = Paint.rcPaint.bottom - Paint.rcPaint.top;
 			int Width = Paint.rcPaint.right - Paint.rcPaint.left;
-            static DWORD Operation = WHITENESS;
-			PatBlt(DeviceContext, X, Y, Width, Height, Operation);
-            if(Operation == WHITENESS)
-            {
-                Operation = BLACKNESS;
-            } else {
-                Operation = WHITENESS;
-            }
+			Win32UpdateWindow(DeviceContext, X, Y, Width, Height);
             EndPaint(Window, &Paint);
         } break;
         default:
@@ -66,7 +116,7 @@ WinMain(
 {
     WNDCLASS WindowClass = {};
     WindowClass.style = CS_OWNDC|CS_HREDRAW|CS_VREDRAW; // TODO(smzb): Check wether HREDRAW and VREDRAW are still necessary [confirmed] setting this to 0 didn't work
-    WindowClass.lpfnWndProc = MainWindowCallBack;
+    WindowClass.lpfnWndProc = Win32MainWindowCallBack;
     WindowClass.hInstance = Instance;
 //    WindowClass.hIcon; // TODO(smzb): Make an icon and stick it in here.
     WindowClass.lpszClassName = "HandmadeHeroWindowClass";
@@ -87,7 +137,8 @@ WinMain(
                                            0);
         if (WindowHandle)
         {
-            for(;;)
+            Running = true;
+            while(Running)
             {
                 MSG Message;
                 BOOL MessageResult = GetMessage(&Message, 0, 0, 0);
