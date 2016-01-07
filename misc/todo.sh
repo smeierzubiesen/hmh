@@ -1,4 +1,4 @@
-file="todo.txt"
+file="todo.md"
 prefix=" - [ ] "
 cd ..
 [[ -f "$file" ]] && rm -f "$file"
