@@ -1,4 +1,4 @@
-file="notes.md"
+file="CHANGELOG.md"
 prefix=" - "
 cd ..
 [[ -f "$file" ]] && rm -f "$file"
