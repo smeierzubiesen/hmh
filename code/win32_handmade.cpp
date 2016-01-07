@@ -77,7 +77,7 @@ WinMain(
     {
         HWND WindowHandle = CreateWindowEx(0,
                                            WindowClass.lpszClassName,
-                                           "Handmade Hero", // TODO(smzb): maybe some versioning here?
+                                           "Handmade Hero", // TODO(smzb): maybe some version information here?
                                            WS_OVERLAPPEDWINDOW|WS_VISIBLE,
                                            CW_USEDEFAULT,
                                            CW_USEDEFAULT,
