@@ -31,7 +31,7 @@ LRESULT CALLBACK MainWindowCallBack(
         } break;
         case WM_PAINT:
         {
-            //OutputDebugStringA("WM_PAINT"); // NOTE(smzb): This won't be needed anymore
+            //OutputDebugStringA("WM_PAINT"); // FIXED(smzb): This won't be needed anymore - addresses #3
             PAINTSTRUCT Paint;
             HDC DeviceContext = BeginPaint(Window, &Paint);
             int X = Paint.rcPaint.left;

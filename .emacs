@@ -15,7 +15,7 @@
 (setq casey-linux (featurep 'x))
 (setq casey-win32 (not (or casey-aquamacs casey-linux)))
 
-(setq casey-todo-file "z:/hmh/todo.txt")
+(setq casey-todo-file "z:/hmh/todo.md")
 (setq casey-log-file "z:/hmh/log.txt")
 
 (global-hl-line-mode 1)
@@ -125,7 +125,7 @@
 	 (font-lock-add-keywords
 	  mode
 	  '(("\\<\\(TODO\\)" 1 'font-lock-fixme-face t)
-            ("\\<\\(NOTE\\)" 1 'font-lock-note-face t))))
+            ("\\<\\(FIXED\\)" 1 'font-lock-note-face t))))
 	fixme-modes)
  (modify-face 'font-lock-fixme-face "Red" nil nil t nil t nil nil)
  (modify-face 'font-lock-note-face "Dark Green" nil nil t nil t nil nil)
