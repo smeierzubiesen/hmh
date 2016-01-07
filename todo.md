@@ -1,3 +1,5 @@
+// TODO(smzb): maybe add some markdown formatting to this stuff?
+
  - [X] code/win32_handmade.cpp   2 : Add a better comment template for new .cpp and .h files
  - [ ] code/win32_handmade.cpp  26 : This message gets called when the window is getting closed.
  - [ ] code/win32_handmade.cpp  69 : Check wether HREDRAW and VREDRAW are still necessary
