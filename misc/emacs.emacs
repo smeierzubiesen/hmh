@@ -314,10 +314,10 @@
 
   (define-key c++-mode-map "\e/" 'c-mark-function)
 
-;  (define-key c++-mode-map "\e " 'set-mark-command)
-;  (define-key c++-mode-map "\eq" 'append-as-kill)
-;  (define-key c++-mode-map "\ea" 'yank)
-;  (define-key c++-mode-map "\ez" 'kill-region)
+  (define-key c++-mode-map "\e " 'set-mark-command)
+  (define-key c++-mode-map "\eq" 'append-as-kill)
+  (define-key c++-mode-map "\ea" 'yank)
+  (define-key c++-mode-map "\ez" 'kill-region)
 
   ; devenv.com error parsing
   (add-to-list 'compilation-error-regexp-alist 'casey-devenv)
@@ -415,10 +415,11 @@
   (append-next-kill) 
   (copy-region-as-kill (mark) (point))
 )
-;(define-key global-map "\e " 'set-mark-command)
-;(define-key global-map "\eq" 'append-as-kill)
-;(define-key global-map "\ea" 'yank)
-;(define-key global-map "\ez" 'kill-region)
+ 
+(define-key global-map "\e " 'set-mark-command)
+(define-key global-map "\eq" 'append-as-kill)
+(define-key global-map "\ea" 'yank)
+(define-key global-map "\ez" 'kill-region)
 (define-key global-map [M-up] 'previous-blank-line)
 (define-key global-map [M-down] 'next-blank-line)
 (define-key global-map [M-right] 'forward-word)
