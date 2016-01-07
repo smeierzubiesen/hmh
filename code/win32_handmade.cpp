@@ -1,5 +1,5 @@
 /*
- //TODO(smzb): Add a better comment template for new .cpp and .h files (emacs/lisp?)
+ // TODO(smzb): Add a better comment template for new .cpp and .h files
  */
 
 #include <windows.h>
@@ -23,7 +23,7 @@ LRESULT CALLBACK MainWindowCallBack(
         } break;
         case WM_CLOSE:
         {
-            OutputDebugStringA("WM_CLOSE\n");
+            OutputDebugStringA("WM_CLOSE\n"); // TODO(smzb): This message gets called when the window is getting closed.
         } break;
         case WM_ACTIVATEAPP:
         {
@@ -31,7 +31,7 @@ LRESULT CALLBACK MainWindowCallBack(
         } break;
         case WM_PAINT:
         {
-            OutputDebugStringA("WM_PAINT");
+            //OutputDebugStringA("WM_PAINT"); // NOTE(smzb): This won't be needed anymore
             PAINTSTRUCT Paint;
             HDC DeviceContext = BeginPaint(Window, &Paint);
             int X = Paint.rcPaint.left;
@@ -70,14 +70,14 @@ WinMain(
     WindowClass.style = CS_OWNDC|CS_HREDRAW|CS_VREDRAW;
     WindowClass.lpfnWndProc = MainWindowCallBack;
     WindowClass.hInstance = Instance;
-//    WindowClass.hIcon;
+//    WindowClass.hIcon; // TODO(smzb): Make an icon and stick it in here.
     WindowClass.lpszClassName = "HandmadeHeroWindowClass";
 
     if(RegisterClass(&WindowClass))
     {
         HWND WindowHandle = CreateWindowEx(0,
                                            WindowClass.lpszClassName,
-                                           "Handmade Hero",
+                                           "Handmade Hero", // TODO(smzb): maybe some versioning here?
                                            WS_OVERLAPPEDWINDOW|WS_VISIBLE,
                                            CW_USEDEFAULT,
                                            CW_USEDEFAULT,
@@ -102,12 +102,12 @@ WinMain(
                 }
             }
         } else {
-            // TODO(smzb): Log this event (!WindowHandle)
+            // TODO(smzb): Log this event !WindowHandle
         }
     }
     else
     {
-        // TODO(smzb): Log this event (!RegisterClass(&WindowClass))
+        // TODO(smzb): Log this event !RegisterClass
     }
     
     return(0);

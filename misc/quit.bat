@@ -1,5 +1,5 @@
-REM @Echo off
+@Echo off
 c:
-cd \
-subst z: /d
-exit /b
+cd "%USERPROFILE%\Documents\Github\hmh\misc\"
+call kill.bat
+exit
