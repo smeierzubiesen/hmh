@@ -1,6 +1,6 @@
 /*
- // TODO(smzb): Add a better comment template for new .cpp and .h files
- */
+// TODO(smzb): Add a better comment template for new .cpp and .h files
+*/
 
 #include <windows.h>
 
@@ -9,15 +9,15 @@
 #define global_variable static
 
 global_variable bool Running; // TODO(smzb): This should not be a global in future.
-global_variable BITMAPINFO BitmapInfo;
-global_variable void *BitmapMemory;
-global_variable HBITMAP BitmapHandle;
-global_variable HDC BitmapDeviceContext;
+global_variable BITMAPINFO BitmapInfo; // TODO(smzb): This should not be a global in future.
+global_variable void *BitmapMemory; // TODO(smzb): This should not be a global in future.
+global_variable HBITMAP BitmapHandle; // TODO(smzb): This should not be a global in future.
+global_variable HDC BitmapDeviceContext; // TODO(smzb): This should not be a global in future.
 
 internal void
 Win32ResizeDIBSection(int Width, int Height)
 {
-    // TODO(smzb): Bulletproof this
+    // TODO(smzb): Bulletproof this : Free after if possible, if not free first
     // Free after if possible, if not free first
 
     if (BitmapHandle)
@@ -44,16 +44,15 @@ Win32ResizeDIBSection(int Width, int Height)
                                     NULL, NULL);
 }
 
-internal void Win32UpdateWindow(HDC DeviceContext, int X, int Y, int Width, int Height)
+internal void Win32UpdateWindow(HDC DeviceContext, int X, int Y, int W, int H)
 {
     StretchDIBits(DeviceContext,
-                  X, Y, Width, Height,
-                  X, Y, Width, Height,
+                  X, Y, W, H,
+                  X, Y, W, H,
                   BitmapMemory,
                   &BitmapInfo,
                   DIB_RGB_COLORS,
                   SRCCOPY);
-	//code here
 }
 
 LRESULT CALLBACK Win32MainWindowCallBack(
@@ -69,9 +68,9 @@ LRESULT CALLBACK Win32MainWindowCallBack(
         {
             RECT ClientRect;
             GetClientRect(Window, &ClientRect);
-            int Width = ClientRect.right - ClientRect.left;
-            int Height = ClientRect.bottom - ClientRect.top;
-            Win32ResizeDIBSection(Width, Height);
+            int W = ClientRect.right - ClientRect.left;
+            int H = ClientRect.bottom - ClientRect.top;
+            Win32ResizeDIBSection(W, H);
         } break;
         case WM_DESTROY:
         {
@@ -93,9 +92,9 @@ LRESULT CALLBACK Win32MainWindowCallBack(
             HDC DeviceContext = BeginPaint(Window, &Paint);
             int X = Paint.rcPaint.left;
 			int Y = Paint.rcPaint.top;
-			int Height = Paint.rcPaint.bottom - Paint.rcPaint.top;
-			int Width = Paint.rcPaint.right - Paint.rcPaint.left;
-			Win32UpdateWindow(DeviceContext, X, Y, Width, Height);
+			int H = Paint.rcPaint.bottom - Paint.rcPaint.top;
+			int W = Paint.rcPaint.right - Paint.rcPaint.left;
+			Win32UpdateWindow(DeviceContext, X, Y, W, H);
             EndPaint(Window, &Paint);
         } break;
         default:
@@ -115,7 +114,8 @@ WinMain(
 	int       ShowCode)
 {
     WNDCLASS WindowClass = {};
-    WindowClass.style = CS_OWNDC|CS_HREDRAW|CS_VREDRAW; // TODO(smzb): Check wether HREDRAW and VREDRAW are still necessary [confirmed] setting this to 0 didn't work
+    //WindowClass.style = CS_OWNDC|CS_HREDRAW|CS_VREDRAW; // TODO(smzb): Check wether HREDRAW and VREDRAW are still necessary [confirmed] setting this to 0 didn't work, will try just CS_OWNDC
+    WindowClass.style = CS_OWNDC;
     WindowClass.lpfnWndProc = Win32MainWindowCallBack;
     WindowClass.hInstance = Instance;
 //    WindowClass.hIcon; // TODO(smzb): Make an icon and stick it in here.
