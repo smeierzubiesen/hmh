@@ -1,10 +1,61 @@
 /*
- // TODO(smzb): Add a better comment template for new .cpp and .h files
- */
+// TODO(smzb): Add a better comment template for new .cpp and .h files
+*/
 
 #include <windows.h>
 
-LRESULT CALLBACK MainWindowCallBack(
+#define internal static
+#define local_persist static
+#define global_variable static
+
+global_variable bool Running; // TODO(smzb): This should not be a global in future.
+global_variable BITMAPINFO BitmapInfo; // TODO(smzb): This should not be a global in future.
+global_variable void *BitmapMemory; // TODO(smzb): This should not be a global in future.
+global_variable HBITMAP BitmapHandle; // TODO(smzb): This should not be a global in future.
+global_variable HDC BitmapDeviceContext; // TODO(smzb): This should not be a global in future.
+
+internal void
+Win32ResizeDIBSection(int Width, int Height)
+{
+    // TODO(smzb): Bulletproof this : Free after if possible, if not free first
+    // Free after if possible, if not free first
+
+    if (BitmapHandle)
+    {
+        DeleteObject(BitmapHandle);
+    }
+
+    if (!BitmapDeviceContext)
+    {
+        BitmapDeviceContext = CreateCompatibleDC(0);
+    }
+
+    BitmapInfo.bmiHeader.biSize = sizeof(BitmapInfo.bmiHeader);
+    BitmapInfo.bmiHeader.biWidth = Width;
+    BitmapInfo.bmiHeader.biHeight = Height;
+    BitmapInfo.bmiHeader.biPlanes = 1;
+    BitmapInfo.bmiHeader.biBitCount = 32;
+    BitmapInfo.bmiHeader.biCompression = BI_RGB;
+
+    BitmapHandle = CreateDIBSection(BitmapDeviceContext,
+                                    &BitmapInfo,
+                                    DIB_RGB_COLORS,
+                                    &BitmapMemory,
+                                    NULL, NULL);
+}
+
+internal void Win32UpdateWindow(HDC DeviceContext, int X, int Y, int W, int H)
+{
+    StretchDIBits(DeviceContext,
+                  X, Y, W, H,
+                  X, Y, W, H,
+                  BitmapMemory,
+                  &BitmapInfo,
+                  DIB_RGB_COLORS,
+                  SRCCOPY);
+}
+
+LRESULT CALLBACK Win32MainWindowCallBack(
     HWND   Window,
     UINT   Message,
     WPARAM WParam,
@@ -15,15 +66,20 @@ LRESULT CALLBACK MainWindowCallBack(
     {
         case WM_SIZE:
         {
-            OutputDebugStringA("WM_SIZE\n");
+            RECT ClientRect;
+            GetClientRect(Window, &ClientRect);
+            int W = ClientRect.right - ClientRect.left;
+            int H = ClientRect.bottom - ClientRect.top;
+            Win32ResizeDIBSection(W, H);
         } break;
         case WM_DESTROY:
         {
-            OutputDebugStringA("WM_DESTROY\n");
+            Running = false; // TODO(smzb): Handle this as error? Re-create Window?
         } break;
         case WM_CLOSE:
         {
-            OutputDebugStringA("WM_CLOSE\n"); // TODO(smzb): Create function to close window.
+            // FIXED(smzb): Create function to close window.
+            Running = false; // TODO(smzb): Throw a message to the user to ask for confirmation?
         } break;
         case WM_ACTIVATEAPP:
         {
@@ -36,16 +92,9 @@ LRESULT CALLBACK MainWindowCallBack(
             HDC DeviceContext = BeginPaint(Window, &Paint);
             int X = Paint.rcPaint.left;
 			int Y = Paint.rcPaint.top;
-			int Height = Paint.rcPaint.bottom - Paint.rcPaint.top;
-			int Width = Paint.rcPaint.right - Paint.rcPaint.left;
-            static DWORD Operation = WHITENESS;
-			PatBlt(DeviceContext, X, Y, Width, Height, Operation);
-            if(Operation == WHITENESS)
-            {
-                Operation = BLACKNESS;
-            } else {
-                Operation = WHITENESS;
-            }
+			int H = Paint.rcPaint.bottom - Paint.rcPaint.top;
+			int W = Paint.rcPaint.right - Paint.rcPaint.left;
+			Win32UpdateWindow(DeviceContext, X, Y, W, H);
             EndPaint(Window, &Paint);
         } break;
         default:
@@ -65,8 +114,9 @@ WinMain(
 	int       ShowCode)
 {
     WNDCLASS WindowClass = {};
-    WindowClass.style = CS_OWNDC|CS_HREDRAW|CS_VREDRAW; // TODO(smzb): Check wether HREDRAW and VREDRAW are still necessary [confirmed] setting this to 0 didn't work
-    WindowClass.lpfnWndProc = MainWindowCallBack;
+    //WindowClass.style = CS_OWNDC|CS_HREDRAW|CS_VREDRAW; // TODO(smzb): Check wether HREDRAW and VREDRAW are still necessary [confirmed] setting this to 0 didn't work, will try just CS_OWNDC
+    WindowClass.style = CS_OWNDC;
+    WindowClass.lpfnWndProc = Win32MainWindowCallBack;
     WindowClass.hInstance = Instance;
 //    WindowClass.hIcon; // TODO(smzb): Make an icon and stick it in here.
     WindowClass.lpszClassName = "HandmadeHeroWindowClass";
@@ -87,7 +137,8 @@ WinMain(
                                            0);
         if (WindowHandle)
         {
-            for(;;)
+            Running = true;
+            while(Running)
             {
                 MSG Message;
                 BOOL MessageResult = GetMessage(&Message, 0, 0, 0);
