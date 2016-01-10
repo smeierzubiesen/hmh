@@ -26,6 +26,30 @@ global_variable void *BitmapMemory; // TODO(smzb): This should not be a global i
 global_variable int BitmapWidth;
 global_variable int BitmapHeight;
 
+global_variable int BytesPerPixel = 4;
+
+internal void RenderGradient(int XOffset, int YOffset)
+{
+    int Width = BitmapWidth;
+    int height = BitmapHeight;
+
+    int Pitch = Width*BytesPerPixel;
+    uint8 *Row = (uint8 *)BitmapMemory;
+    for(int Y = 0; Y < BitmapHeight; Y++)
+    {
+        uint32 *Pixel = (uint32 *)Row;
+        for(int X = 0; X < BitmapWidth; X++)
+        {
+            uint8 Blue = (X + XOffset);
+            uint8 Green = (Y + YOffset);
+            uint8 Red = (YOffset + XOffset);
+
+            *Pixel++ = ((Red << 16) | (Green << 8) | (Blue));
+		}
+
+        Row += Pitch;
+    }
+}
 
 internal void
 Win32ResizeDIBSection(int Width, int Height)
@@ -45,42 +69,17 @@ Win32ResizeDIBSection(int Width, int Height)
     BitmapInfo.bmiHeader.biBitCount = 32;
     BitmapInfo.bmiHeader.biCompression = BI_RGB;
 
-    int BytesPerPixel = 4;
+
     int BitmapMemorySize = (BitmapWidth*BitmapHeight)*BytesPerPixel;
     BitmapMemory = VirtualAlloc(0, BitmapMemorySize, MEM_COMMIT, PAGE_READWRITE);
 
-    int Pitch = Width*BytesPerPixel;
-    uint8 *Row = (uint8 *)BitmapMemory;
-    for(int Y = 0; Y < BitmapHeight; Y++)
-    {
-        uint8 *Pixel = (uint8 *)Row;
-        for(int X = 0; X < BitmapWidth; X++)
-        {
-			/*
-			00 11 22 33
-			BB GG RR xx
-			*/
-            *Pixel = (uint8)X;
-            ++Pixel;
-
-            *Pixel = (uint8)Y;
-            ++Pixel;
-
-            *Pixel = 0;
-            ++Pixel;
-
-            *Pixel = 0;
-            ++Pixel;
-        }
-
-        Row += Pitch;
-    }
+    // TODO(smzb): Might want a blanking routine here.
 }
 
-internal void Win32UpdateWindow(HDC DeviceContext, RECT *WindowRect, int X, int Y, int W, int H)
+internal void Win32UpdateWindow(HDC DeviceContext, RECT *ClientRect, int X, int Y, int W, int H)
 {
-    int WindowWidth = WindowRect->right - WindowRect->left;
-    int WindowHeight = WindowRect->bottom - WindowRect->top;
+    int WindowWidth = ClientRect->right - ClientRect->left;
+    int WindowHeight = ClientRect->bottom - ClientRect->top;
     StretchDIBits(DeviceContext,
                   /*X, Y, W, H,
                     X, Y, W, H,*/
@@ -164,7 +163,7 @@ WinMain(
 
     if(RegisterClass(&WindowClass))
     {
-        HWND WindowHandle = CreateWindowEx(0,
+        HWND Window = CreateWindowEx(0,
                                            WindowClass.lpszClassName,
                                            "Handmade Hero", // TODO(smzb): maybe some version information here?
                                            WS_OVERLAPPEDWINDOW|WS_VISIBLE,
@@ -176,20 +175,33 @@ WinMain(
                                            0,
                                            Instance,
                                            0);
-        if (WindowHandle)
+        if (Window)
         {
+            int XOffset = 0;
+            int YOffset = 0;
             Running = true;
             while(Running)
             {
+
                 MSG Message;
-                BOOL MessageResult = GetMessage(&Message, 0, 0, 0);
-                if (MessageResult > 0)
+                while(PeekMessage(&Message, 0, 0, 0, PM_REMOVE))
                 {
+                    if (Message.message == WM_QUIT)
+                    {
+                        Running = false;
+                    }
                     TranslateMessage(&Message);
                     DispatchMessage(&Message);
-                } else {
-                    break;
                 }
+                RenderGradient(XOffset, YOffset);
+                RECT ClientRect;
+                GetClientRect(Window, &ClientRect);
+                HDC DeviceContext = GetDC(Window);
+                int WindowWidth = ClientRect.right - ClientRect.left;
+                int WindowHeight = ClientRect.bottom - ClientRect.top;
+                Win32UpdateWindow(DeviceContext, &ClientRect, 0, 0, WindowWidth, WindowHeight);
+                ReleaseDC(Window, DeviceContext);
+                ++XOffset;
             }
         } else {
             // TODO(smzb): Log this event !WindowHandle
