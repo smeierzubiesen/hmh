@@ -20,8 +20,8 @@ typedef int32_t int32;
 typedef int64_t  int64;
 
 struct win32_offscreen_buffer {
-    BITMAPINFO Info; // TODO(smzb): This should not be a global in future.
-    void *Memory; // TODO(smzb): This should not be a global in future.
+    BITMAPINFO Info; // FIXED(smzb): No more global variables, they exist in structs now
+    void *Memory; 
     int Width;
     int Height;
     int Pitch;
@@ -34,7 +34,7 @@ struct win32_window_dimensions
     int Height;
 };
 
-win32_window_dimensions GetWindowDimensions(HWND Window) {
+win32_window_dimensions Win32GetWindowDimensions(HWND Window) {
     win32_window_dimensions Result;
     RECT ClientRect;
     GetClientRect(Window, &ClientRect);
@@ -60,7 +60,7 @@ internal void RenderGradient(win32_offscreen_buffer Buffer, int XOffset, int YOf
         {
             uint8 Blue = (X + XOffset);
             uint8 Green = (Y + YOffset);
-            uint8 Red = (YOffset + XOffset);
+            uint8 Red = (XOffset - YOffset);
 
             *Pixel++ = ((Red << 16) | (Green << 8) | (Blue));
 		}
@@ -119,7 +119,7 @@ LRESULT CALLBACK Win32MainWindowCallBack(
     {
         case WM_SIZE:
         {
-            win32_window_dimensions Dimensions = GetWindowDimensions(Window);
+            win32_window_dimensions Dimensions = Win32GetWindowDimensions(Window);
             Win32ResizeDIBSection(&GlobalBackBuffer, Dimensions.Width, Dimensions.Height);
         } break;
         case WM_DESTROY:
@@ -145,7 +145,7 @@ LRESULT CALLBACK Win32MainWindowCallBack(
 			int H = Paint.rcPaint.bottom - Paint.rcPaint.top;
 			int W = Paint.rcPaint.right - Paint.rcPaint.left;
 
-            win32_window_dimensions Dim = GetWindowDimensions(Window);
+            win32_window_dimensions Dim = Win32GetWindowDimensions(Window);
             Win32UpdateWindow(DeviceContext, GlobalBackBuffer, Dim.Width, Dim.Height, X, Y, W, H);
             EndPaint(Window, &Paint);
         } break;
@@ -207,10 +207,11 @@ WinMain(
                 }
                 RenderGradient(GlobalBackBuffer, XOffset, YOffset);
                 HDC DeviceContext = GetDC(Window);
-                win32_window_dimensions Dim = GetWindowDimensions(Window);
+                win32_window_dimensions Dim = Win32GetWindowDimensions(Window);
                 Win32UpdateWindow(DeviceContext, GlobalBackBuffer, Dim.Width, Dim.Height, 0, 0, Dim.Width, Dim.Height);
                 ReleaseDC(Window, DeviceContext);
-                ++XOffset;
+                --XOffset;
+                ++YOffset;
             }
         } else {
             // TODO(smzb): Log this event !WindowHandle
