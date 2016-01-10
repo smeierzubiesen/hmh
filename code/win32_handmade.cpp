@@ -19,26 +19,44 @@ typedef int16_t int16;
 typedef int32_t int32;
 typedef int64_t  int64;
 
-global_variable bool Running; // TODO(smzb): This should not be a global in future.
+struct win32_offscreen_buffer {
+    BITMAPINFO Info; // TODO(smzb): This should not be a global in future.
+    void *Memory; // TODO(smzb): This should not be a global in future.
+    int Width;
+    int Height;
+    int Pitch;
+    int BytesPerPixel;
+};
 
-global_variable BITMAPINFO BitmapInfo; // TODO(smzb): This should not be a global in future.
-global_variable void *BitmapMemory; // TODO(smzb): This should not be a global in future.
-global_variable int BitmapWidth;
-global_variable int BitmapHeight;
-
-global_variable int BytesPerPixel = 4;
-
-internal void RenderGradient(int XOffset, int YOffset)
+struct win32_window_dimensions
 {
-    int Width = BitmapWidth;
-    int height = BitmapHeight;
+    int Width;
+    int Height;
+};
 
-    int Pitch = Width*BytesPerPixel;
-    uint8 *Row = (uint8 *)BitmapMemory;
-    for(int Y = 0; Y < BitmapHeight; Y++)
+win32_window_dimensions GetWindowDimensions(HWND Window) {
+    win32_window_dimensions Result;
+    RECT ClientRect;
+    GetClientRect(Window, &ClientRect);
+    Result.Width = ClientRect.right - ClientRect.left;
+    Result.Height = ClientRect.bottom - ClientRect.top;
+    return(Result);
+}
+
+global_variable bool Running; // TODO(smzb): This should not be a global in future.
+global_variable win32_offscreen_buffer GlobalBackBuffer;
+
+internal void RenderGradient(win32_offscreen_buffer Buffer, int XOffset, int YOffset)
+{
+    int Width = Buffer.Width;
+    int height = Buffer.Height;
+
+
+    uint8 *Row = (uint8 *)Buffer.Memory;
+    for(int Y = 0; Y < Buffer.Height; Y++)
     {
         uint32 *Pixel = (uint32 *)Row;
-        for(int X = 0; X < BitmapWidth; X++)
+        for(int X = 0; X < Buffer.Width; X++)
         {
             uint8 Blue = (X + XOffset);
             uint8 Green = (Y + YOffset);
@@ -47,46 +65,45 @@ internal void RenderGradient(int XOffset, int YOffset)
             *Pixel++ = ((Red << 16) | (Green << 8) | (Blue));
 		}
 
-        Row += Pitch;
+        Row += Buffer.Pitch;
     }
 }
 
 internal void
-Win32ResizeDIBSection(int Width, int Height)
+Win32ResizeDIBSection(win32_offscreen_buffer *Buffer, int Width, int Height)
 {
-    if(BitmapMemory)
+    if(Buffer->Memory)
     {
-        VirtualFree(BitmapMemory, 0, MEM_RELEASE);
+        VirtualFree(Buffer->Memory, 0, MEM_RELEASE);
     }
 
-    BitmapWidth = Width;
-    BitmapHeight = Height;
+    Buffer->Width = Width;
+    Buffer->Height = Height;
+    Buffer->BytesPerPixel = 4;
     
-    BitmapInfo.bmiHeader.biSize = sizeof(BitmapInfo.bmiHeader);
-    BitmapInfo.bmiHeader.biWidth = BitmapWidth;
-    BitmapInfo.bmiHeader.biHeight = -BitmapHeight;
-    BitmapInfo.bmiHeader.biPlanes = 1;
-    BitmapInfo.bmiHeader.biBitCount = 32;
-    BitmapInfo.bmiHeader.biCompression = BI_RGB;
+    Buffer->Info.bmiHeader.biSize = sizeof(Buffer->Info.bmiHeader);
+    Buffer->Info.bmiHeader.biWidth = Buffer->Width;
+    Buffer->Info.bmiHeader.biHeight = -Buffer->Height;
+    Buffer->Info.bmiHeader.biPlanes = 1;
+    Buffer->Info.bmiHeader.biBitCount = 32;
+    Buffer->Info.bmiHeader.biCompression = BI_RGB;
 
 
-    int BitmapMemorySize = (BitmapWidth*BitmapHeight)*BytesPerPixel;
-    BitmapMemory = VirtualAlloc(0, BitmapMemorySize, MEM_COMMIT, PAGE_READWRITE);
+    int BitmapMemorySize = (Buffer->Width*Buffer->Height)*Buffer->BytesPerPixel;
+    Buffer->Memory = VirtualAlloc(0, BitmapMemorySize, MEM_COMMIT, PAGE_READWRITE);
 
     // TODO(smzb): Might want a blanking routine here.
+
+    Buffer->Pitch = Width*Buffer->BytesPerPixel;
 }
 
-internal void Win32UpdateWindow(HDC DeviceContext, RECT *ClientRect, int X, int Y, int W, int H)
+internal void Win32UpdateWindow(HDC DeviceContext, win32_offscreen_buffer Buffer, int WindowWidth, int WindowHeight, int X, int Y, int W, int H)
 {
-    int WindowWidth = ClientRect->right - ClientRect->left;
-    int WindowHeight = ClientRect->bottom - ClientRect->top;
     StretchDIBits(DeviceContext,
-                  /*X, Y, W, H,
-                    X, Y, W, H,*/
-                  0, 0, BitmapWidth, BitmapHeight,
+                  0, 0, Buffer.Width, Buffer.Height,
                   0, 0, WindowWidth, WindowHeight,
-                  BitmapMemory,
-                  &BitmapInfo,
+                  Buffer.Memory,
+                  &Buffer.Info,
                   DIB_RGB_COLORS,
                   SRCCOPY);
 }
@@ -102,11 +119,8 @@ LRESULT CALLBACK Win32MainWindowCallBack(
     {
         case WM_SIZE:
         {
-            RECT ClientRect;
-            GetClientRect(Window, &ClientRect);
-            int W = ClientRect.right - ClientRect.left;
-            int H = ClientRect.bottom - ClientRect.top;
-            Win32ResizeDIBSection(W, H);
+            win32_window_dimensions Dimensions = GetWindowDimensions(Window);
+            Win32ResizeDIBSection(&GlobalBackBuffer, Dimensions.Width, Dimensions.Height);
         } break;
         case WM_DESTROY:
         {
@@ -131,10 +145,8 @@ LRESULT CALLBACK Win32MainWindowCallBack(
 			int H = Paint.rcPaint.bottom - Paint.rcPaint.top;
 			int W = Paint.rcPaint.right - Paint.rcPaint.left;
 
-            RECT ClientRect;
-            GetClientRect(Window, &ClientRect);
-
-            Win32UpdateWindow(DeviceContext, &ClientRect, X, Y, W, H);
+            win32_window_dimensions Dim = GetWindowDimensions(Window);
+            Win32UpdateWindow(DeviceContext, GlobalBackBuffer, Dim.Width, Dim.Height, X, Y, W, H);
             EndPaint(Window, &Paint);
         } break;
         default:
@@ -154,8 +166,8 @@ WinMain(
 	int       ShowCode)
 {
     WNDCLASS WindowClass = {};
-    //WindowClass.style = CS_OWNDC|CS_HREDRAW|CS_VREDRAW; // TODO(smzb): Check wether HREDRAW and VREDRAW are still necessary [confirmed] setting this to 0 didn't work, will try just CS_OWNDC
-    WindowClass.style = CS_OWNDC;
+    //WindowClass.style = CS_OWNDC|CS_HREDRAW|CS_VREDRAW; // FIXED(smzb): Check wether HREDRAW and VREDRAW are still necessary [confirmed] HREDRAW|VREDRAW needed due to force refresh upon resize
+    WindowClass.style = CS_HREDRAW|CS_VREDRAW;
     WindowClass.lpfnWndProc = Win32MainWindowCallBack;
     WindowClass.hInstance = Instance;
 //    WindowClass.hIcon; // TODO(smzb): Make an icon and stick it in here.
@@ -193,13 +205,10 @@ WinMain(
                     TranslateMessage(&Message);
                     DispatchMessage(&Message);
                 }
-                RenderGradient(XOffset, YOffset);
-                RECT ClientRect;
-                GetClientRect(Window, &ClientRect);
+                RenderGradient(GlobalBackBuffer, XOffset, YOffset);
                 HDC DeviceContext = GetDC(Window);
-                int WindowWidth = ClientRect.right - ClientRect.left;
-                int WindowHeight = ClientRect.bottom - ClientRect.top;
-                Win32UpdateWindow(DeviceContext, &ClientRect, 0, 0, WindowWidth, WindowHeight);
+                win32_window_dimensions Dim = GetWindowDimensions(Window);
+                Win32UpdateWindow(DeviceContext, GlobalBackBuffer, Dim.Width, Dim.Height, 0, 0, Dim.Width, Dim.Height);
                 ReleaseDC(Window, DeviceContext);
                 ++XOffset;
             }
