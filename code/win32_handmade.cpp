@@ -97,7 +97,6 @@ LRESULT CALLBACK Win32MainWindowCallBack(
         } break;
         case WM_CLOSE:
         {
-            // FIXED(smzb): Create function to close window.
             Running = false; // TODO(smzb): Throw a message to the user to ask for confirmation?
         } break;
         case WM_ACTIVATEAPP:
@@ -106,7 +105,6 @@ LRESULT CALLBACK Win32MainWindowCallBack(
         } break;
         case WM_PAINT:
         {
-            //OutputDebugStringA("WM_PAINT"); // FIXED(smzb): This won't be needed anymore - addresses #3
             PAINTSTRUCT Paint;
             HDC DeviceContext = BeginPaint(Window, &Paint);
             int X = Paint.rcPaint.left;
@@ -141,21 +139,22 @@ WinMain(
     WindowClass.hInstance = Instance;
 //    WindowClass.hIcon; // TODO(smzb): Make an icon and stick it in here.
     WindowClass.lpszClassName = "HandmadeHeroWindowClass";
+    char title[32] = "Handmade Hero (day5)";
+    char* WindowTitle = title;
 
     if(RegisterClass(&WindowClass))
     {
-        HWND Window = CreateWindowEx(0,
-                                           WindowClass.lpszClassName,
-                                           "Handmade Hero", // TODO(smzb): maybe some version information here?
-                                           WS_OVERLAPPEDWINDOW|WS_VISIBLE,
-                                           CW_USEDEFAULT,
-                                           CW_USEDEFAULT,
-                                           CW_USEDEFAULT,
-                                           CW_USEDEFAULT,
-                                           0,
-                                           0,
-                                           Instance,
-                                           0);
+        HWND Window = CreateWindowEx(0, WindowClass.lpszClassName,
+                                     WindowTitle, // TODO(smzb): maybe some version information here?
+                                     WS_OVERLAPPEDWINDOW|WS_VISIBLE,
+                                     CW_USEDEFAULT,
+                                     CW_USEDEFAULT,
+                                     CW_USEDEFAULT,
+                                     CW_USEDEFAULT,
+                                     0,
+                                     0,
+                                     Instance,
+                                     0);
         if (Window)
         {
             int XOffset = 0;
