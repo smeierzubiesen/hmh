@@ -15,12 +15,9 @@ win32_window_dimensions Win32GetWindowDimensions(HWND Window) {
     return(Result);
 }
 
-internal void RenderGradient(win32_offscreen_buffer Buffer, int XOffset, int YOffset)
-{
+internal void RenderGradient(win32_offscreen_buffer Buffer, int XOffset, int YOffset) {
     int Width = Buffer.Width;
     int height = Buffer.Height;
-
-
     uint8 *Row = (uint8 *)Buffer.Memory;
     for(int Y = 0; Y < Buffer.Height; Y++)
     {
@@ -29,18 +26,14 @@ internal void RenderGradient(win32_offscreen_buffer Buffer, int XOffset, int YOf
         {
             uint8 Blue = (X + XOffset);
             uint8 Green = (Y + YOffset);
-            uint8 Red = (XOffset - YOffset);
-
+            uint8 Red = (XOffset|YOffset);
             *Pixel++ = ((Red << 16) | (Green << 8) | (Blue));
 		}
-
         Row += Buffer.Pitch;
     }
 }
 
-internal void
-Win32ResizeDIBSection(win32_offscreen_buffer *Buffer, int Width, int Height)
-{
+internal void Win32ResizeDIBSection(win32_offscreen_buffer *Buffer, int Width, int Height) {
     if(Buffer->Memory)
     {
         VirtualFree(Buffer->Memory, 0, MEM_RELEASE);
@@ -49,25 +42,18 @@ Win32ResizeDIBSection(win32_offscreen_buffer *Buffer, int Width, int Height)
     Buffer->Width = Width;
     Buffer->Height = Height;
     Buffer->BytesPerPixel = 4;
-    
     Buffer->Info.bmiHeader.biSize = sizeof(Buffer->Info.bmiHeader);
     Buffer->Info.bmiHeader.biWidth = Buffer->Width;
     Buffer->Info.bmiHeader.biHeight = -Buffer->Height;
     Buffer->Info.bmiHeader.biPlanes = 1;
     Buffer->Info.bmiHeader.biBitCount = 32;
     Buffer->Info.bmiHeader.biCompression = BI_RGB;
-
-
     int BitmapMemorySize = (Buffer->Width*Buffer->Height)*Buffer->BytesPerPixel;
     Buffer->Memory = VirtualAlloc(0, BitmapMemorySize, MEM_COMMIT, PAGE_READWRITE);
-
-    // TODO(smzb): Might want a blanking routine here.
-
     Buffer->Pitch = Width*Buffer->BytesPerPixel;
 }
 
-internal void Win32UpdateWindow(HDC DeviceContext, win32_offscreen_buffer Buffer, int WindowWidth, int WindowHeight, int X, int Y, int W, int H)
-{
+internal void Win32UpdateWindow(HDC DeviceContext, win32_offscreen_buffer Buffer, int WindowWidth, int WindowHeight, int X, int Y, int W, int H) {
     StretchDIBits(DeviceContext,
                   0, 0, Buffer.Width, Buffer.Height,
                   0, 0, WindowWidth, WindowHeight,
@@ -77,12 +63,7 @@ internal void Win32UpdateWindow(HDC DeviceContext, win32_offscreen_buffer Buffer
                   SRCCOPY);
 }
 
-LRESULT CALLBACK Win32MainWindowCallBack(
-    HWND   Window,
-    UINT   Message,
-    WPARAM WParam,
-    LPARAM LParam)
-{
+LRESULT CALLBACK Win32MainWindowCallBack(HWND Window, UINT Message, WPARAM WParam, LPARAM LParam) {
     LRESULT Result = 0;
     switch(Message)
     {
@@ -111,7 +92,6 @@ LRESULT CALLBACK Win32MainWindowCallBack(
 			int Y = Paint.rcPaint.top;
 			int H = Paint.rcPaint.bottom - Paint.rcPaint.top;
 			int W = Paint.rcPaint.right - Paint.rcPaint.left;
-
             win32_window_dimensions Dim = Win32GetWindowDimensions(Window);
             Win32UpdateWindow(DeviceContext, GlobalBackBuffer, Dim.Width, Dim.Height, X, Y, W, H);
             EndPaint(Window, &Paint);
@@ -125,15 +105,8 @@ LRESULT CALLBACK Win32MainWindowCallBack(
     return(Result);
 }
 
-int CALLBACK
-WinMain(
-	HINSTANCE Instance,
-	HINSTANCE PrevInstance,
-	LPSTR     CommandLine,
-	int       ShowCode)
-{
+int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE PrevInstance, LPSTR CommandLine,	int ShowCode) {
     WNDCLASS WindowClass = {};
-    //WindowClass.style = CS_OWNDC|CS_HREDRAW|CS_VREDRAW; // FIXED(smzb): Check wether HREDRAW and VREDRAW are still necessary [confirmed] HREDRAW|VREDRAW needed due to force refresh upon resize
     WindowClass.style = CS_HREDRAW|CS_VREDRAW;
     WindowClass.lpfnWndProc = Win32MainWindowCallBack;
     WindowClass.hInstance = Instance;
@@ -182,12 +155,14 @@ WinMain(
                 ++YOffset;
             }
         } else {
-            // TODO(smzb): Log this event !WindowHandle
+            // TODO(smzb): Log the fact that we couldn't retrieve a Window Handle
+            // This is a critical failure.
         }
     }
     else
     {
-        // TODO(smzb): Log this event !RegisterClass
+        // TODO(smzb): Log the fact that we couldn't register a new WindowClass
+        // This is a critical failure.
     }
     
     return(0);

@@ -1,4 +1,3 @@
-#if !defined(WIN32_HANDMADE_H)
 /* ========================================================================
    $File: $
    $Date: $
@@ -7,6 +6,7 @@
    $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
    ======================================================================== */
 
+#if !defined(WIN32_HANDMADE_H)
 #define WIN32_HANDMADE_H
 
 #define internal static
@@ -24,7 +24,7 @@ typedef int32_t int32;
 typedef int64_t  int64;
 
 struct win32_offscreen_buffer {
-    BITMAPINFO Info; // FIXED(smzb): No more global variables, they exist in structs now
+    BITMAPINFO Info;
     void *Memory; 
     int Width;
     int Height;
@@ -38,7 +38,7 @@ struct win32_window_dimensions
     int Height;
 };
 
-global_variable bool Running; // TODO(smzb): This should not be a global in future.
+global_variable bool Running;
 global_variable win32_offscreen_buffer GlobalBackBuffer;
 
 #endif
