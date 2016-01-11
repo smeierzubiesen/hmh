@@ -1,7 +1,14 @@
 # TODO List
  - [X] code/win32_handmade.cpp   2 : Add a better comment template for new .cpp and .h files
- - [ ] code/win32_handmade.cpp  26 : This message gets called when the window is getting closed.
- - [ ] code/win32_handmade.cpp  69 : Check wether HREDRAW and VREDRAW are still necessary
+ - [ ] code/win32_handmade.cpp  11 : This should not be a global in future.
+ - [ ] code/win32_handmade.cpp  12 : This should not be a global in future.
+ - [ ] code/win32_handmade.cpp  13 : This should not be a global in future.
+ - [ ] code/win32_handmade.cpp  14 : This should not be a global in future.
+ - [ ] code/win32_handmade.cpp  15 : This should not be a global in future.
+ - [ ] code/win32_handmade.cpp  20 : Bulletproof this : Free after if possible, if not free first
+ - [ ] code/win32_handmade.cpp  78 : Handle this as error? Re-create Window?
+ - [ ] code/win32_handmade.cpp  83 : Throw a message to the user to ask for confirmation?
+ - [ ] code/win32_handmade.cpp 117 : Check wether HREDRAW and VREDRAW are still necessary [confirmed] setting this to 0 didn't work, will try just CS_OWNDC
  - [ ] code/win32_handmade.cpp  73 : Make an icon and stick it in here.
  - [ ] code/win32_handmade.cpp  80 : maybe some version information here?
  - [ ] code/win32_handmade.cpp 105 : Log this event !WindowHandle
