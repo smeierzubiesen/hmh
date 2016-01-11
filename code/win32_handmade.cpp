@@ -26,8 +26,8 @@ internal void RenderGradient(win32_offscreen_buffer Buffer, int XOffset, int YOf
         {
             uint8 Blue = (X + XOffset);
             uint8 Green = (Y + YOffset);
-            uint8 Red = (XOffset|YOffset);
-            *Pixel++ = ((Red << 16) | (Green << 8) | (Blue));
+            //uint8 Red = (XOffset|YOffset);
+            *Pixel++ = (/*(Red << 16) |*/ (Green << 8) | (Blue));
 		}
         Row += Buffer.Pitch;
     }
@@ -53,10 +53,13 @@ internal void Win32ResizeDIBSection(win32_offscreen_buffer *Buffer, int Width, i
     Buffer->Pitch = Width*Buffer->BytesPerPixel;
 }
 
+
+
 internal void Win32UpdateWindow(HDC DeviceContext, win32_offscreen_buffer Buffer, int WindowWidth, int WindowHeight, int X, int Y, int W, int H) {
+    // TODO(smzb): Aspect ratio needs looked at.
     StretchDIBits(DeviceContext,
-                  0, 0, Buffer.Width, Buffer.Height,
                   0, 0, WindowWidth, WindowHeight,
+                  0, 0, Buffer.Width, Buffer.Height,
                   Buffer.Memory,
                   &Buffer.Info,
                   DIB_RGB_COLORS,
@@ -69,8 +72,6 @@ LRESULT CALLBACK Win32MainWindowCallBack(HWND Window, UINT Message, WPARAM WPara
     {
         case WM_SIZE:
         {
-            win32_window_dimensions Dimensions = Win32GetWindowDimensions(Window);
-            Win32ResizeDIBSection(&GlobalBackBuffer, Dimensions.Width, Dimensions.Height);
         } break;
         case WM_DESTROY:
         {
@@ -107,6 +108,7 @@ LRESULT CALLBACK Win32MainWindowCallBack(HWND Window, UINT Message, WPARAM WPara
 
 int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE PrevInstance, LPSTR CommandLine,	int ShowCode) {
     WNDCLASS WindowClass = {};
+    Win32ResizeDIBSection(&GlobalBackBuffer, 1280, 720);
     WindowClass.style = CS_HREDRAW|CS_VREDRAW;
     WindowClass.lpfnWndProc = Win32MainWindowCallBack;
     WindowClass.hInstance = Instance;
@@ -151,8 +153,8 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE PrevInstance, LPSTR CommandLi
                 win32_window_dimensions Dim = Win32GetWindowDimensions(Window);
                 Win32UpdateWindow(DeviceContext, GlobalBackBuffer, Dim.Width, Dim.Height, 0, 0, Dim.Width, Dim.Height);
                 ReleaseDC(Window, DeviceContext);
-                --XOffset;
-                ++YOffset;
+                ++XOffset;
+                YOffset += 2;
             }
         } else {
             // TODO(smzb): Log the fact that we couldn't retrieve a Window Handle
