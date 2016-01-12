@@ -1,5 +1,5 @@
 /*
-// TODO(smzb): Add a better comment template for new .cpp and .h files
+// FIXED(smzb): Add a better comment template for new .cpp and .h files
 */
 
 #include <windows.h>
@@ -26,8 +26,7 @@ internal void RenderGradient(win32_offscreen_buffer Buffer, int XOffset, int YOf
         {
             uint8 Blue = (X + XOffset);
             uint8 Green = (Y + YOffset);
-            //uint8 Red = (XOffset|YOffset);
-            *Pixel++ = (/*(Red << 16) |*/ (Green << 8) | (Blue));
+            *Pixel++ = ((Green << 8) | (Blue));
 		}
         Row += Buffer.Pitch;
     }
@@ -38,7 +37,6 @@ internal void Win32ResizeDIBSection(win32_offscreen_buffer *Buffer, int Width, i
     {
         VirtualFree(Buffer->Memory, 0, MEM_RELEASE);
     }
-
     Buffer->Width = Width;
     Buffer->Height = Height;
     Buffer->BytesPerPixel = 4;
@@ -52,8 +50,6 @@ internal void Win32ResizeDIBSection(win32_offscreen_buffer *Buffer, int Width, i
     Buffer->Memory = VirtualAlloc(0, BitmapMemorySize, MEM_COMMIT, PAGE_READWRITE);
     Buffer->Pitch = Width*Buffer->BytesPerPixel;
 }
-
-
 
 internal void Win32UpdateWindow(HDC DeviceContext, win32_offscreen_buffer Buffer, int WindowWidth, int WindowHeight, int X, int Y, int W, int H) {
     // TODO(smzb): Aspect ratio needs looked at.
@@ -116,7 +112,6 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE PrevInstance, LPSTR CommandLi
     WindowClass.lpszClassName = "HandmadeHeroWindowClass";
     char title[32] = "Handmade Hero (day5)";
     char* WindowTitle = title;
-
     if(RegisterClass(&WindowClass))
     {
         HWND Window = CreateWindowEx(0, WindowClass.lpszClassName,
@@ -137,7 +132,6 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE PrevInstance, LPSTR CommandLi
             Running = true;
             while(Running)
             {
-
                 MSG Message;
                 while(PeekMessage(&Message, 0, 0, 0, PM_REMOVE))
                 {
@@ -169,4 +163,3 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE PrevInstance, LPSTR CommandLi
     
     return(0);
 }
-
