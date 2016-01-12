@@ -1,5 +1,6 @@
 /*
-// FIXED(smzb): Add a better comment template for new .cpp and .h files
+// TODO(smzb): Add a better comment template for new .cpp and .h files
+// FIXED(smzb): Template has been changed in .emacs file
 */
 
 #include <windows.h>
