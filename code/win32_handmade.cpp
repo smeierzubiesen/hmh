@@ -22,7 +22,7 @@ global_variable x_input_set_state *XInputSetState_ = XInputSetStateStub;
 #define XInputSetState XInputSetState_
 
 internal void Win32LoadXInput(void) {
-    HMODULE XInputLibrary = LoadLibrary("xinput1_3.dll");
+    HMODULE XInputLibrary = LoadLibrary("xinput9_1_0.dll");
     if(XInputLibrary)
     {
         XInputGetState = (x_input_get_state *)GetProcAddress(XInputLibrary, "XInputGetState");
@@ -135,7 +135,7 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE PrevInstance, LPSTR CommandLi
     WindowClass.hInstance = Instance;
 //    WindowClass.hIcon; // TODO(smzb): Make an icon and stick it in here.
     WindowClass.lpszClassName = "HandmadeHeroWindowClass";
-    char title[32] = "Handmade Hero (day5)";
+    char title[32] = "Handmade Hero (day6)";
     char* WindowTitle = title;
     if(RegisterClass(&WindowClass))
     {
