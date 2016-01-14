@@ -1,8 +1,16 @@
-/*
+// win32_handmade.cpp
+// compile with -doc -FC -Zi win32_handmade.cpp user32.lib gdi32.lib
+/* ========================================================================
+   $File: $
+   $Date: $
+   $Revision: $
+   $Creator: Sebastian Meier zu Biesen $
+   $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
+   ======================================================================== */
+
 // TODO(smzb): Add a better comment template for new .cpp and .h files
 // FIXED(smzb): Template has been changed in .emacs file
 // NOTE(smzb): Something else that is noteworthy
-*/
 
 #include <windows.h>
 #include <stdint.h>
@@ -21,6 +29,10 @@ X_INPUT_SET_STATE(XInputSetStateStub) { return(0); }
 global_variable x_input_set_state *XInputSetState_ = XInputSetStateStub;
 #define XInputSetState XInputSetState_
 
+/// <summary>Win32LoadXInput loads xinput9_1_0.dll
+/// <para>Here's how you could make a second paragraph in a description. <see cref="System::Console::WriteLine"/> for information about output statements.</para>
+/// <seealso cref="MyClass::MyMethod2"/>
+/// </summary>
 internal void Win32LoadXInput(void) {
     HMODULE XInputLibrary = LoadLibrary("xinput9_1_0.dll");
     if(XInputLibrary)
