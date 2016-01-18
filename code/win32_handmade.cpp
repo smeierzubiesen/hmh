@@ -17,6 +17,9 @@
 #include <xinput.h>
 #include "win32_handmade.h"
 
+global_variable int XOffset = 0;
+global_variable int YOffset = 0;
+
 /// <summary>Win32LoadXInput loads xinput9_1_0.dll
 /// <para>Here's how you could make a second paragraph in a description. <see cref="System::Console::WriteLine"/> for information about output statements.</para>
 /// <seealso cref="MyClass::MyMethod2"/>
@@ -159,6 +162,12 @@ LRESULT CALLBACK Win32MainWindowCallBack(HWND Window, UINT Message, WPARAM WPara
                 //
             } else if(VKCode == VK_SPACE) {
                 OutputDebugStringA("SPACE\n");
+                if(IsDown) {
+                    YOffset += 2;
+                }
+                if(WasDown) {
+                    //
+                }
             }
 
         }
@@ -197,8 +206,7 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE PrevInstance, LPSTR CommandLi
                                      0);
         if (Window)
         {
-            int XOffset = 0;
-            int YOffset = 0;
+
             Running = true;
             while(Running)
             {
