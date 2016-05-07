@@ -77,6 +77,7 @@ internal void Win32ResizeDIBSection(win32_offscreen_buffer *Buffer, int Width, i
 
 internal void Win32UpdateWindow(HDC DeviceContext, win32_offscreen_buffer *Buffer, int WindowWidth, int WindowHeight, int X, int Y, int W, int H) {
     // TODO(smzb): Aspect ratio needs looked at.
+    // NOTE(smzb): at this point in time we simply render whatever is in the framebuffer without regard to any scaling of source material
     StretchDIBits(DeviceContext,
                   0, 0, WindowWidth, WindowHeight,
                   0, 0, Buffer->Width, Buffer->Height,
@@ -86,12 +87,14 @@ internal void Win32UpdateWindow(HDC DeviceContext, win32_offscreen_buffer *Buffe
                   SRCCOPY);
 }
 
+// NOTE(smzb): This simply deals with the program loop and handles events based on WindowMessage
 LRESULT CALLBACK Win32MainWindowCallBack(HWND Window, UINT Message, WPARAM WParam, LPARAM LParam) {
     LRESULT Result = 0;
     switch(Message)
     {
         case WM_SIZE:
         {
+            // TODO(smzb): do we have to deal with resizing or is the on-screen rendering enough?
         } break;
         case WM_DESTROY:
         {
