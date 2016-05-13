@@ -1,5 +1,6 @@
 // win32_handmade.cpp
 // compiles with -doc -FC -Zi win32_handmade.cpp user32.lib gdi32.lib
+// see: build.bat for switches used in compilation
 /* ========================================================================
    $File: $
    $Date: $
@@ -99,6 +100,7 @@ LRESULT CALLBACK Win32MainWindowCallBack(HWND Window, UINT Message, WPARAM WPara
         case WM_DESTROY:
         {
             Running = false; // TODO(smzb): Handle this as error? Re-create Window?
+                             // NOTE(smzb): RThis is NOT a close event, this event occurs if the window handle gets destroyed before its time
         } break;
         case WM_CLOSE:
         {
@@ -181,7 +183,8 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE PrevInstance, LPSTR CommandLi
     WindowClass.style = CS_HREDRAW|CS_VREDRAW;
     WindowClass.lpfnWndProc = Win32MainWindowCallBack;
     WindowClass.hInstance = Instance;
-//    WindowClass.hIcon; // TODO(smzb): Make an icon and stick it in here.
+    //WindowClass.hIcon; // TODO(smzb): Make an icon and stick it in here.
+    // NOTE(smzb): Possibly as an .exe resource?
     WindowClass.lpszClassName = "HandmadeHeroWindowClass";
     char title[32] = "Handmade Hero (day6)";
     char* WindowTitle = title;
@@ -192,8 +195,8 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE PrevInstance, LPSTR CommandLi
                                      WS_OVERLAPPEDWINDOW|WS_VISIBLE,
                                      CW_USEDEFAULT,
                                      CW_USEDEFAULT,
-                                     CW_USEDEFAULT,
-                                     CW_USEDEFAULT,
+                                     1280, // NOTE(smzb): this is width
+                                     720, // NOTE(smzb): this is height
                                      0,
                                      0,
                                      Instance,
