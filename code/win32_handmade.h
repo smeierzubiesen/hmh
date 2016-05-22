@@ -1,4 +1,4 @@
-/* ========================================================================
+#/* ========================================================================
    $File: $
    $Date: $
    $Revision: $
@@ -23,6 +23,8 @@ typedef int16_t int16;
 typedef int32_t int32;
 typedef int64_t  int64;
 
+typedef int32 bool32;
+
 struct win32_offscreen_buffer {
     BITMAPINFO Info;
     void *Memory; 
@@ -40,17 +42,5 @@ struct win32_window_dimensions
 
 global_variable bool Running;
 global_variable win32_offscreen_buffer GlobalBackBuffer;
-
-#define X_INPUT_GET_STATE(name) DWORD WINAPI name(DWORD dwUserIndex, XINPUT_STATE *pState)
-typedef X_INPUT_GET_STATE(x_input_get_state);
-X_INPUT_GET_STATE(XInputGetStateStub) { return(0); }
-global_variable x_input_get_state *XInputGetState_ = XInputGetStateStub;
-#define XInputGetState XInputGetState_
-
-#define X_INPUT_SET_STATE(name) DWORD WINAPI name(DWORD dwUserIndex, XINPUT_VIBRATION *pVibration)
-typedef X_INPUT_SET_STATE(x_input_set_state);
-X_INPUT_SET_STATE(XInputSetStateStub) { return(0); }
-global_variable x_input_set_state *XInputSetState_ = XInputSetStateStub;
-#define XInputSetState XInputSetState_
 
 #endif

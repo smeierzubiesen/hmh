@@ -16,18 +16,110 @@
 #include <windows.h>
 #include <stdint.h>
 #include <xinput.h>
+#include <dsound.h>
 #include "win32_handmade.h"
 
-/// <summary>Win32LoadXInput loads xinput9_1_0.dll
+global_variable int XOffset;
+global_variable int YOffset;
+
+#define X_INPUT_GET_STATE(name) DWORD WINAPI name(DWORD dwUserIndex, XINPUT_STATE *pState)
+typedef X_INPUT_GET_STATE(x_input_get_state);
+X_INPUT_GET_STATE(XInputGetStateStub) { return(ERROR_DEVICE_NOT_CONNECTED); }
+global_variable x_input_get_state *XInputGetState_ = XInputGetStateStub;
+#define XInputGetState XInputGetState_
+
+#define X_INPUT_SET_STATE(name) DWORD WINAPI name(DWORD dwUserIndex, XINPUT_VIBRATION *pVibration)
+typedef X_INPUT_SET_STATE(x_input_set_state);
+X_INPUT_SET_STATE(XInputSetStateStub) { return(ERROR_DEVICE_NOT_CONNECTED); }
+global_variable x_input_set_state *XInputSetState_ = XInputSetStateStub;
+#define XInputSetState XInputSetState_
+
+#define DIRECT_SOUND_CREATE(name) HRESULT WINAPI name(LPCGUID pcGuidDevice, LPDIRECTSOUND *ppDS, LPUNKNOWN pUnkOuter)
+typedef DIRECT_SOUND_CREATE(direct_sound_create);
+//DIRECT_SOUND_CREATE(DirectSoundCreateStub) { return(0); }
+//global_variable direct_sound_create *DirectSoundCreate_ = DirectSoundCreateStub;
+//#define DirectSoundCreate DirectSoundCreate_;
+
+/// <summary>Win32LoadXInput loads xinput1_4.dll
 /// <para>Here's how you could make a second paragraph in a description. <see cref="System::Console::WriteLine"/> for information about output statements.</para>
 /// <seealso cref="MyClass::MyMethod2"/>
 /// </summary>
 internal void Win32LoadXInput(void) {
-    HMODULE XInputLibrary = LoadLibrary("xinput9_1_0.dll");
+    HMODULE XInputLibrary = LoadLibrary("xinput1_4.dll");
+    if(!XInputLibrary) {
+        HMODULE XInputLibrary = LoadLibrary("xinput1_3.dll");
+    }
     if(XInputLibrary)
     {
         XInputGetState = (x_input_get_state *)GetProcAddress(XInputLibrary, "XInputGetState");
         XInputSetState = (x_input_set_state *)GetProcAddress(XInputLibrary, "XInputSetState");
+    }
+}
+
+internal void Win32InitDSound(HWND Window, int32 SamplesPerSecond, int32 BufferSize) {
+    // TODO(smzb): Load Lib
+    HMODULE DSoundLibrary = LoadLibraryA("dsound.dll");
+    if(DSoundLibrary)
+    {
+        // TODO(smzb): Get DSound Object
+        direct_sound_create *DirectSoundCreate = (direct_sound_create *)GetProcAddress(DSoundLibrary, "DirectSoundCreate");
+        
+        LPDIRECTSOUND DirectSound;
+        if(DirectSoundCreate && SUCCEEDED(DirectSoundCreate(0, &DirectSound, 0))) {
+            WAVEFORMATEX WaveFormat = {};
+            WaveFormat.wFormatTag = WAVE_FORMAT_PCM;
+            WaveFormat.nChannels = 2;
+            WaveFormat.nSamplesPerSec = SamplesPerSecond;
+            WaveFormat.wBitsPerSample = 16;
+            WaveFormat.nBlockAlign = (WaveFormat.nChannels*WaveFormat.wBitsPerSample) / 8;
+            WaveFormat.nAvgBytesPerSec = (WaveFormat.nSamplesPerSec*WaveFormat.nBlockAlign);
+            WaveFormat.cbSize = 0;
+            if(SUCCEEDED(DirectSound->SetCooperativeLevel(Window, DSSCL_PRIORITY))) {
+                DSBUFFERDESC BufferDescription = {};
+                BufferDescription.dwSize = sizeof(BufferDescription);
+                BufferDescription.dwFlags = DSBCAPS_PRIMARYBUFFER;
+                BufferDescription.dwBufferBytes = BufferSize;
+
+                // TODO(smzb): Create "primary" buffer
+                LPDIRECTSOUNDBUFFER PrimaryBuffer;
+                if(SUCCEEDED(DirectSound->CreateSoundBuffer(&BufferDescription, &PrimaryBuffer, 0))) {
+
+                    HRESULT Error = PrimaryBuffer->SetFormat(&WaveFormat);
+                if(SUCCEEDED(Error)) {
+                        // We've got a Primary buffer
+                        OutputDebugStringA("Primary Buffer format set\n");
+                    } else {
+                        // TODO(smzb): Primary Buffer Diagnostic
+                        OutputDebugStringA("Primary Buffer format NOT set\n");
+                    }
+                    OutputDebugStringA("Primary Buffer set");
+                } else {
+                    OutputDebugStringA("Primary Buffer NOT set");
+                }
+            } else {
+                // TODO(smzb): Direct Sound Diagnostic
+            }
+            
+            // TODO(smzb): Create "secondary" buffer
+            DSBUFFERDESC BufferDescription = {};
+            BufferDescription.dwSize = sizeof(BufferDescription);
+            BufferDescription.dwFlags = 0;
+            BufferDescription.dwBufferBytes = BufferSize;
+            BufferDescription.lpwfxFormat = &WaveFormat;
+            LPDIRECTSOUNDBUFFER SecondaryBuffer;
+            HRESULT Error = DirectSound->CreateSoundBuffer(&BufferDescription, &SecondaryBuffer, 0);
+            if(SUCCEEDED(Error)) {
+                OutputDebugStringA("Secondary Buffer set\n");
+            } else {
+                //Secondary Buffer Diagnostics
+                OutputDebugStringA("Secondary Buffer NOT set\n");
+            }
+        } else {
+            // TODO(smzb): Return some diagnostic info for no-sound..
+        }
+
+        // TODO(smzb): Start playback.
+        
     }
 }
 
@@ -164,8 +256,17 @@ LRESULT CALLBACK Win32MainWindowCallBack(HWND Window, UINT Message, WPARAM WPara
                 //
             } else if(VKCode == VK_SPACE) {
                 OutputDebugStringA("SPACE\n");
+                if(IsDown) {
+                    YOffset += 2;
+                }
+                if(WasDown) {
+                    //
+                }
             }
-
+            bool AltWasDown = ((LParam & (1 << 29)) != 0);
+            if((VKCode == VK_F4) && AltWasDown) {
+                    Running = false; 
+                }
         }
         default:
         {
@@ -203,8 +304,8 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE PrevInstance, LPSTR CommandLi
                                      0);
         if (Window)
         {
-            int XOffset = 0;
-            int YOffset = 0;
+            Win32InitDSound(Window, 48000, 48000*sizeof(int16)*2);
+
             Running = true;
             while(Running)
             {
