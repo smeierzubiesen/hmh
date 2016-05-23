@@ -287,7 +287,7 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE PrevInstance, LPSTR CommandLi
     //WindowClass.hIcon; // TODO(smzb): Make an icon and stick it in here.
     // NOTE(smzb): Possibly as an .exe resource?
     WindowClass.lpszClassName = "HandmadeHeroWindowClass";
-    char title[32] = "Handmade Hero (day6)";
+    char title[32] = "Handmade Hero (day8)";
     char* WindowTitle = title;
     if(RegisterClass(&WindowClass))
     {
@@ -348,15 +348,32 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE PrevInstance, LPSTR CommandLi
 
                         if(AButton){
                             XINPUT_VIBRATION Vibration;
-                            Vibration.wLeftMotorSpeed = 60000;
-                            Vibration.wRightMotorSpeed = 60000;
+                            //Vibration.wLeftMotorSpeed = 65535;
+                            Vibration.wRightMotorSpeed = 65535;
                             XInputSetState(0, &Vibration);
-                            YOffset += 2;
+                            YOffset += -2;
+                            XOffset += 2;
                         } else {
                             XINPUT_VIBRATION Vibration;
                             Vibration.wLeftMotorSpeed = 0;
                             Vibration.wRightMotorSpeed = 0;
                             XInputSetState(0, &Vibration);
+                        }
+                        if(BButton){
+                            XINPUT_VIBRATION Vibration;
+                            Vibration.wLeftMotorSpeed = 65535;
+                            //Vibration.wRightMotorSpeed = 65535;
+                            XInputSetState(0, &Vibration);
+                            YOffset += 2;
+                            XOffset += -2;
+                        } else {
+                            XINPUT_VIBRATION Vibration;
+                            Vibration.wLeftMotorSpeed = 0;
+                            Vibration.wRightMotorSpeed = 0;
+                            XInputSetState(0, &Vibration);
+                        }
+                        if(Start){
+                            Running = false;
                         }
                     } else {
                         // NOTE(smzb): Controller is NOT present

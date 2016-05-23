@@ -3,7 +3,7 @@
 c:
 cd "c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\"
 call vcvarsall.bat x64
-cd "%USERPROFILE%\Documents\"
+cd "%USERPROFILE%\OneDrive\Documents\"
 subst z: GitHub
 z:
 set path=%path%;z:\hmh\misc
