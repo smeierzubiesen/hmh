@@ -7,7 +7,9 @@ by Molly Rocket
 This is my take on and progress of the above mentioned (lol)
 
 ## Progress
-We are currently on Day 3 and will start making colorful things soon
+We are currently on Day 8 and have implemented some backbuffer graphics
+We also managed to get the Xbox 360 PC controller working and interpreting input
+(eg: Start button closes app)
 
 First of all I had to set up my dev environment.
 
