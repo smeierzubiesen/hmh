@@ -13,6 +13,9 @@ Participate in the development via [Waffle.io][]
 This is my take on and progress of the above mentioned (lol)
 
 ## Progress
+
+[Changelog](/changelog/)
+<pre>this is not working yet</pre>
 We are currently on Day 1 and have not actually started yet
 
 First of all I had to set up my dev environment.

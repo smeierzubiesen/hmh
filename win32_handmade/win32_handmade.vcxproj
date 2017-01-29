@@ -126,6 +126,7 @@
     <ClCompile Include="win32_handmade.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\404.md" />
     <None Include="..\CHANGELOG.md" />
     <None Include="..\README.md" />
     <None Include="..\todo.md" />
