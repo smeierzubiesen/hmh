@@ -43,5 +43,8 @@
     <None Include="..\UNLICENSE">
       <Filter>Other Files</Filter>
     </None>
+    <None Include="..\404.md">
+      <Filter>Other Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
