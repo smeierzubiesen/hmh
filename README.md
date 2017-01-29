@@ -14,7 +14,7 @@ This is my take on and progress of the above mentioned (lol)
 
 ## Progress
 
-[Changelog](/hmh/changelog.html)
+[Changelog](/hmh/changelog.md)
 <pre>this is not working yet</pre>
  - 29/01/17 : Day1 finished and ready for merge
  -- Added simple MsgBox function
