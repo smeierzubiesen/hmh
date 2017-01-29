@@ -37,8 +37,11 @@
 *.ilk
 *.tlog
 *.idb
-win32_handmade/Debug/win32_handmade.log
-win32_handmade/Debug/win32_handmade.nativecodeanalysis.xml
-win32_handmade/Debug/vc.nativecodeanalysis.all.xml
-hmh.VC.VC.opendb
-Debug/win32_handmade.exe.lastcodeanalysissucceeded
+*.opendb
+*.db
+*.cache
+*.log
+
+*.lastcodeanalysissucceeded
+
+win32_handmade/Debug/
