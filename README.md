@@ -1,5 +1,6 @@
 # Handmade Hero
-by Molly Rocket
+by Molly Rocket  
+<small>(also check out : https://smeierzubiesen.github.io/hmh/)</small>
 
 | [![Stories in Backlog](https://badge.waffle.io/smeierzubiesen/hmh.svg?label=Backlog&title=Backlog)](https://waffle.io/smeierzubiesen/hmh) | [![Stories in Ready](https://badge.waffle.io/smeierzubiesen/hmh.svg?label=Ready&title=Ready)](http://waffle.io/smeierzubiesen/hmh) | [![Stories in In Progress](https://badge.waffle.io/smeierzubiesen/hmh.svg?label=In%20Progess&title=In%20Progress)](https://waffle.io/smeierzubiesen/hmh) | [![Stories in Done](https://badge.waffle.io/smeierzubiesen/hmh.svg?label=done&title=Done)](https://waffle.io/smeierzubiesen/hmh) |
 |:-----------------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------:|
