@@ -1,4 +1,8 @@
-[![Stories in Ready](https://badge.waffle.io/smeierzubiesen/hmh.png?label=ready&title=Ready)](https://waffle.io/smeierzubiesen/hmh)
+[![Stories in Backlog](https://badge.waffle.io/smeierzubiesen/hmh.png?label=backlog&title=Backlog)](https://waffle.io/smeierzubiesen/hmh) 
+[![Stories in Ready](https://badge.waffle.io/smeierzubiesen/hmh.png?label=ready&title=Ready)](https://waffle.io/smeierzubiesen/hmh) 
+[![Stories in In Progress](https://badge.waffle.io/smeierzubiesen/hmh.png?label=in%20progess&title=In%20Progress)](https://waffle.io/smeierzubiesen/hmh) 
+[![Stories in Done](https://badge.waffle.io/smeierzubiesen/hmh.png?label=done&title=Done)](https://waffle.io/smeierzubiesen/hmh) 
+ 
 Participate in the development [here](https://waffle.io/smeierzubiesen/hmh) (via: Waffle.io)
 # Handmade Hero
 by Molly Rocket
