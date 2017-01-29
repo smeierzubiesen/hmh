@@ -16,7 +16,13 @@ This is my take on and progress of the above mentioned (lol)
 
 [Changelog](/hmh/changelog.html)
 <pre>this is not working yet</pre>
-We are currently on Day 1 and have not actually started yet
+ - 29/01/17 : Day1 finished and ready for merge
+ -- Added simple MsgBox function
+ -- Compiler options set.
+ -- Documentation is being generated
+ - 29/01/17 : We are currently on Day 1 and have not actually started yet
+ -- Set up dev environnment.
+ -- Changed approach from emacs based and cmd builds to [VS2015][] as I prefer it, but it's personal choice.
 
 First of all I had to set up my dev environment.
 So simply install [VS2015][] (Community Edition is free and does everything we need it to)
