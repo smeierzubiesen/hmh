@@ -14,7 +14,7 @@ This is my take on and progress of the above mentioned (lol)
 
 ## Progress
 
-[Changelog](/changelog/)
+[Changelog](/hmh/changelog.html)
 <pre>this is not working yet</pre>
 We are currently on Day 1 and have not actually started yet
 
