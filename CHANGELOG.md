@@ -7,6 +7,7 @@ All changes should be listed here in future
  - Reset the whole thing as I will start over, but this time in VS2015 alone
    There'll be no messing about in emacs with custom build scripts.
  - Added github-pages documentation stuff and added all waffle.io badges
+ - successful first build with only main() entry point
 
 ## older dates
 
