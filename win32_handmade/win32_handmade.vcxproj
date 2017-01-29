@@ -125,6 +125,13 @@
   <ItemGroup>
     <ClCompile Include="win32_handmade.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\CHANGELOG.md" />
+    <None Include="..\README.md" />
+    <None Include="..\todo.md" />
+    <None Include="..\UNLICENSE" />
+    <None Include="..\_config.yml" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

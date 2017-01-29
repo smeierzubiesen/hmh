@@ -11,9 +11,7 @@ by Molly Rocket
 This is my take on and progress of the above mentioned (lol)
 
 ## Progress
-We are currently on Day 8 and have implemented some backbuffer graphics
-We also managed to get the Xbox 360 PC controller working and interpreting input
-(eg: Start button closes app)
+We are currently on Day 1 and have not actually started yet
 
 First of all I had to set up my dev environment.
 
@@ -21,20 +19,12 @@ First of all I had to set up my dev environment.
 
 ### Prerequisites
 
- * Emacs 24 for Windows (at the moment)
- (this *ideally* wants to live in a directory called emacs next to the hmh\ directory)
- * Visual Studio 2015 Community Edition
+ ~~* Emacs 24 for Windows (at the moment)~~
+  * Visual Studio 2015 Community Edition
 
-### Caveats
-
-Please make sure you check all .bat scripts for your personal paths, as these are most likely changing once you clone into your environment.
+~~### Caveats
+Please make sure you check all .bat scripts for your personal paths, as these are most likely changing once you clone into your environment.~~
 
 ### Step-by-step
 
-Make a shortcut to cmd.exe and append something like this to the commandline `/k "%HOMEDRIVE%%HOMEPATH%\Documents\Github\hmh\misc\shell.bat"`  
-*(where `<project path>` = the path where you cloned __HMH__ to)*  
-That way, when you click on that link you will end up with an almost ready-to-go dev environment on drive z:
-
-you can open any file by simply calling emacs.bat with a filename
-
-within emacs simply hit M-m to build the .cpp file that is currently open in your buffer
+Simply open the solutions in VS2015 Build and Run win32_handmade.exe
