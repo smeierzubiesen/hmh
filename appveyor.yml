@@ -6,7 +6,7 @@ deploy:
 - provider: GitHub
   auth_token:
     secure: hifcN93/wHdEWIaKpGuJz+M73qcBHaLa6ozBz1fKgporFBvnbZGOiCATSawgKdwX
-  artifact: build\win32_handmade.exe
+  artifact: hmh_x64.exe
   draft: true
   prerelease: true
   force_update: true
