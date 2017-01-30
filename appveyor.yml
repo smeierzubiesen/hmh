@@ -1,9 +1,13 @@
 version: 1.0.{build}
+configuration: Release
+platform:
+- x86
+- x64
 build:
   parallel: true
   verbosity: minimal
 artifacts:
-- path: x64\Debug\hmh_x64.exe
+- path: '*\Release\hmh_x64.exe'
   name: hmh_x64
 deploy:
 - provider: GitHub
