@@ -1,4 +1,4 @@
-version: 1.0.{build}
+version: 0.1.{build}
 pull_requests:
   do_not_increment_build_number: true
 skip_branch_with_pr: true
@@ -15,7 +15,7 @@ artifacts:
 deploy:
 - provider: GitHub
   tag: hmh-v$(appveyor_build_version)
-  description: 'Handmade Hero v$(appveyor_build_version)'
+  description: Handmade Hero v$(appveyor_build_version)
   auth_token:
     secure: hifcN93/wHdEWIaKpGuJz+M73qcBHaLa6ozBz1fKgporFBvnbZGOiCATSawgKdwX
   draft: false
