@@ -14,8 +14,9 @@ artifacts:
   name: hmh-${platform}
 deploy:
 - provider: GitHub
-  tag: hmh-v{version}
-  description: Handmade Hero v{version}
+  tag: hmh-v${version}
+  release: hmh-v${version}-${platform}
+  description: Handmade Hero v${version}
   auth_token:
     secure: hifcN93/wHdEWIaKpGuJz+M73qcBHaLa6ozBz1fKgporFBvnbZGOiCATSawgKdwX
   draft: false
