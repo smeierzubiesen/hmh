@@ -1,10 +1,10 @@
 version: 1.0.{build}
 build:
   parallel: true
-  verbosity: normal
+  verbosity: minimal
 artifacts:
-- path: build\*.exe
-  name: handmade-hero
+- path: x64\Debug\hmh_x64.exe
+  name: hmh_x64
 deploy:
 - provider: GitHub
   auth_token:
