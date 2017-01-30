@@ -48,3 +48,4 @@ win32_handmade/docs/
 build/*.exe
 build/*.pdb
 build/*.lastcodeanalysis*
+Release/

@@ -5,6 +5,17 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "win32_handmade", "win32_handmade\win32_handmade.vcxproj", "{3C57BDC2-49B7-4535-A70D-AE11E8DE7FB6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{53049193-4716-4366-B63A-C03DA51DB863}"
+	ProjectSection(SolutionItems) = preProject
+		404.md = 404.md
+		_config.yml = _config.yml
+		appveyor.yml = appveyor.yml
+		CHANGELOG.md = CHANGELOG.md
+		README.md = README.md
+		todo.md = todo.md
+		UNLICENSE = UNLICENSE
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

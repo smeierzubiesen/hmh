@@ -3,6 +3,11 @@ by [Molly Rocket][]
 a complete game development in C(++) from scratch  
 <small>(Visit our [Github Page][] for more information.)</small>
 
+|   | Build Status |
+|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| Project Status  | [![Build status](https://ci.appveyor.com/api/projects/status/ut2kjvfxq7ceny9x?svg=true)](https://ci.appveyor.com/project/smeierzubiesen/hmh) |
+| branch:master  | [![Build status](https://ci.appveyor.com/api/projects/status/ut2kjvfxq7ceny9x/branch/master?svg=true)](https://ci.appveyor.com/project/smeierzubiesen/hmh/branch/master) |
+
 | Agile Board | Status | on | [Waffle.io][] |
 |-------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | [![Stories in Backlog](https://badge.waffle.io/smeierzubiesen/hmh.svg?label=Backlog&title=Backlog)](https://waffle.io/smeierzubiesen/hmh) | [![Stories in Ready](https://badge.waffle.io/smeierzubiesen/hmh.svg?label=Ready&title=Ready)](http://waffle.io/smeierzubiesen/hmh) | [![Stories in In Progress](https://badge.waffle.io/smeierzubiesen/hmh.svg?label=In%20Progess&title=In%20Progress)](https://waffle.io/smeierzubiesen/hmh) | [![Stories in Done](https://badge.waffle.io/smeierzubiesen/hmh.svg?label=done&title=Done)](https://waffle.io/smeierzubiesen/hmh) |
