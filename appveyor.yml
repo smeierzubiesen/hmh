@@ -7,7 +7,7 @@ build:
   parallel: true
   verbosity: minimal
 artifacts:
-- path: '*\Release\win32_handmade.exe'
+- path: win32_handmade.exe
   name: handmadehero
 deploy:
 - provider: GitHub
