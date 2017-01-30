@@ -3,9 +3,9 @@ by [Molly Rocket][]
 a complete game development in C(++) from scratch  
 <small>(Visit our [Github Page][] for more information.)</small>
 
-|   | Build Status |
-|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| Project Status  | [![Build status](https://ci.appveyor.com/api/projects/status/ut2kjvfxq7ceny9x?svg=true)](https://ci.appveyor.com/project/smeierzubiesen/hmh) |
+|                |                                                                               Build Status                                                                               |
+|----------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| Project Status |               [![Build status](https://ci.appveyor.com/api/projects/status/ut2kjvfxq7ceny9x?svg=true)](https://ci.appveyor.com/project/smeierzubiesen/hmh)               |
 | branch:master  | [![Build status](https://ci.appveyor.com/api/projects/status/ut2kjvfxq7ceny9x/branch/master?svg=true)](https://ci.appveyor.com/project/smeierzubiesen/hmh/branch/master) |
 
 | Agile Board | Status | on | [Waffle.io][] |
