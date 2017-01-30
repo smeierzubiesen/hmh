@@ -1,13 +1,15 @@
 version: 1.0.{build}
 build:
   parallel: true
-  verbosity: minimal
+  verbosity: normal
+artifacts:
+- path: build\*.exe
+  name: handmade-hero
 deploy:
 - provider: GitHub
   auth_token:
     secure: hifcN93/wHdEWIaKpGuJz+M73qcBHaLa6ozBz1fKgporFBvnbZGOiCATSawgKdwX
-  artifact: hmh_x64.exe
-  draft: true
+  draft: false
   prerelease: true
   force_update: true
   on:
