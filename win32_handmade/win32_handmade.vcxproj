@@ -71,7 +71,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <CodeAnalysisRuleSet>MixedRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
     <OutDir>$(SolutionDir)build\$(PlatformShortName)\</OutDir>
     <EnableManagedIncrementalBuild>false</EnableManagedIncrementalBuild>
     <TargetName>$(SolutionName)-$(PlatformShortName)</TargetName>
@@ -82,17 +82,20 @@
     <OutDir>$(SolutionDir)build\$(PlatformShortName)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
     <EmbedManifest>false</EmbedManifest>
+    <CodeAnalysisRuleSet>MixedRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)build\$(PlatformShortName)\</OutDir>
     <TargetName>$(SolutionName)-$(PlatformShortName)</TargetName>
     <EmbedManifest>false</EmbedManifest>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)build\$(PlatformShortName)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
     <TargetName>$(SolutionName)-$(PlatformShortName)</TargetName>
     <EmbedManifest>false</EmbedManifest>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -100,20 +103,19 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <CompileAs>CompileAsCpp</CompileAs>
-      <EnablePREfast>true</EnablePREfast>
+      <EnablePREfast>false</EnablePREfast>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AssemblerOutput>All</AssemblerOutput>
-      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
-      <XMLDocumentationFileName>docs\</XMLDocumentationFileName>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
       <SuppressStartupBanner>false</SuppressStartupBanner>
     </ClCompile>
     <Link />
     <Link>
       <LinkStatus>true</LinkStatus>
+      <ShowProgress>LinkVerboseCLR</ShowProgress>
+      <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <Manifest>
       <SuppressStartupBanner>false</SuppressStartupBanner>
@@ -131,9 +133,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <OmitFramePointers>false</OmitFramePointers>
+      <AssemblerOutput>All</AssemblerOutput>
+      <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Manifest>
       <SuppressStartupBanner>false</SuppressStartupBanner>
@@ -144,6 +148,12 @@
     <ManifestResourceCompile>
       <ResourceOutputFileName>$(IntDir)$(TargetName)$(TargetExt).embed.manifest.res</ResourceOutputFileName>
     </ManifestResourceCompile>
+    <Link>
+      <ShowProgress>LinkVerboseCLR</ShowProgress>
+    </Link>
+    <Link>
+      <LinkStatus>true</LinkStatus>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -157,10 +167,17 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <EnablePREfast>true</EnablePREfast>
+      <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <ShowProgress>LinkVerboseCLR</ShowProgress>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <LinkStatus>true</LinkStatus>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
     <Manifest>
       <SuppressStartupBanner>false</SuppressStartupBanner>
@@ -172,6 +189,9 @@
     <ManifestResourceCompile>
       <ResourceOutputFileName>$(IntDir)$(TargetName)$(TargetExt).embed.manifest.res</ResourceOutputFileName>
     </ManifestResourceCompile>
+    <Xdcmake>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+    </Xdcmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -184,10 +204,19 @@
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <EnablePREfast>true</EnablePREfast>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <ShowProgress>LinkVerboseCLR</ShowProgress>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <LinkStatus>true</LinkStatus>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
     <Manifest>
       <SuppressStartupBanner>false</SuppressStartupBanner>
@@ -199,6 +228,9 @@
     <ManifestResourceCompile>
       <ResourceOutputFileName>$(IntDir)$(TargetName)$(TargetExt).embed.manifest.res</ResourceOutputFileName>
     </ManifestResourceCompile>
+    <Xdcmake>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+    </Xdcmake>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="win32_handmade.h" />

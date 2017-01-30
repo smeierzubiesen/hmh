@@ -43,5 +43,4 @@
 *.cache
 *.log
 
-build/
 *.suo
