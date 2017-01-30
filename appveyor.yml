@@ -8,7 +8,7 @@ platform:
 - x64
 build:
   parallel: true
-  verbosity: minimal
+  verbosity: quiet
 artifacts:
 - path: build\${platform}\hmh-${platform}.exe
   name: hmh-${platform}
