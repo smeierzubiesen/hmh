@@ -1,4 +1,4 @@
-version: 0.1.${build}.${platform}
+version: 0.1.{build}
 configuration: Release
 platform:
 - x86
@@ -7,14 +7,14 @@ build:
   parallel: true
   verbosity: minimal
 artifacts:
-- path: build\hmh${platform}.exe
-  name: handmadehero${platform}
+- path: build\${platform}\hmh-${platform}.exe
+  name: hmh-${platform}
 assembly_info:
   patch: true
   file: AssemblyInfo.*
-  assembly_version: "0.1.${build}.${platform}"
-  assembly_file_version: "${version}.${platform}"
-  assembly_informational_version: "${version}.${platform}"
+  assembly_version: "0.1.{build}"
+  assembly_file_version: "{version}"
+  assembly_informational_version: "${version}"
 deploy:
 - provider: GitHub
   auth_token:
