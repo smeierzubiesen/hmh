@@ -43,8 +43,5 @@
 *.cache
 *.log
 
-win32_handmade/Debug/
-win32_handmade/docs/
-win32_handmade/Release/
 build/
 *.suo
