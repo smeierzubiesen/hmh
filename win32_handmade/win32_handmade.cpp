@@ -14,5 +14,5 @@ $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 
 int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 	MessageBox(0, "This is Handmade Hero", "Handmade Hero v0.1", MB_OK | MB_ICONINFORMATION);
-	return 0;
+	return 1;
 }
