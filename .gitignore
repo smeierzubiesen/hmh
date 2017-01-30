@@ -45,11 +45,7 @@
 
 win32_handmade/Debug/
 win32_handmade/docs/
-build/*.exe
-build/*.pdb
-build/*.lastcodeanalysis*
-Release/
-*.iobj
-*.ipdb
+win32_handmade/Release/
+build/
 
 \.vs/hmh/v14/\.suo
