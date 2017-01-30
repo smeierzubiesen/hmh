@@ -1,4 +1,7 @@
 version: 0.1.{build}
+pull_requests:
+  do_not_increment_build_number: true
+skip_branch_with_pr: true
 configuration: Release
 platform:
 - x86
@@ -9,12 +12,12 @@ build:
 artifacts:
 - path: build\${platform}\hmh-${platform}.exe
   name: hmh-${platform}
-assembly_info:
-  patch: true
-  file: AssemblyInfo.*
-  assembly_version: "0.1.{build}"
-  assembly_file_version: "{version}"
-  assembly_informational_version: "${version}"
+#assembly_info:
+#  patch: true
+#  file: AssemblyInfo.*
+#  assembly_version: "0.1.{build}"
+#  assembly_file_version: "{version}"
+#  assembly_informational_version: "${version}"
 deploy:
 - provider: GitHub
   auth_token:
