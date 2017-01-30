@@ -14,7 +14,6 @@ artifacts:
   name: hmh-${platform}
 deploy:
 - provider: GitHub
-  tag: hmh-v$(appveyor_build_version)
   description: Handmade Hero v$(appveyor_build_version)
   auth_token:
     secure: hifcN93/wHdEWIaKpGuJz+M73qcBHaLa6ozBz1fKgporFBvnbZGOiCATSawgKdwX
