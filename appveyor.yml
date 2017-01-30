@@ -1,0 +1,14 @@
+version: 1.0.{build}
+build:
+  parallel: true
+  verbosity: minimal
+deploy:
+- provider: GitHub
+  auth_token:
+    secure: hifcN93/wHdEWIaKpGuJz+M73qcBHaLa6ozBz1fKgporFBvnbZGOiCATSawgKdwX
+  artifact: build\win32_handmade.exe
+  draft: true
+  prerelease: true
+  force_update: true
+  on:
+    branch: master

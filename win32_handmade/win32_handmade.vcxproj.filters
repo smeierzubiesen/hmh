@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Other Files">
-      <UniqueIdentifier>{5fb133a3-0607-4359-add4-01a156ecd30f}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="win32_handmade.h">
@@ -26,25 +23,5 @@
     <ClCompile Include="win32_handmade.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\_config.yml">
-      <Filter>Other Files</Filter>
-    </None>
-    <None Include="..\CHANGELOG.md">
-      <Filter>Other Files</Filter>
-    </None>
-    <None Include="..\README.md">
-      <Filter>Other Files</Filter>
-    </None>
-    <None Include="..\todo.md">
-      <Filter>Other Files</Filter>
-    </None>
-    <None Include="..\UNLICENSE">
-      <Filter>Other Files</Filter>
-    </None>
-    <None Include="..\404.md">
-      <Filter>Other Files</Filter>
-    </None>
   </ItemGroup>
 </Project>
