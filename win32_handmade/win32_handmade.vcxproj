@@ -72,11 +72,23 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <CodeAnalysisRuleSet>MixedRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <OutDir>$(SolutionDir)build\</OutDir>
+    <OutDir>$(SolutionDir)build\$(PlatformShortName)\</OutDir>
     <EnableManagedIncrementalBuild>false</EnableManagedIncrementalBuild>
+    <TargetName>$(SolutionName)-$(PlatformShortName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <TargetName>$(SolutionName)_x$(PlatformArchitecture)</TargetName>
+    <TargetName>$(SolutionName)-$(PlatformShortName)</TargetName>
+    <OutDir>$(SolutionDir)build\$(PlatformShortName)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)build\$(PlatformShortName)\</OutDir>
+    <TargetName>$(SolutionName)-$(PlatformShortName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)build\$(PlatformShortName)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <TargetName>$(SolutionName)-$(PlatformShortName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

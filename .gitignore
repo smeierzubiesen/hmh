@@ -49,3 +49,5 @@ build/*.exe
 build/*.pdb
 build/*.lastcodeanalysis*
 Release/
+*.iobj
+*.ipdb
