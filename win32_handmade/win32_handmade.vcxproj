@@ -75,14 +75,14 @@
     <OutDir>$(SolutionDir)build\$(PlatformShortName)\</OutDir>
     <EnableManagedIncrementalBuild>false</EnableManagedIncrementalBuild>
     <TargetName>$(SolutionName)-$(PlatformShortName)</TargetName>
-    <EmbedManifest>false</EmbedManifest>
+    <EmbedManifest>true</EmbedManifest>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>$(SolutionName)-$(PlatformShortName)</TargetName>
     <OutDir>$(SolutionDir)build\$(PlatformShortName)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
-    <EmbedManifest>false</EmbedManifest>
+    <EmbedManifest>true</EmbedManifest>
     <CodeAnalysisRuleSet>MixedRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
@@ -117,7 +117,6 @@
     </ClCompile>
     <Link />
     <Link>
-      <LinkStatus>true</LinkStatus>
       <ShowProgress>LinkVerboseCLR</ShowProgress>
       <TargetMachine>MachineX86</TargetMachine>
       <LargeAddressAware>false</LargeAddressAware>
@@ -125,11 +124,9 @@
       <GenerateMapFile>true</GenerateMapFile>
     </Link>
     <Manifest>
-      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
     </Manifest>
-    <Manifest>
-      <AssemblyIdentity>HandMadeHero</AssemblyIdentity>
-    </Manifest>
+    <Manifest />
     <ManifestResourceCompile>
       <ResourceOutputFileName>$(IntDir)$(TargetName)$(TargetExt).embed.manifest.res</ResourceOutputFileName>
     </ManifestResourceCompile>
@@ -147,11 +144,9 @@
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Manifest>
-      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
     </Manifest>
-    <Manifest>
-      <AssemblyIdentity>HandMadeHero</AssemblyIdentity>
-    </Manifest>
+    <Manifest />
     <ManifestResourceCompile>
       <ResourceOutputFileName>$(IntDir)$(TargetName)$(TargetExt).embed.manifest.res</ResourceOutputFileName>
     </ManifestResourceCompile>
@@ -159,7 +154,6 @@
       <ShowProgress>LinkVerboseCLR</ShowProgress>
     </Link>
     <Link>
-      <LinkStatus>true</LinkStatus>
       <LargeAddressAware>true</LargeAddressAware>
       <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
       <GenerateMapFile>true</GenerateMapFile>
