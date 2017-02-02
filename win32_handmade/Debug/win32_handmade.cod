@@ -9,12 +9,8 @@
 INCLUDELIB MSVCRTD
 INCLUDELIB OLDNAMES
 
-_DATA	SEGMENT
-?Operation@?9??MainWindowCallback@@YGJPAUHWND__@@IIJ@Z@4KA DD 0ff0062H ; `MainWindowCallback'::`10'::Operation
-_DATA	ENDS
 PUBLIC	_WinMain@16
-PUBLIC	?MainWindowCallback@@YGJPAUHWND__@@IIJ@Z	; MainWindowCallback
-PUBLIC	??_C@_08JPDHIBIK@WM_SIZE?6?$AA@			; `string'
+PUBLIC	?Win32MainWindowCallback@@YGJPAUHWND__@@IIJ@Z	; Win32MainWindowCallback
 PUBLIC	??_C@_0M@OGANANAC@WM_DESTROY?6?$AA@		; `string'
 PUBLIC	??_C@_09GGLKGCAE@WM_CLOSE?6?$AA@		; `string'
 PUBLIC	??_C@_08CIKHGLDE@WM_QUIT?6?$AA@			; `string'
@@ -24,16 +20,19 @@ PUBLIC	??_C@_0P@EDKCKOAO@hmhWindowClass?$AA@		; `string'
 PUBLIC	??_C@_0BD@JMDKAHFN@Handmade?5Hero?5v0?41?$AA@	; `string'
 PUBLIC	??_C@_0BG@KHEJAAGL@This?5is?5Handmade?5Hero?$AA@ ; `string'
 EXTRN	__imp__OutputDebugStringA@4:PROC
-EXTRN	__imp__PatBlt@24:PROC
+EXTRN	__imp__CreateCompatibleDC@4:PROC
+EXTRN	__imp__DeleteObject@4:PROC
+EXTRN	__imp__StretchDIBits@52:PROC
+EXTRN	__imp__CreateDIBSection@24:PROC
 EXTRN	__imp__GetMessageA@16:PROC
 EXTRN	__imp__TranslateMessage@4:PROC
 EXTRN	__imp__DispatchMessageA@4:PROC
 EXTRN	__imp__DefWindowProcA@16:PROC
-EXTRN	__imp__PostQuitMessage@4:PROC
 EXTRN	__imp__RegisterClassA@4:PROC
 EXTRN	__imp__CreateWindowExA@48:PROC
 EXTRN	__imp__BeginPaint@8:PROC
 EXTRN	__imp__EndPaint@8:PROC
+EXTRN	__imp__GetClientRect@8:PROC
 EXTRN	__imp__MessageBoxA@16:PROC
 EXTRN	@_RTC_CheckStackVars@8:PROC
 EXTRN	@__security_check_cookie@4:PROC
@@ -41,6 +40,15 @@ EXTRN	__RTC_CheckEsp:PROC
 EXTRN	__RTC_InitBase:PROC
 EXTRN	__RTC_Shutdown:PROC
 EXTRN	___security_cookie:DWORD
+_BSS	SEGMENT
+?Running@@3_NA DB 01H DUP (?)				; Running
+	ALIGN	4
+
+?BitmapInfo@@3UtagBITMAPINFO@@A DB 02cH DUP (?)		; BitmapInfo
+?BitmapMemory@@3PAXA DD 01H DUP (?)			; BitmapMemory
+?BitmapHandle@@3PAUHBITMAP__@@A DD 01H DUP (?)		; BitmapHandle
+?BitmapDeviceContext@@3PAUHDC__@@A DD 01H DUP (?)	; BitmapDeviceContext
+_BSS	ENDS
 ;	COMDAT rtc$TMZ
 rtc$TMZ	SEGMENT
 __RTC_Shutdown.rtc$TMZ DD FLAT:__RTC_Shutdown
@@ -82,378 +90,596 @@ CONST	ENDS
 CONST	SEGMENT
 ??_C@_0M@OGANANAC@WM_DESTROY?6?$AA@ DB 'WM_DESTROY', 0aH, 00H ; `string'
 CONST	ENDS
-;	COMDAT ??_C@_08JPDHIBIK@WM_SIZE?6?$AA@
-CONST	SEGMENT
-??_C@_08JPDHIBIK@WM_SIZE?6?$AA@ DB 'WM_SIZE', 0aH, 00H	; `string'
-CONST	ENDS
 ; Function compile flags: /Odtp /RTCsu /ZI
 ; File c:\users\mitoskalandiel\documents\visual studio 2015\projects\hmh\win32_handmade\win32_handmade.cpp
-;	COMDAT ?MainWindowCallback@@YGJPAUHWND__@@IIJ@Z
+;	COMDAT ?Win32MainWindowCallback@@YGJPAUHWND__@@IIJ@Z
 _TEXT	SEGMENT
-tv64 = -344						; size = 4
-_Height$1 = -144					; size = 4
-_Width$2 = -132						; size = 4
-_Y$3 = -120						; size = 4
-_X$4 = -108						; size = 4
-_DeviceContext$5 = -96					; size = 4
-_Paint$6 = -84						; size = 64
+tv64 = -392						; size = 4
+_Height$1 = -192					; size = 4
+_Width$2 = -180						; size = 4
+_Y$3 = -168						; size = 4
+_X$4 = -156						; size = 4
+_DeviceContext$5 = -144					; size = 4
+_Paint$6 = -132						; size = 64
+_Height$7 = -60						; size = 4
+_Width$8 = -48						; size = 4
+_ClientRect$9 = -36					; size = 16
 _Result$ = -12						; size = 4
 __$ArrayPad$ = -4					; size = 4
 _Window$ = 8						; size = 4
 _Message$ = 12						; size = 4
 _WParam$ = 16						; size = 4
 _LParam$ = 20						; size = 4
-?MainWindowCallback@@YGJPAUHWND__@@IIJ@Z PROC		; MainWindowCallback, COMDAT
+?Win32MainWindowCallback@@YGJPAUHWND__@@IIJ@Z PROC	; Win32MainWindowCallback, COMDAT
 
-; 16   : {
+; 49   : {
 
   00000	55		 push	 ebp
   00001	8b ec		 mov	 ebp, esp
-  00003	81 ec 58 01 00
-	00		 sub	 esp, 344		; 00000158H
+  00003	81 ec 88 01 00
+	00		 sub	 esp, 392		; 00000188H
   00009	53		 push	 ebx
   0000a	56		 push	 esi
   0000b	57		 push	 edi
-  0000c	8d bd a8 fe ff
-	ff		 lea	 edi, DWORD PTR [ebp-344]
-  00012	b9 56 00 00 00	 mov	 ecx, 86			; 00000056H
+  0000c	8d bd 78 fe ff
+	ff		 lea	 edi, DWORD PTR [ebp-392]
+  00012	b9 62 00 00 00	 mov	 ecx, 98			; 00000062H
   00017	b8 cc cc cc cc	 mov	 eax, -858993460		; ccccccccH
   0001c	f3 ab		 rep stosd
   0001e	a1 00 00 00 00	 mov	 eax, DWORD PTR ___security_cookie
   00023	33 c5		 xor	 eax, ebp
   00025	89 45 fc	 mov	 DWORD PTR __$ArrayPad$[ebp], eax
 
-; 17   : 	LRESULT Result = 0;
+; 50   : 	LRESULT Result = 0;
 
   00028	c7 45 f4 00 00
 	00 00		 mov	 DWORD PTR _Result$[ebp], 0
 
-; 18   : 	switch (Message) {
+; 51   : 	switch (Message) {
 
   0002f	8b 45 0c	 mov	 eax, DWORD PTR _Message$[ebp]
-  00032	89 85 a8 fe ff
+  00032	89 85 78 fe ff
 	ff		 mov	 DWORD PTR tv64[ebp], eax
-  00038	8b 8d a8 fe ff
+  00038	8b 8d 78 fe ff
 	ff		 mov	 ecx, DWORD PTR tv64[ebp]
   0003e	83 e9 02	 sub	 ecx, 2
-  00041	89 8d a8 fe ff
+  00041	89 8d 78 fe ff
 	ff		 mov	 DWORD PTR tv64[ebp], ecx
-  00047	83 bd a8 fe ff
+  00047	83 bd 78 fe ff
 	ff 1a		 cmp	 DWORD PTR tv64[ebp], 26	; 0000001aH
-  0004e	0f 87 5c 01 00
-	00		 ja	 $LN12@MainWindow
-  00054	8b 95 a8 fe ff
+  0004e	0f 87 69 01 00
+	00		 ja	 $LN10@Win32MainW
+  00054	8b 95 78 fe ff
 	ff		 mov	 edx, DWORD PTR tv64[ebp]
   0005a	0f b6 82 00 00
-	00 00		 movzx	 eax, BYTE PTR $LN14@MainWindow[edx]
+	00 00		 movzx	 eax, BYTE PTR $LN12@Win32MainW[edx]
   00061	ff 24 85 00 00
-	00 00		 jmp	 DWORD PTR $LN18@MainWindow[eax*4]
-$LN4@MainWindow:
+	00 00		 jmp	 DWORD PTR $LN17@Win32MainW[eax*4]
+$LN4@Win32MainW:
 
-; 19   : 		case WM_SIZE:
-; 20   : 		{
-; 21   : 			OutputDebugStringA("WM_SIZE\n");
+; 52   : 		case WM_SIZE:
+; 53   : 		{
+; 54   : 			RECT ClientRect;
+; 55   : 			GetClientRect(Window,&ClientRect);
 
   00068	8b f4		 mov	 esi, esp
-  0006a	68 00 00 00 00	 push	 OFFSET ??_C@_08JPDHIBIK@WM_SIZE?6?$AA@
-  0006f	ff 15 00 00 00
+  0006a	8d 45 dc	 lea	 eax, DWORD PTR _ClientRect$9[ebp]
+  0006d	50		 push	 eax
+  0006e	8b 4d 08	 mov	 ecx, DWORD PTR _Window$[ebp]
+  00071	51		 push	 ecx
+  00072	ff 15 00 00 00
+	00		 call	 DWORD PTR __imp__GetClientRect@8
+  00078	3b f4		 cmp	 esi, esp
+  0007a	e8 00 00 00 00	 call	 __RTC_CheckEsp
+
+; 56   : 			int Width = ClientRect.right - ClientRect.left;
+
+  0007f	8b 45 e4	 mov	 eax, DWORD PTR _ClientRect$9[ebp+8]
+  00082	2b 45 dc	 sub	 eax, DWORD PTR _ClientRect$9[ebp]
+  00085	89 45 d0	 mov	 DWORD PTR _Width$8[ebp], eax
+
+; 57   : 			int Height = ClientRect.bottom - ClientRect.top;
+
+  00088	8b 45 e8	 mov	 eax, DWORD PTR _ClientRect$9[ebp+12]
+  0008b	2b 45 e0	 sub	 eax, DWORD PTR _ClientRect$9[ebp+4]
+  0008e	89 45 c4	 mov	 DWORD PTR _Height$7[ebp], eax
+
+; 58   : 			Win32ResizeDIBSection(Width, Height);
+
+  00091	8b 45 c4	 mov	 eax, DWORD PTR _Height$7[ebp]
+  00094	50		 push	 eax
+  00095	8b 4d d0	 mov	 ecx, DWORD PTR _Width$8[ebp]
+  00098	51		 push	 ecx
+  00099	e8 00 00 00 00	 call	 ?Win32ResizeDIBSection@@YAXHH@Z ; Win32ResizeDIBSection
+  0009e	83 c4 08	 add	 esp, 8
+
+; 59   : 			//OutputDebugStringA("WM_SIZE\n");
+; 60   : 		} break;
+
+  000a1	e9 39 01 00 00	 jmp	 $LN2@Win32MainW
+$LN5@Win32MainW:
+
+; 61   : 		case WM_DESTROY:
+; 62   : 		{
+; 63   : 			Running = false;
+
+  000a6	c6 05 00 00 00
+	00 00		 mov	 BYTE PTR ?Running@@3_NA, 0
+
+; 64   : 			OutputDebugStringA("WM_DESTROY\n");
+
+  000ad	8b f4		 mov	 esi, esp
+  000af	68 00 00 00 00	 push	 OFFSET ??_C@_0M@OGANANAC@WM_DESTROY?6?$AA@
+  000b4	ff 15 00 00 00
 	00		 call	 DWORD PTR __imp__OutputDebugStringA@4
-  00075	3b f4		 cmp	 esi, esp
-  00077	e8 00 00 00 00	 call	 __RTC_CheckEsp
+  000ba	3b f4		 cmp	 esi, esp
+  000bc	e8 00 00 00 00	 call	 __RTC_CheckEsp
 
-; 22   : 		} break;
+; 65   : 		} break;
 
-  0007c	e9 51 01 00 00	 jmp	 $LN2@MainWindow
-$LN5@MainWindow:
+  000c1	e9 19 01 00 00	 jmp	 $LN2@Win32MainW
+$LN6@Win32MainW:
 
-; 23   : 		case WM_DESTROY:
-; 24   : 		{
-; 25   : 			OutputDebugStringA("WM_DESTROY\n");
+; 66   : 		case WM_CLOSE:
+; 67   : 		{
+; 68   : 			Running = false;
 
-  00081	8b f4		 mov	 esi, esp
-  00083	68 00 00 00 00	 push	 OFFSET ??_C@_0M@OGANANAC@WM_DESTROY?6?$AA@
-  00088	ff 15 00 00 00
+  000c6	c6 05 00 00 00
+	00 00		 mov	 BYTE PTR ?Running@@3_NA, 0
+
+; 69   : 			OutputDebugStringA("WM_CLOSE\n");
+
+  000cd	8b f4		 mov	 esi, esp
+  000cf	68 00 00 00 00	 push	 OFFSET ??_C@_09GGLKGCAE@WM_CLOSE?6?$AA@
+  000d4	ff 15 00 00 00
 	00		 call	 DWORD PTR __imp__OutputDebugStringA@4
-  0008e	3b f4		 cmp	 esi, esp
-  00090	e8 00 00 00 00	 call	 __RTC_CheckEsp
+  000da	3b f4		 cmp	 esi, esp
+  000dc	e8 00 00 00 00	 call	 __RTC_CheckEsp
 
-; 26   : 		} break;
+; 70   : 		} break;
 
-  00095	e9 38 01 00 00	 jmp	 $LN2@MainWindow
-$LN6@MainWindow:
+  000e1	e9 f9 00 00 00	 jmp	 $LN2@Win32MainW
+$LN7@Win32MainW:
 
-; 27   : 		case WM_CLOSE:
-; 28   : 		{
-; 29   : 			OutputDebugStringA("WM_CLOSE\n");
+; 71   : 		case WM_QUIT:
+; 72   : 		{
+; 73   : 			OutputDebugStringA("WM_QUIT\n");
 
-  0009a	8b f4		 mov	 esi, esp
-  0009c	68 00 00 00 00	 push	 OFFSET ??_C@_09GGLKGCAE@WM_CLOSE?6?$AA@
-  000a1	ff 15 00 00 00
+  000e6	8b f4		 mov	 esi, esp
+  000e8	68 00 00 00 00	 push	 OFFSET ??_C@_08CIKHGLDE@WM_QUIT?6?$AA@
+  000ed	ff 15 00 00 00
 	00		 call	 DWORD PTR __imp__OutputDebugStringA@4
-  000a7	3b f4		 cmp	 esi, esp
-  000a9	e8 00 00 00 00	 call	 __RTC_CheckEsp
+  000f3	3b f4		 cmp	 esi, esp
+  000f5	e8 00 00 00 00	 call	 __RTC_CheckEsp
 
-; 30   : 			PostQuitMessage(0);
+; 74   : 		} break;
 
-  000ae	8b f4		 mov	 esi, esp
-  000b0	6a 00		 push	 0
-  000b2	ff 15 00 00 00
-	00		 call	 DWORD PTR __imp__PostQuitMessage@4
-  000b8	3b f4		 cmp	 esi, esp
-  000ba	e8 00 00 00 00	 call	 __RTC_CheckEsp
+  000fa	e9 e0 00 00 00	 jmp	 $LN2@Win32MainW
+$LN8@Win32MainW:
 
-; 31   : 		} break;
+; 75   : 		case WM_ACTIVATEAPP:
+; 76   : 		{
+; 77   : 			OutputDebugStringA("WM_ACTIVATEAPP\n");
 
-  000bf	e9 0e 01 00 00	 jmp	 $LN2@MainWindow
-$LN7@MainWindow:
-
-; 32   : 		case WM_QUIT:
-; 33   : 		{
-; 34   : 			OutputDebugStringA("WM_QUIT\n");
-
-  000c4	8b f4		 mov	 esi, esp
-  000c6	68 00 00 00 00	 push	 OFFSET ??_C@_08CIKHGLDE@WM_QUIT?6?$AA@
-  000cb	ff 15 00 00 00
+  000ff	8b f4		 mov	 esi, esp
+  00101	68 00 00 00 00	 push	 OFFSET ??_C@_0BA@LIBNEJNG@WM_ACTIVATEAPP?6?$AA@
+  00106	ff 15 00 00 00
 	00		 call	 DWORD PTR __imp__OutputDebugStringA@4
-  000d1	3b f4		 cmp	 esi, esp
-  000d3	e8 00 00 00 00	 call	 __RTC_CheckEsp
+  0010c	3b f4		 cmp	 esi, esp
+  0010e	e8 00 00 00 00	 call	 __RTC_CheckEsp
 
-; 35   : 		} break;
+; 78   : 		} break;
 
-  000d8	e9 f5 00 00 00	 jmp	 $LN2@MainWindow
-$LN8@MainWindow:
+  00113	e9 c7 00 00 00	 jmp	 $LN2@Win32MainW
+$LN9@Win32MainW:
 
-; 36   : 		case WM_ACTIVATEAPP:
-; 37   : 		{
-; 38   : 			OutputDebugStringA("WM_ACTIVATEAPP\n");
+; 79   : 		case WM_PAINT:
+; 80   : 		{
+; 81   : 			PAINTSTRUCT Paint;
+; 82   : 			HDC DeviceContext = BeginPaint(Window, &Paint);
 
-  000dd	8b f4		 mov	 esi, esp
-  000df	68 00 00 00 00	 push	 OFFSET ??_C@_0BA@LIBNEJNG@WM_ACTIVATEAPP?6?$AA@
-  000e4	ff 15 00 00 00
-	00		 call	 DWORD PTR __imp__OutputDebugStringA@4
-  000ea	3b f4		 cmp	 esi, esp
-  000ec	e8 00 00 00 00	 call	 __RTC_CheckEsp
-
-; 39   : 		} break;
-
-  000f1	e9 dc 00 00 00	 jmp	 $LN2@MainWindow
-$LN9@MainWindow:
-
-; 40   : 		case WM_PAINT:
-; 41   : 		{
-; 42   : 			PAINTSTRUCT Paint;
-; 43   : 			HDC DeviceContext = BeginPaint(Window, &Paint);
-
-  000f6	8b f4		 mov	 esi, esp
-  000f8	8d 45 ac	 lea	 eax, DWORD PTR _Paint$6[ebp]
-  000fb	50		 push	 eax
-  000fc	8b 4d 08	 mov	 ecx, DWORD PTR _Window$[ebp]
-  000ff	51		 push	 ecx
-  00100	ff 15 00 00 00
+  00118	8b f4		 mov	 esi, esp
+  0011a	8d 85 7c ff ff
+	ff		 lea	 eax, DWORD PTR _Paint$6[ebp]
+  00120	50		 push	 eax
+  00121	8b 4d 08	 mov	 ecx, DWORD PTR _Window$[ebp]
+  00124	51		 push	 ecx
+  00125	ff 15 00 00 00
 	00		 call	 DWORD PTR __imp__BeginPaint@8
-  00106	3b f4		 cmp	 esi, esp
-  00108	e8 00 00 00 00	 call	 __RTC_CheckEsp
-  0010d	89 45 a0	 mov	 DWORD PTR _DeviceContext$5[ebp], eax
+  0012b	3b f4		 cmp	 esi, esp
+  0012d	e8 00 00 00 00	 call	 __RTC_CheckEsp
+  00132	89 85 70 ff ff
+	ff		 mov	 DWORD PTR _DeviceContext$5[ebp], eax
 
-; 44   : 			int X = Paint.rcPaint.left;
+; 83   : 			int X = Paint.rcPaint.left;
 
-  00110	8b 45 b4	 mov	 eax, DWORD PTR _Paint$6[ebp+8]
-  00113	89 45 94	 mov	 DWORD PTR _X$4[ebp], eax
+  00138	8b 45 84	 mov	 eax, DWORD PTR _Paint$6[ebp+8]
+  0013b	89 85 64 ff ff
+	ff		 mov	 DWORD PTR _X$4[ebp], eax
 
-; 45   : 			int Y = Paint.rcPaint.top;
+; 84   : 			int Y = Paint.rcPaint.top;
 
-  00116	8b 45 b8	 mov	 eax, DWORD PTR _Paint$6[ebp+12]
-  00119	89 45 88	 mov	 DWORD PTR _Y$3[ebp], eax
+  00141	8b 45 88	 mov	 eax, DWORD PTR _Paint$6[ebp+12]
+  00144	89 85 58 ff ff
+	ff		 mov	 DWORD PTR _Y$3[ebp], eax
 
-; 46   : 			int Width = Paint.rcPaint.right - Paint.rcPaint.left;
+; 85   : 			int Width = Paint.rcPaint.right - Paint.rcPaint.left;
 
-  0011c	8b 45 bc	 mov	 eax, DWORD PTR _Paint$6[ebp+16]
-  0011f	2b 45 b4	 sub	 eax, DWORD PTR _Paint$6[ebp+8]
-  00122	89 85 7c ff ff
+  0014a	8b 45 8c	 mov	 eax, DWORD PTR _Paint$6[ebp+16]
+  0014d	2b 45 84	 sub	 eax, DWORD PTR _Paint$6[ebp+8]
+  00150	89 85 4c ff ff
 	ff		 mov	 DWORD PTR _Width$2[ebp], eax
 
-; 47   : 			int Height = Paint.rcPaint.bottom - Paint.rcPaint.top;
+; 86   : 			int Height = Paint.rcPaint.bottom - Paint.rcPaint.top;
 
-  00128	8b 45 c0	 mov	 eax, DWORD PTR _Paint$6[ebp+20]
-  0012b	2b 45 b8	 sub	 eax, DWORD PTR _Paint$6[ebp+12]
-  0012e	89 85 70 ff ff
+  00156	8b 45 90	 mov	 eax, DWORD PTR _Paint$6[ebp+20]
+  00159	2b 45 88	 sub	 eax, DWORD PTR _Paint$6[ebp+12]
+  0015c	89 85 40 ff ff
 	ff		 mov	 DWORD PTR _Height$1[ebp], eax
 
-; 48   : 			static DWORD Operation = WHITENESS;
-; 49   : 			PatBlt(DeviceContext, X, Y, Width, Height, Operation);
+; 87   : 			Win32UpdateWindow(DeviceContext, X, Y, Width, Height);
 
-  00134	8b f4		 mov	 esi, esp
-  00136	a1 00 00 00 00	 mov	 eax, DWORD PTR ?Operation@?9??MainWindowCallback@@YGJPAUHWND__@@IIJ@Z@4KA
-  0013b	50		 push	 eax
-  0013c	8b 8d 70 ff ff
-	ff		 mov	 ecx, DWORD PTR _Height$1[ebp]
-  00142	51		 push	 ecx
-  00143	8b 95 7c ff ff
-	ff		 mov	 edx, DWORD PTR _Width$2[ebp]
-  00149	52		 push	 edx
-  0014a	8b 45 88	 mov	 eax, DWORD PTR _Y$3[ebp]
-  0014d	50		 push	 eax
-  0014e	8b 4d 94	 mov	 ecx, DWORD PTR _X$4[ebp]
-  00151	51		 push	 ecx
-  00152	8b 55 a0	 mov	 edx, DWORD PTR _DeviceContext$5[ebp]
-  00155	52		 push	 edx
-  00156	ff 15 00 00 00
-	00		 call	 DWORD PTR __imp__PatBlt@24
-  0015c	3b f4		 cmp	 esi, esp
-  0015e	e8 00 00 00 00	 call	 __RTC_CheckEsp
+  00162	8b 85 40 ff ff
+	ff		 mov	 eax, DWORD PTR _Height$1[ebp]
+  00168	50		 push	 eax
+  00169	8b 8d 4c ff ff
+	ff		 mov	 ecx, DWORD PTR _Width$2[ebp]
+  0016f	51		 push	 ecx
+  00170	8b 95 58 ff ff
+	ff		 mov	 edx, DWORD PTR _Y$3[ebp]
+  00176	52		 push	 edx
+  00177	8b 85 64 ff ff
+	ff		 mov	 eax, DWORD PTR _X$4[ebp]
+  0017d	50		 push	 eax
+  0017e	8b 8d 70 ff ff
+	ff		 mov	 ecx, DWORD PTR _DeviceContext$5[ebp]
+  00184	51		 push	 ecx
+  00185	e8 00 00 00 00	 call	 ?Win32UpdateWindow@@YAXPAUHDC__@@HHHH@Z ; Win32UpdateWindow
+  0018a	83 c4 14	 add	 esp, 20			; 00000014H
 
-; 50   : 			if (Operation == WHITENESS) {
+; 88   : 			EndPaint(Window,&Paint);
 
-  00163	81 3d 00 00 00
-	00 62 00 ff 00	 cmp	 DWORD PTR ?Operation@?9??MainWindowCallback@@YGJPAUHWND__@@IIJ@Z@4KA, 16711778 ; 00ff0062H
-  0016d	75 0c		 jne	 SHORT $LN10@MainWindow
-
-; 51   : 				Operation = BLACKNESS;
-
-  0016f	c7 05 00 00 00
-	00 42 00 00 00	 mov	 DWORD PTR ?Operation@?9??MainWindowCallback@@YGJPAUHWND__@@IIJ@Z@4KA, 66 ; 00000042H
-
-; 52   : 			}
-; 53   : 			else {
-
-  00179	eb 0a		 jmp	 SHORT $LN11@MainWindow
-$LN10@MainWindow:
-
-; 54   : 				Operation = WHITENESS;
-
-  0017b	c7 05 00 00 00
-	00 62 00 ff 00	 mov	 DWORD PTR ?Operation@?9??MainWindowCallback@@YGJPAUHWND__@@IIJ@Z@4KA, 16711778 ; 00ff0062H
-$LN11@MainWindow:
-
-; 55   : 			}
-; 56   : 
-; 57   : 			EndPaint(Window,&Paint);
-
-  00185	8b f4		 mov	 esi, esp
-  00187	8d 45 ac	 lea	 eax, DWORD PTR _Paint$6[ebp]
-  0018a	50		 push	 eax
-  0018b	8b 4d 08	 mov	 ecx, DWORD PTR _Window$[ebp]
-  0018e	51		 push	 ecx
-  0018f	ff 15 00 00 00
+  0018d	8b f4		 mov	 esi, esp
+  0018f	8d 85 7c ff ff
+	ff		 lea	 eax, DWORD PTR _Paint$6[ebp]
+  00195	50		 push	 eax
+  00196	8b 4d 08	 mov	 ecx, DWORD PTR _Window$[ebp]
+  00199	51		 push	 ecx
+  0019a	ff 15 00 00 00
 	00		 call	 DWORD PTR __imp__EndPaint@8
-  00195	3b f4		 cmp	 esi, esp
-  00197	e8 00 00 00 00	 call	 __RTC_CheckEsp
+  001a0	3b f4		 cmp	 esi, esp
+  001a2	e8 00 00 00 00	 call	 __RTC_CheckEsp
 
-; 58   : 			OutputDebugStringA("WM_PAINT\n");
+; 89   : 			OutputDebugStringA("WM_PAINT\n");
 
-  0019c	8b f4		 mov	 esi, esp
-  0019e	68 00 00 00 00	 push	 OFFSET ??_C@_09LMMFEECM@WM_PAINT?6?$AA@
-  001a3	ff 15 00 00 00
+  001a7	8b f4		 mov	 esi, esp
+  001a9	68 00 00 00 00	 push	 OFFSET ??_C@_09LMMFEECM@WM_PAINT?6?$AA@
+  001ae	ff 15 00 00 00
 	00		 call	 DWORD PTR __imp__OutputDebugStringA@4
-  001a9	3b f4		 cmp	 esi, esp
-  001ab	e8 00 00 00 00	 call	 __RTC_CheckEsp
-$LN12@MainWindow:
+  001b4	3b f4		 cmp	 esi, esp
+  001b6	e8 00 00 00 00	 call	 __RTC_CheckEsp
 
-; 59   : 		}
-; 60   : 		default:
-; 61   : 		{
-; 62   : 			Result = DefWindowProc(Window,Message,WParam,LParam);
+; 90   : 		} break;
 
-  001b0	8b f4		 mov	 esi, esp
-  001b2	8b 45 14	 mov	 eax, DWORD PTR _LParam$[ebp]
-  001b5	50		 push	 eax
-  001b6	8b 4d 10	 mov	 ecx, DWORD PTR _WParam$[ebp]
-  001b9	51		 push	 ecx
-  001ba	8b 55 0c	 mov	 edx, DWORD PTR _Message$[ebp]
-  001bd	52		 push	 edx
-  001be	8b 45 08	 mov	 eax, DWORD PTR _Window$[ebp]
-  001c1	50		 push	 eax
-  001c2	ff 15 00 00 00
+  001bb	eb 22		 jmp	 SHORT $LN2@Win32MainW
+$LN10@Win32MainW:
+
+; 91   : 		default:
+; 92   : 		{
+; 93   : 			Result = DefWindowProc(Window,Message,WParam,LParam);
+
+  001bd	8b f4		 mov	 esi, esp
+  001bf	8b 45 14	 mov	 eax, DWORD PTR _LParam$[ebp]
+  001c2	50		 push	 eax
+  001c3	8b 4d 10	 mov	 ecx, DWORD PTR _WParam$[ebp]
+  001c6	51		 push	 ecx
+  001c7	8b 55 0c	 mov	 edx, DWORD PTR _Message$[ebp]
+  001ca	52		 push	 edx
+  001cb	8b 45 08	 mov	 eax, DWORD PTR _Window$[ebp]
+  001ce	50		 push	 eax
+  001cf	ff 15 00 00 00
 	00		 call	 DWORD PTR __imp__DefWindowProcA@16
-  001c8	3b f4		 cmp	 esi, esp
-  001ca	e8 00 00 00 00	 call	 __RTC_CheckEsp
-  001cf	89 45 f4	 mov	 DWORD PTR _Result$[ebp], eax
-$LN2@MainWindow:
+  001d5	3b f4		 cmp	 esi, esp
+  001d7	e8 00 00 00 00	 call	 __RTC_CheckEsp
+  001dc	89 45 f4	 mov	 DWORD PTR _Result$[ebp], eax
+$LN2@Win32MainW:
 
-; 63   : 			//6OutputDebugStringA("default\n");
-; 64   : 		} break;
-; 65   : 	}
-; 66   : 	
-; 67   : 	return(Result);
+; 94   : 			//OutputDebugStringA("default\n");
+; 95   : 		} break;
+; 96   : 	}
+; 97   : 	
+; 98   : 	return(Result);
 
-  001d2	8b 45 f4	 mov	 eax, DWORD PTR _Result$[ebp]
+  001df	8b 45 f4	 mov	 eax, DWORD PTR _Result$[ebp]
 
-; 68   : }
+; 99   : }
 
-  001d5	52		 push	 edx
-  001d6	8b cd		 mov	 ecx, ebp
-  001d8	50		 push	 eax
-  001d9	8d 15 00 00 00
-	00		 lea	 edx, DWORD PTR $LN17@MainWindow
-  001df	e8 00 00 00 00	 call	 @_RTC_CheckStackVars@8
-  001e4	58		 pop	 eax
-  001e5	5a		 pop	 edx
-  001e6	5f		 pop	 edi
-  001e7	5e		 pop	 esi
-  001e8	5b		 pop	 ebx
-  001e9	8b 4d fc	 mov	 ecx, DWORD PTR __$ArrayPad$[ebp]
-  001ec	33 cd		 xor	 ecx, ebp
-  001ee	e8 00 00 00 00	 call	 @__security_check_cookie@4
-  001f3	81 c4 58 01 00
-	00		 add	 esp, 344		; 00000158H
-  001f9	3b ec		 cmp	 ebp, esp
-  001fb	e8 00 00 00 00	 call	 __RTC_CheckEsp
-  00200	8b e5		 mov	 esp, ebp
-  00202	5d		 pop	 ebp
-  00203	c2 10 00	 ret	 16			; 00000010H
-  00206	66 90		 npad	 2
-$LN17@MainWindow:
-  00208	01 00 00 00	 DD	 1
-  0020c	00 00 00 00	 DD	 $LN16@MainWindow
-$LN16@MainWindow:
-  00210	ac ff ff ff	 DD	 -84			; ffffffacH
-  00214	40 00 00 00	 DD	 64			; 00000040H
-  00218	00 00 00 00	 DD	 $LN15@MainWindow
-$LN15@MainWindow:
-  0021c	50		 DB	 80			; 00000050H
-  0021d	61		 DB	 97			; 00000061H
-  0021e	69		 DB	 105			; 00000069H
-  0021f	6e		 DB	 110			; 0000006eH
-  00220	74		 DB	 116			; 00000074H
-  00221	00		 DB	 0
-  00222	66 90		 npad	 2
-$LN18@MainWindow:
-  00224	00 00 00 00	 DD	 $LN5@MainWindow
-  00228	00 00 00 00	 DD	 $LN4@MainWindow
-  0022c	00 00 00 00	 DD	 $LN9@MainWindow
-  00230	00 00 00 00	 DD	 $LN6@MainWindow
-  00234	00 00 00 00	 DD	 $LN7@MainWindow
-  00238	00 00 00 00	 DD	 $LN8@MainWindow
-  0023c	00 00 00 00	 DD	 $LN12@MainWindow
-$LN14@MainWindow:
-  00240	00		 DB	 0
-  00241	06		 DB	 6
-  00242	06		 DB	 6
-  00243	01		 DB	 1
-  00244	06		 DB	 6
-  00245	06		 DB	 6
-  00246	06		 DB	 6
-  00247	06		 DB	 6
-  00248	06		 DB	 6
-  00249	06		 DB	 6
-  0024a	06		 DB	 6
-  0024b	06		 DB	 6
-  0024c	06		 DB	 6
-  0024d	02		 DB	 2
-  0024e	03		 DB	 3
-  0024f	06		 DB	 6
-  00250	04		 DB	 4
-  00251	06		 DB	 6
-  00252	06		 DB	 6
-  00253	06		 DB	 6
-  00254	06		 DB	 6
-  00255	06		 DB	 6
-  00256	06		 DB	 6
-  00257	06		 DB	 6
-  00258	06		 DB	 6
-  00259	06		 DB	 6
-  0025a	05		 DB	 5
-?MainWindowCallback@@YGJPAUHWND__@@IIJ@Z ENDP		; MainWindowCallback
+  001e2	52		 push	 edx
+  001e3	8b cd		 mov	 ecx, ebp
+  001e5	50		 push	 eax
+  001e6	8d 15 00 00 00
+	00		 lea	 edx, DWORD PTR $LN16@Win32MainW
+  001ec	e8 00 00 00 00	 call	 @_RTC_CheckStackVars@8
+  001f1	58		 pop	 eax
+  001f2	5a		 pop	 edx
+  001f3	5f		 pop	 edi
+  001f4	5e		 pop	 esi
+  001f5	5b		 pop	 ebx
+  001f6	8b 4d fc	 mov	 ecx, DWORD PTR __$ArrayPad$[ebp]
+  001f9	33 cd		 xor	 ecx, ebp
+  001fb	e8 00 00 00 00	 call	 @__security_check_cookie@4
+  00200	81 c4 88 01 00
+	00		 add	 esp, 392		; 00000188H
+  00206	3b ec		 cmp	 ebp, esp
+  00208	e8 00 00 00 00	 call	 __RTC_CheckEsp
+  0020d	8b e5		 mov	 esp, ebp
+  0020f	5d		 pop	 ebp
+  00210	c2 10 00	 ret	 16			; 00000010H
+  00213	90		 npad	 1
+$LN16@Win32MainW:
+  00214	02 00 00 00	 DD	 2
+  00218	00 00 00 00	 DD	 $LN15@Win32MainW
+$LN15@Win32MainW:
+  0021c	dc ff ff ff	 DD	 -36			; ffffffdcH
+  00220	10 00 00 00	 DD	 16			; 00000010H
+  00224	00 00 00 00	 DD	 $LN13@Win32MainW
+  00228	7c ff ff ff	 DD	 -132			; ffffff7cH
+  0022c	40 00 00 00	 DD	 64			; 00000040H
+  00230	00 00 00 00	 DD	 $LN14@Win32MainW
+$LN14@Win32MainW:
+  00234	50		 DB	 80			; 00000050H
+  00235	61		 DB	 97			; 00000061H
+  00236	69		 DB	 105			; 00000069H
+  00237	6e		 DB	 110			; 0000006eH
+  00238	74		 DB	 116			; 00000074H
+  00239	00		 DB	 0
+$LN13@Win32MainW:
+  0023a	43		 DB	 67			; 00000043H
+  0023b	6c		 DB	 108			; 0000006cH
+  0023c	69		 DB	 105			; 00000069H
+  0023d	65		 DB	 101			; 00000065H
+  0023e	6e		 DB	 110			; 0000006eH
+  0023f	74		 DB	 116			; 00000074H
+  00240	52		 DB	 82			; 00000052H
+  00241	65		 DB	 101			; 00000065H
+  00242	63		 DB	 99			; 00000063H
+  00243	74		 DB	 116			; 00000074H
+  00244	00		 DB	 0
+  00245	0f 1f 00	 npad	 3
+$LN17@Win32MainW:
+  00248	00 00 00 00	 DD	 $LN5@Win32MainW
+  0024c	00 00 00 00	 DD	 $LN4@Win32MainW
+  00250	00 00 00 00	 DD	 $LN9@Win32MainW
+  00254	00 00 00 00	 DD	 $LN6@Win32MainW
+  00258	00 00 00 00	 DD	 $LN7@Win32MainW
+  0025c	00 00 00 00	 DD	 $LN8@Win32MainW
+  00260	00 00 00 00	 DD	 $LN10@Win32MainW
+$LN12@Win32MainW:
+  00264	00		 DB	 0
+  00265	06		 DB	 6
+  00266	06		 DB	 6
+  00267	01		 DB	 1
+  00268	06		 DB	 6
+  00269	06		 DB	 6
+  0026a	06		 DB	 6
+  0026b	06		 DB	 6
+  0026c	06		 DB	 6
+  0026d	06		 DB	 6
+  0026e	06		 DB	 6
+  0026f	06		 DB	 6
+  00270	06		 DB	 6
+  00271	02		 DB	 2
+  00272	03		 DB	 3
+  00273	06		 DB	 6
+  00274	04		 DB	 4
+  00275	06		 DB	 6
+  00276	06		 DB	 6
+  00277	06		 DB	 6
+  00278	06		 DB	 6
+  00279	06		 DB	 6
+  0027a	06		 DB	 6
+  0027b	06		 DB	 6
+  0027c	06		 DB	 6
+  0027d	06		 DB	 6
+  0027e	05		 DB	 5
+?Win32MainWindowCallback@@YGJPAUHWND__@@IIJ@Z ENDP	; Win32MainWindowCallback
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu /ZI
+; File c:\users\mitoskalandiel\documents\visual studio 2015\projects\hmh\win32_handmade\win32_handmade.cpp
+;	COMDAT ?Win32UpdateWindow@@YAXPAUHDC__@@HHHH@Z
+_TEXT	SEGMENT
+_DeviceContext$ = 8					; size = 4
+_X$ = 12						; size = 4
+_Y$ = 16						; size = 4
+_Width$ = 20						; size = 4
+_Height$ = 24						; size = 4
+?Win32UpdateWindow@@YAXPAUHDC__@@HHHH@Z PROC		; Win32UpdateWindow, COMDAT
+
+; 41   : internal void Win32UpdateWindow(HDC DeviceContext, int X, int Y, int Width, int Height) {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	81 ec c0 00 00
+	00		 sub	 esp, 192		; 000000c0H
+  00009	53		 push	 ebx
+  0000a	56		 push	 esi
+  0000b	57		 push	 edi
+  0000c	8d bd 40 ff ff
+	ff		 lea	 edi, DWORD PTR [ebp-192]
+  00012	b9 30 00 00 00	 mov	 ecx, 48			; 00000030H
+  00017	b8 cc cc cc cc	 mov	 eax, -858993460		; ccccccccH
+  0001c	f3 ab		 rep stosd
+
+; 42   : 	StretchDIBits(DeviceContext, X, Y, Width, Height, X, Y, Width, Height,
+
+  0001e	8b f4		 mov	 esi, esp
+  00020	68 20 00 cc 00	 push	 13369376		; 00cc0020H
+  00025	6a 00		 push	 0
+  00027	68 00 00 00 00	 push	 OFFSET ?BitmapInfo@@3UtagBITMAPINFO@@A
+  0002c	a1 00 00 00 00	 mov	 eax, DWORD PTR ?BitmapMemory@@3PAXA
+  00031	50		 push	 eax
+  00032	8b 4d 18	 mov	 ecx, DWORD PTR _Height$[ebp]
+  00035	51		 push	 ecx
+  00036	8b 55 14	 mov	 edx, DWORD PTR _Width$[ebp]
+  00039	52		 push	 edx
+  0003a	8b 45 10	 mov	 eax, DWORD PTR _Y$[ebp]
+  0003d	50		 push	 eax
+  0003e	8b 4d 0c	 mov	 ecx, DWORD PTR _X$[ebp]
+  00041	51		 push	 ecx
+  00042	8b 55 18	 mov	 edx, DWORD PTR _Height$[ebp]
+  00045	52		 push	 edx
+  00046	8b 45 14	 mov	 eax, DWORD PTR _Width$[ebp]
+  00049	50		 push	 eax
+  0004a	8b 4d 10	 mov	 ecx, DWORD PTR _Y$[ebp]
+  0004d	51		 push	 ecx
+  0004e	8b 55 0c	 mov	 edx, DWORD PTR _X$[ebp]
+  00051	52		 push	 edx
+  00052	8b 45 08	 mov	 eax, DWORD PTR _DeviceContext$[ebp]
+  00055	50		 push	 eax
+  00056	ff 15 00 00 00
+	00		 call	 DWORD PTR __imp__StretchDIBits@52
+  0005c	3b f4		 cmp	 esi, esp
+  0005e	e8 00 00 00 00	 call	 __RTC_CheckEsp
+
+; 43   : 		BitmapMemory,
+; 44   : 		&BitmapInfo,
+; 45   : 		DIB_RGB_COLORS,	SRCCOPY);
+; 46   : }
+
+  00063	5f		 pop	 edi
+  00064	5e		 pop	 esi
+  00065	5b		 pop	 ebx
+  00066	81 c4 c0 00 00
+	00		 add	 esp, 192		; 000000c0H
+  0006c	3b ec		 cmp	 ebp, esp
+  0006e	e8 00 00 00 00	 call	 __RTC_CheckEsp
+  00073	8b e5		 mov	 esp, ebp
+  00075	5d		 pop	 ebp
+  00076	c3		 ret	 0
+?Win32UpdateWindow@@YAXPAUHDC__@@HHHH@Z ENDP		; Win32UpdateWindow
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu /ZI
+; File c:\users\mitoskalandiel\documents\visual studio 2015\projects\hmh\win32_handmade\win32_handmade.cpp
+;	COMDAT ?Win32ResizeDIBSection@@YAXHH@Z
+_TEXT	SEGMENT
+_Width$ = 8						; size = 4
+_Height$ = 12						; size = 4
+?Win32ResizeDIBSection@@YAXHH@Z PROC			; Win32ResizeDIBSection, COMDAT
+
+; 21   : internal void Win32ResizeDIBSection(int Width, int Height) {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	81 ec c0 00 00
+	00		 sub	 esp, 192		; 000000c0H
+  00009	53		 push	 ebx
+  0000a	56		 push	 esi
+  0000b	57		 push	 edi
+  0000c	8d bd 40 ff ff
+	ff		 lea	 edi, DWORD PTR [ebp-192]
+  00012	b9 30 00 00 00	 mov	 ecx, 48			; 00000030H
+  00017	b8 cc cc cc cc	 mov	 eax, -858993460		; ccccccccH
+  0001c	f3 ab		 rep stosd
+
+; 22   : 	
+; 23   : 	if (BitmapHandle) {
+
+  0001e	83 3d 00 00 00
+	00 00		 cmp	 DWORD PTR ?BitmapHandle@@3PAUHBITMAP__@@A, 0
+  00025	74 17		 je	 SHORT $LN2@Win32Resiz
+
+; 24   : 		DeleteObject(BitmapHandle);
+
+  00027	8b f4		 mov	 esi, esp
+  00029	a1 00 00 00 00	 mov	 eax, DWORD PTR ?BitmapHandle@@3PAUHBITMAP__@@A
+  0002e	50		 push	 eax
+  0002f	ff 15 00 00 00
+	00		 call	 DWORD PTR __imp__DeleteObject@4
+  00035	3b f4		 cmp	 esi, esp
+  00037	e8 00 00 00 00	 call	 __RTC_CheckEsp
+
+; 25   : 	}
+; 26   : 	else {
+
+  0003c	eb 16		 jmp	 SHORT $LN3@Win32Resiz
+$LN2@Win32Resiz:
+
+; 27   : 		BitmapDeviceContext = CreateCompatibleDC(0);
+
+  0003e	8b f4		 mov	 esi, esp
+  00040	6a 00		 push	 0
+  00042	ff 15 00 00 00
+	00		 call	 DWORD PTR __imp__CreateCompatibleDC@4
+  00048	3b f4		 cmp	 esi, esp
+  0004a	e8 00 00 00 00	 call	 __RTC_CheckEsp
+  0004f	a3 00 00 00 00	 mov	 DWORD PTR ?BitmapDeviceContext@@3PAUHDC__@@A, eax
+$LN3@Win32Resiz:
+
+; 28   : 	}
+; 29   : 	
+; 30   : 	BitmapInfo.bmiHeader.biSize = sizeof(BitmapInfo.bmiHeader);
+
+  00054	c7 05 00 00 00
+	00 28 00 00 00	 mov	 DWORD PTR ?BitmapInfo@@3UtagBITMAPINFO@@A, 40 ; 00000028H
+
+; 31   : 	BitmapInfo.bmiHeader.biWidth = Width;
+
+  0005e	8b 45 08	 mov	 eax, DWORD PTR _Width$[ebp]
+  00061	a3 04 00 00 00	 mov	 DWORD PTR ?BitmapInfo@@3UtagBITMAPINFO@@A+4, eax
+
+; 32   : 	BitmapInfo.bmiHeader.biHeight = Height;
+
+  00066	8b 45 0c	 mov	 eax, DWORD PTR _Height$[ebp]
+  00069	a3 08 00 00 00	 mov	 DWORD PTR ?BitmapInfo@@3UtagBITMAPINFO@@A+8, eax
+
+; 33   : 	BitmapInfo.bmiHeader.biPlanes = 1;
+
+  0006e	b8 01 00 00 00	 mov	 eax, 1
+  00073	66 a3 0c 00 00
+	00		 mov	 WORD PTR ?BitmapInfo@@3UtagBITMAPINFO@@A+12, ax
+
+; 34   : 	BitmapInfo.bmiHeader.biBitCount = 32;
+
+  00079	b8 20 00 00 00	 mov	 eax, 32			; 00000020H
+  0007e	66 a3 0e 00 00
+	00		 mov	 WORD PTR ?BitmapInfo@@3UtagBITMAPINFO@@A+14, ax
+
+; 35   : 	BitmapInfo.bmiHeader.biCompression = BI_RGB;
+
+  00084	c7 05 10 00 00
+	00 00 00 00 00	 mov	 DWORD PTR ?BitmapInfo@@3UtagBITMAPINFO@@A+16, 0
+
+; 36   : 	
+; 37   : 	BitmapHandle = CreateDIBSection(BitmapDeviceContext,&BitmapInfo,DIB_RGB_COLORS,&BitmapMemory,0,0);
+
+  0008e	8b f4		 mov	 esi, esp
+  00090	6a 00		 push	 0
+  00092	6a 00		 push	 0
+  00094	68 00 00 00 00	 push	 OFFSET ?BitmapMemory@@3PAXA
+  00099	6a 00		 push	 0
+  0009b	68 00 00 00 00	 push	 OFFSET ?BitmapInfo@@3UtagBITMAPINFO@@A
+  000a0	a1 00 00 00 00	 mov	 eax, DWORD PTR ?BitmapDeviceContext@@3PAUHDC__@@A
+  000a5	50		 push	 eax
+  000a6	ff 15 00 00 00
+	00		 call	 DWORD PTR __imp__CreateDIBSection@24
+  000ac	3b f4		 cmp	 esi, esp
+  000ae	e8 00 00 00 00	 call	 __RTC_CheckEsp
+  000b3	a3 00 00 00 00	 mov	 DWORD PTR ?BitmapHandle@@3PAUHBITMAP__@@A, eax
+
+; 38   : 
+; 39   : }
+
+  000b8	5f		 pop	 edi
+  000b9	5e		 pop	 esi
+  000ba	5b		 pop	 ebx
+  000bb	81 c4 c0 00 00
+	00		 add	 esp, 192		; 000000c0H
+  000c1	3b ec		 cmp	 ebp, esp
+  000c3	e8 00 00 00 00	 call	 __RTC_CheckEsp
+  000c8	8b e5		 mov	 esp, ebp
+  000ca	5d		 pop	 ebp
+  000cb	c3		 ret	 0
+?Win32ResizeDIBSection@@YAXHH@Z ENDP			; Win32ResizeDIBSection
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu /ZI
 ; File c:\users\mitoskalandiel\documents\visual studio 2015\projects\hmh\win32_handmade\win32_handmade.cpp
@@ -470,7 +696,7 @@ _CommandLine$ = 16					; size = 4
 _ShowCode$ = 20						; size = 4
 _WinMain@16 PROC					; COMDAT
 
-; 70   : int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int ShowCode) {
+; 101  : int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int ShowCode) {
 
   00000	55		 push	 ebp
   00001	8b ec		 mov	 ebp, esp
@@ -488,7 +714,7 @@ _WinMain@16 PROC					; COMDAT
   00023	33 c5		 xor	 eax, ebp
   00025	89 45 fc	 mov	 DWORD PTR __$ArrayPad$[ebp], eax
 
-; 71   : 	WNDCLASS WindowClass = {};
+; 102  : 	WNDCLASS WindowClass = {};
 
   00028	33 c0		 xor	 eax, eax
   0002a	89 45 d0	 mov	 DWORD PTR _WindowClass$[ebp], eax
@@ -502,29 +728,29 @@ _WinMain@16 PROC					; COMDAT
   00042	89 45 f0	 mov	 DWORD PTR _WindowClass$[ebp+32], eax
   00045	89 45 f4	 mov	 DWORD PTR _WindowClass$[ebp+36], eax
 
-; 72   : 	WindowClass.style = CS_HREDRAW|CS_VREDRAW|CS_OWNDC;
+; 103  : 	WindowClass.style = CS_HREDRAW|CS_VREDRAW|CS_OWNDC;
 
   00048	c7 45 d0 23 00
 	00 00		 mov	 DWORD PTR _WindowClass$[ebp], 35 ; 00000023H
 
-; 73   : 	WindowClass.lpfnWndProc = MainWindowCallback;
+; 104  : 	WindowClass.lpfnWndProc = Win32MainWindowCallback;
 
   0004f	c7 45 d4 00 00
-	00 00		 mov	 DWORD PTR _WindowClass$[ebp+4], OFFSET ?MainWindowCallback@@YGJPAUHWND__@@IIJ@Z ; MainWindowCallback
+	00 00		 mov	 DWORD PTR _WindowClass$[ebp+4], OFFSET ?Win32MainWindowCallback@@YGJPAUHWND__@@IIJ@Z ; Win32MainWindowCallback
 
-; 74   : 	WindowClass.hInstance = Instance;
+; 105  : 	WindowClass.hInstance = Instance;
 
   00056	8b 45 08	 mov	 eax, DWORD PTR _Instance$[ebp]
   00059	89 45 e0	 mov	 DWORD PTR _WindowClass$[ebp+16], eax
 
-; 75   : 	//WindowClass.hIcon = ;
-; 76   : 	//WindowClass.hCursor = ;
-; 77   : 	WindowClass.lpszClassName = "hmhWindowClass";
+; 106  : 	//WindowClass.hIcon = ;
+; 107  : 	//WindowClass.hCursor = ;
+; 108  : 	WindowClass.lpszClassName = "hmhWindowClass";
 
   0005c	c7 45 f4 00 00
 	00 00		 mov	 DWORD PTR _WindowClass$[ebp+36], OFFSET ??_C@_0P@EDKCKOAO@hmhWindowClass?$AA@
 
-; 78   : 	if (RegisterClass(&WindowClass))
+; 109  : 	if (RegisterClass(&WindowClass))
 
   00063	8b f4		 mov	 esi, esp
   00065	8d 45 d0	 lea	 eax, DWORD PTR _WindowClass$[ebp]
@@ -535,11 +761,11 @@ _WinMain@16 PROC					; COMDAT
   00071	e8 00 00 00 00	 call	 __RTC_CheckEsp
   00076	0f b7 c8	 movzx	 ecx, ax
   00079	85 c9		 test	 ecx, ecx
-  0007b	0f 84 94 00 00
-	00		 je	 $LN6@WinMain
+  0007b	0f 84 a6 00 00
+	00		 je	 $LN5@WinMain
 
-; 79   : 	{
-; 80   : 		HWND WindowHandle = CreateWindowEx(
+; 110  : 	{
+; 111  : 		HWND WindowHandle = CreateWindowEx(
 
   00081	8b f4		 mov	 esi, esp
   00083	6a 00		 push	 0
@@ -562,166 +788,177 @@ _WinMain@16 PROC					; COMDAT
   000b9	e8 00 00 00 00	 call	 __RTC_CheckEsp
   000be	89 45 c4	 mov	 DWORD PTR _WindowHandle$3[ebp], eax
 
-; 81   : 			0,
-; 82   : 			WindowClass.lpszClassName,
-; 83   : 			"Handmade Hero v0.1",
-; 84   : 			WS_OVERLAPPEDWINDOW|WS_VISIBLE,
-; 85   : 			CW_USEDEFAULT,
-; 86   : 			CW_USEDEFAULT,
-; 87   : 			CW_USEDEFAULT,
-; 88   : 			CW_USEDEFAULT,
-; 89   : 			0,
-; 90   : 			0,
-; 91   : 			Instance,
-; 92   : 			0);
-; 93   : 		if (WindowHandle)
+; 112  : 			0,
+; 113  : 			WindowClass.lpszClassName,
+; 114  : 			"Handmade Hero v0.1",
+; 115  : 			WS_OVERLAPPEDWINDOW|WS_VISIBLE,
+; 116  : 			CW_USEDEFAULT,
+; 117  : 			CW_USEDEFAULT,
+; 118  : 			CW_USEDEFAULT,
+; 119  : 			CW_USEDEFAULT,
+; 120  : 			0,
+; 121  : 			0,
+; 122  : 			Instance,
+; 123  : 			0);
+; 124  : 		if (WindowHandle)
 
   000c1	83 7d c4 00	 cmp	 DWORD PTR _WindowHandle$3[ebp], 0
-  000c5	74 4e		 je	 SHORT $LN6@WinMain
-$LN4@WinMain:
+  000c5	74 60		 je	 SHORT $LN5@WinMain
 
-; 94   : 		{
-; 95   : 			for (;;)
-; 96   : 			{
-; 97   : 				MSG Message;
-; 98   : 				BOOL MessageResult = GetMessage(&Message, 0, 0, 0);
+; 125  : 		{
+; 126  : 			Running = true;
 
-  000c7	8b f4		 mov	 esi, esp
-  000c9	6a 00		 push	 0
-  000cb	6a 00		 push	 0
-  000cd	6a 00		 push	 0
-  000cf	8d 45 a0	 lea	 eax, DWORD PTR _Message$2[ebp]
-  000d2	50		 push	 eax
-  000d3	ff 15 00 00 00
+  000c7	c6 05 00 00 00
+	00 01		 mov	 BYTE PTR ?Running@@3_NA, 1
+$LN2@WinMain:
+
+; 127  : 			while(Running)
+
+  000ce	0f b6 05 00 00
+	00 00		 movzx	 eax, BYTE PTR ?Running@@3_NA
+  000d5	85 c0		 test	 eax, eax
+  000d7	74 4e		 je	 SHORT $LN5@WinMain
+
+; 128  : 			{
+; 129  : 				MSG Message;
+; 130  : 				BOOL MessageResult = GetMessage(&Message, 0, 0, 0);
+
+  000d9	8b f4		 mov	 esi, esp
+  000db	6a 00		 push	 0
+  000dd	6a 00		 push	 0
+  000df	6a 00		 push	 0
+  000e1	8d 45 a0	 lea	 eax, DWORD PTR _Message$2[ebp]
+  000e4	50		 push	 eax
+  000e5	ff 15 00 00 00
 	00		 call	 DWORD PTR __imp__GetMessageA@16
-  000d9	3b f4		 cmp	 esi, esp
-  000db	e8 00 00 00 00	 call	 __RTC_CheckEsp
-  000e0	89 45 94	 mov	 DWORD PTR _MessageResult$1[ebp], eax
+  000eb	3b f4		 cmp	 esi, esp
+  000ed	e8 00 00 00 00	 call	 __RTC_CheckEsp
+  000f2	89 45 94	 mov	 DWORD PTR _MessageResult$1[ebp], eax
 
-; 99   : 				if (MessageResult > 0) {
+; 131  : 				if (MessageResult > 0) {
 
-  000e3	83 7d 94 00	 cmp	 DWORD PTR _MessageResult$1[ebp], 0
-  000e7	7e 28		 jle	 SHORT $LN9@WinMain
+  000f5	83 7d 94 00	 cmp	 DWORD PTR _MessageResult$1[ebp], 0
+  000f9	7e 28		 jle	 SHORT $LN8@WinMain
 
-; 100  : 					TranslateMessage(&Message);
+; 132  : 					TranslateMessage(&Message);
 
-  000e9	8b f4		 mov	 esi, esp
-  000eb	8d 45 a0	 lea	 eax, DWORD PTR _Message$2[ebp]
-  000ee	50		 push	 eax
-  000ef	ff 15 00 00 00
+  000fb	8b f4		 mov	 esi, esp
+  000fd	8d 45 a0	 lea	 eax, DWORD PTR _Message$2[ebp]
+  00100	50		 push	 eax
+  00101	ff 15 00 00 00
 	00		 call	 DWORD PTR __imp__TranslateMessage@4
-  000f5	3b f4		 cmp	 esi, esp
-  000f7	e8 00 00 00 00	 call	 __RTC_CheckEsp
+  00107	3b f4		 cmp	 esi, esp
+  00109	e8 00 00 00 00	 call	 __RTC_CheckEsp
 
-; 101  : 					DispatchMessage(&Message);
+; 133  : 					DispatchMessage(&Message);
 
-  000fc	8b f4		 mov	 esi, esp
-  000fe	8d 45 a0	 lea	 eax, DWORD PTR _Message$2[ebp]
-  00101	50		 push	 eax
-  00102	ff 15 00 00 00
+  0010e	8b f4		 mov	 esi, esp
+  00110	8d 45 a0	 lea	 eax, DWORD PTR _Message$2[ebp]
+  00113	50		 push	 eax
+  00114	ff 15 00 00 00
 	00		 call	 DWORD PTR __imp__DispatchMessageA@4
-  00108	3b f4		 cmp	 esi, esp
-  0010a	e8 00 00 00 00	 call	 __RTC_CheckEsp
+  0011a	3b f4		 cmp	 esi, esp
+  0011c	e8 00 00 00 00	 call	 __RTC_CheckEsp
 
-; 102  : 				}
-; 103  : 				else {
+; 134  : 				}
+; 135  : 				else {
 
-  0010f	eb 02		 jmp	 SHORT $LN10@WinMain
+  00121	eb 02		 jmp	 SHORT $LN9@WinMain
+$LN8@WinMain:
+
+; 136  : 					break;
+
+  00123	eb 02		 jmp	 SHORT $LN5@WinMain
 $LN9@WinMain:
 
-; 104  : 					break;
+; 137  : 				}
+; 138  : 			}
 
-  00111	eb 02		 jmp	 SHORT $LN6@WinMain
-$LN10@WinMain:
+  00125	eb a7		 jmp	 SHORT $LN2@WinMain
+$LN5@WinMain:
 
-; 105  : 				}
-; 106  : 			}
+; 139  : 			
+; 140  : 		}
+; 141  : 		else
+; 142  : 		{
+; 143  : 			//TODO(smzb): Log this event
+; 144  : 		}
+; 145  : 	}
+; 146  : 	else {
+; 147  : 		//TODO(smzb): log this event
+; 148  : 	}
+; 149  : 	MessageBox(0, "This is Handmade Hero", "Handmade Hero v0.1", MB_OK | MB_ICONINFORMATION);
 
-  00113	eb b2		 jmp	 SHORT $LN4@WinMain
-$LN6@WinMain:
-
-; 107  : 			
-; 108  : 		}
-; 109  : 		else
-; 110  : 		{
-; 111  : 			//TODO(smzb): Log this event
-; 112  : 		}
-; 113  : 	}
-; 114  : 	else {
-; 115  : 		//TODO(smzb): log this event
-; 116  : 	}
-; 117  : 	MessageBox(0, "This is Handmade Hero", "Handmade Hero v0.1", MB_OK | MB_ICONINFORMATION);
-
-  00115	8b f4		 mov	 esi, esp
-  00117	6a 40		 push	 64			; 00000040H
-  00119	68 00 00 00 00	 push	 OFFSET ??_C@_0BD@JMDKAHFN@Handmade?5Hero?5v0?41?$AA@
-  0011e	68 00 00 00 00	 push	 OFFSET ??_C@_0BG@KHEJAAGL@This?5is?5Handmade?5Hero?$AA@
-  00123	6a 00		 push	 0
-  00125	ff 15 00 00 00
+  00127	8b f4		 mov	 esi, esp
+  00129	6a 40		 push	 64			; 00000040H
+  0012b	68 00 00 00 00	 push	 OFFSET ??_C@_0BD@JMDKAHFN@Handmade?5Hero?5v0?41?$AA@
+  00130	68 00 00 00 00	 push	 OFFSET ??_C@_0BG@KHEJAAGL@This?5is?5Handmade?5Hero?$AA@
+  00135	6a 00		 push	 0
+  00137	ff 15 00 00 00
 	00		 call	 DWORD PTR __imp__MessageBoxA@16
-  0012b	3b f4		 cmp	 esi, esp
-  0012d	e8 00 00 00 00	 call	 __RTC_CheckEsp
+  0013d	3b f4		 cmp	 esi, esp
+  0013f	e8 00 00 00 00	 call	 __RTC_CheckEsp
 
-; 118  : 	return 0;
+; 150  : 	return 0;
 
-  00132	33 c0		 xor	 eax, eax
+  00144	33 c0		 xor	 eax, eax
 
-; 119  : }
+; 151  : }
 
-  00134	52		 push	 edx
-  00135	8b cd		 mov	 ecx, ebp
-  00137	50		 push	 eax
-  00138	8d 15 00 00 00
-	00		 lea	 edx, DWORD PTR $LN15@WinMain
-  0013e	e8 00 00 00 00	 call	 @_RTC_CheckStackVars@8
-  00143	58		 pop	 eax
-  00144	5a		 pop	 edx
-  00145	5f		 pop	 edi
-  00146	5e		 pop	 esi
-  00147	5b		 pop	 ebx
-  00148	8b 4d fc	 mov	 ecx, DWORD PTR __$ArrayPad$[ebp]
-  0014b	33 cd		 xor	 ecx, ebp
-  0014d	e8 00 00 00 00	 call	 @__security_check_cookie@4
-  00152	81 c4 30 01 00
+  00146	52		 push	 edx
+  00147	8b cd		 mov	 ecx, ebp
+  00149	50		 push	 eax
+  0014a	8d 15 00 00 00
+	00		 lea	 edx, DWORD PTR $LN14@WinMain
+  00150	e8 00 00 00 00	 call	 @_RTC_CheckStackVars@8
+  00155	58		 pop	 eax
+  00156	5a		 pop	 edx
+  00157	5f		 pop	 edi
+  00158	5e		 pop	 esi
+  00159	5b		 pop	 ebx
+  0015a	8b 4d fc	 mov	 ecx, DWORD PTR __$ArrayPad$[ebp]
+  0015d	33 cd		 xor	 ecx, ebp
+  0015f	e8 00 00 00 00	 call	 @__security_check_cookie@4
+  00164	81 c4 30 01 00
 	00		 add	 esp, 304		; 00000130H
-  00158	3b ec		 cmp	 ebp, esp
-  0015a	e8 00 00 00 00	 call	 __RTC_CheckEsp
-  0015f	8b e5		 mov	 esp, ebp
-  00161	5d		 pop	 ebp
-  00162	c2 10 00	 ret	 16			; 00000010H
-  00165	0f 1f 00	 npad	 3
-$LN15@WinMain:
-  00168	02 00 00 00	 DD	 2
-  0016c	00 00 00 00	 DD	 $LN14@WinMain
+  0016a	3b ec		 cmp	 ebp, esp
+  0016c	e8 00 00 00 00	 call	 __RTC_CheckEsp
+  00171	8b e5		 mov	 esp, ebp
+  00173	5d		 pop	 ebp
+  00174	c2 10 00	 ret	 16			; 00000010H
+  00177	90		 npad	 1
 $LN14@WinMain:
-  00170	d0 ff ff ff	 DD	 -48			; ffffffd0H
-  00174	28 00 00 00	 DD	 40			; 00000028H
-  00178	00 00 00 00	 DD	 $LN12@WinMain
-  0017c	a0 ff ff ff	 DD	 -96			; ffffffa0H
-  00180	1c 00 00 00	 DD	 28			; 0000001cH
-  00184	00 00 00 00	 DD	 $LN13@WinMain
+  00178	02 00 00 00	 DD	 2
+  0017c	00 00 00 00	 DD	 $LN13@WinMain
 $LN13@WinMain:
-  00188	4d		 DB	 77			; 0000004dH
-  00189	65		 DB	 101			; 00000065H
-  0018a	73		 DB	 115			; 00000073H
-  0018b	73		 DB	 115			; 00000073H
-  0018c	61		 DB	 97			; 00000061H
-  0018d	67		 DB	 103			; 00000067H
-  0018e	65		 DB	 101			; 00000065H
-  0018f	00		 DB	 0
+  00180	d0 ff ff ff	 DD	 -48			; ffffffd0H
+  00184	28 00 00 00	 DD	 40			; 00000028H
+  00188	00 00 00 00	 DD	 $LN11@WinMain
+  0018c	a0 ff ff ff	 DD	 -96			; ffffffa0H
+  00190	1c 00 00 00	 DD	 28			; 0000001cH
+  00194	00 00 00 00	 DD	 $LN12@WinMain
 $LN12@WinMain:
-  00190	57		 DB	 87			; 00000057H
-  00191	69		 DB	 105			; 00000069H
-  00192	6e		 DB	 110			; 0000006eH
-  00193	64		 DB	 100			; 00000064H
-  00194	6f		 DB	 111			; 0000006fH
-  00195	77		 DB	 119			; 00000077H
-  00196	43		 DB	 67			; 00000043H
-  00197	6c		 DB	 108			; 0000006cH
-  00198	61		 DB	 97			; 00000061H
-  00199	73		 DB	 115			; 00000073H
+  00198	4d		 DB	 77			; 0000004dH
+  00199	65		 DB	 101			; 00000065H
   0019a	73		 DB	 115			; 00000073H
-  0019b	00		 DB	 0
+  0019b	73		 DB	 115			; 00000073H
+  0019c	61		 DB	 97			; 00000061H
+  0019d	67		 DB	 103			; 00000067H
+  0019e	65		 DB	 101			; 00000065H
+  0019f	00		 DB	 0
+$LN11@WinMain:
+  001a0	57		 DB	 87			; 00000057H
+  001a1	69		 DB	 105			; 00000069H
+  001a2	6e		 DB	 110			; 0000006eH
+  001a3	64		 DB	 100			; 00000064H
+  001a4	6f		 DB	 111			; 0000006fH
+  001a5	77		 DB	 119			; 00000077H
+  001a6	43		 DB	 67			; 00000043H
+  001a7	6c		 DB	 108			; 0000006cH
+  001a8	61		 DB	 97			; 00000061H
+  001a9	73		 DB	 115			; 00000073H
+  001aa	73		 DB	 115			; 00000073H
+  001ab	00		 DB	 0
 _WinMain@16 ENDP
 _TEXT	ENDS
 END
