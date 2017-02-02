@@ -27,6 +27,12 @@ LRESULT CALLBACK MainWindowCallback(HWND Window, UINT Message, WPARAM WParam, LP
 		case WM_CLOSE:
 		{
 			OutputDebugStringA("WM_CLOSE\n");
+			//PostQuitMessage(0);
+			//TODO(smzb): this is probably not the way to do it, but it works.
+		} break;
+		case WM_QUIT:
+		{
+			OutputDebugStringA("WM_QUIT\n");
 		} break;
 		case WM_ACTIVATEAPP:
 		{
@@ -55,7 +61,7 @@ LRESULT CALLBACK MainWindowCallback(HWND Window, UINT Message, WPARAM WParam, LP
 		default:
 		{
 			Result = DefWindowProc(Window,Message,WParam,LParam);
-			//6OutputDebugStringA("default\n");
+			//OutputDebugStringA("default\n");
 		} break;
 	}
 	
@@ -69,8 +75,6 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 	WindowClass.hInstance = Instance;
 	//WindowClass.hIcon = ;
 	//WindowClass.hCursor = ;
-	//WindowClass.hbrBackground = ;
-	//WindowClass.lpszMenuName = ;
 	WindowClass.lpszClassName = "hmhWindowClass";
 	if (RegisterClass(&WindowClass))
 	{
@@ -111,6 +115,6 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 	else {
 		//TODO(smzb): log this event
 	}
-	//MessageBox(0, "This is Handmade Hero", "Handmade Hero v0.1", MB_OK | MB_ICONINFORMATION);
+	MessageBox(0, "This is Handmade Hero", "Handmade Hero v0.1", MB_OK | MB_ICONINFORMATION);
 	return 0;
 }
