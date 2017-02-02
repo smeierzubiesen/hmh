@@ -14,11 +14,32 @@ $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 #include "win32_handmade.h"
 
 global_variable bool Running;
+global_variable bool Debug = 0;
 global_variable BITMAPINFO BitmapInfo;
 global_variable void *BitmapMemory;
 
+global_variable int BytesPerPixel = 4;
 global_variable int BitmapWidth;
 global_variable int BitmapHeight;
+
+internal void Win32RenderGradient(int XOffset, int YOffset) {
+	int Pitch = BitmapWidth*BytesPerPixel;
+	uint8 *Row = (uint8 *)BitmapMemory;
+	for (int Y = 0; Y < BitmapHeight; ++Y) {
+		uint8 *Pixel = (uint8 *)Row;
+		for (int X = 0; X < BitmapWidth; ++X) {
+			*Pixel = (uint8)(Y + YOffset);
+			++Pixel;
+			*Pixel = XOffset * YOffset;
+			++Pixel;
+			*Pixel = (uint8)(X + XOffset);
+			++Pixel;
+			*Pixel = 0;
+			++Pixel;
+		}
+		Row += Pitch;
+	}
+}
 
 internal void Win32ResizeDIBSection(int Width, int Height) {
 	if (BitmapMemory) {
@@ -33,26 +54,10 @@ internal void Win32ResizeDIBSection(int Width, int Height) {
 	BitmapInfo.bmiHeader.biBitCount = 32;
 	BitmapInfo.bmiHeader.biCompression = BI_RGB;
 
-	int BytesPerPixel = 4;
-	int Pitch = Width*BytesPerPixel;
 	int BitmapMemorySize = (BitmapWidth*BitmapHeight)*BytesPerPixel;
 	BitmapMemory = VirtualAlloc(0, BitmapMemorySize, MEM_COMMIT, PAGE_READWRITE);
 
-	uint8 *Row = (uint8 *)BitmapMemory;
-	for (int Y = 0; Y < BitmapHeight; ++Y) {
-		uint8 *Pixel = (uint8 *)Row;
-		for (int X = 0; X < BitmapWidth; ++X) {
-			*Pixel = 255;
-			++Pixel;
-			*Pixel = 0;
-			++Pixel;
-			*Pixel = 0;
-			++Pixel;
-			*Pixel = 0;
-			++Pixel;
-		}
-		Row += Pitch;
-	}
+	Win32RenderGradient(0, 0);
 }
 
 internal void Win32UpdateWindow(HDC DeviceContext, RECT *WindowRect, int X, int Y, int Width, int Height) {
@@ -72,25 +77,25 @@ LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPARAM WPara
 			int Width = ClientRect.right - ClientRect.left;
 			int Height = ClientRect.bottom - ClientRect.top;
 			Win32ResizeDIBSection(Width, Height);
-			//OutputDebugStringA("WM_SIZE\n");
+			if (Debug) { OutputDebugStringA("WM_SIZE\n"); }
 		} break;
 		case WM_DESTROY:
 		{
 			Running = false;
-			OutputDebugStringA("WM_DESTROY\n");
+			if (Debug) { OutputDebugStringA("WM_DESTROY\n"); }
 		} break;
 		case WM_CLOSE:
 		{
 			Running = false;
-			OutputDebugStringA("WM_CLOSE\n");
+			if (Debug) { OutputDebugStringA("WM_CLOSE\n"); }
 		} break;
 		case WM_QUIT:
 		{
-			OutputDebugStringA("WM_QUIT\n");
+			if (Debug) { OutputDebugStringA("WM_QUIT\n"); }
 		} break;
 		case WM_ACTIVATEAPP:
 		{
-			OutputDebugStringA("WM_ACTIVATEAPP\n");
+			if (Debug) { OutputDebugStringA("WM_ACTIVATEAPP\n"); }
 		} break;
 		case WM_PAINT:
 		{
@@ -104,7 +109,7 @@ LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPARAM WPara
 			GetClientRect(Window, &ClientRect);
 			Win32UpdateWindow(DeviceContext, &ClientRect, X, Y, Width, Height);
 			EndPaint(Window,&Paint);
-			OutputDebugStringA("WM_PAINT\n");
+			if (Debug) { OutputDebugStringA("WM_PAINT\n"); }
 		} break;
 		default:
 		{
@@ -164,6 +169,6 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 	else {
 		//TODO(smzb): log this event
 	}
-	MessageBox(0, "This is Handmade Hero", "Handmade Hero v0.1", MB_OK | MB_ICONINFORMATION);
+	if (Debug) { MessageBox(0, "This is Handmade Hero", "Handmade Hero v0.1", MB_OK | MB_ICONINFORMATION); }
 	return 0;
 }
