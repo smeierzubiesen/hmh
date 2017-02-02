@@ -26,6 +26,12 @@ This is my take on and progress of the above mentioned (lol)
 
 [Changelog](/hmh/changelog.md)
 <pre>this is not working yet</pre>
+ - 02/02/2017 : Day 4
+  - We are drawing into the window.
+ - 01//2/2017 : Day 3
+  - We have created a backbuffer in which we can now paint.
+ - 30/01/2017 : Day 2
+  - we have created an actual window in which we either set white or black upon WM_SIZE
  - 29/01/17 : Day1 finished and ready for merge
   - Added simple MsgBox function
   - Compiler options set.
