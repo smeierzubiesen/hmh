@@ -19,6 +19,6 @@ deploy:
     secure: hifcN93/wHdEWIaKpGuJz+M73qcBHaLa6ozBz1fKgporFBvnbZGOiCATSawgKdwX
   draft: false
   prerelease: false
-  force_update: true
+  force_update: false
   on:
     branch: master
