@@ -56,8 +56,6 @@ internal void Win32ResizeDIBSection(int Width, int Height) {
 
 	int BitmapMemorySize = (BitmapWidth*BitmapHeight)*BytesPerPixel;
 	BitmapMemory = VirtualAlloc(0, BitmapMemorySize, MEM_COMMIT, PAGE_READWRITE);
-
-	Win32RenderGradient(0, 0);
 }
 
 internal void Win32UpdateWindow(HDC DeviceContext, RECT *WindowRect, int X, int Y, int Width, int Height) {
@@ -72,10 +70,10 @@ LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPARAM WPara
 	switch (Message) {
 		case WM_SIZE:
 		{
-			RECT ClientRect;
-			GetClientRect(Window,&ClientRect);
-			int Width = ClientRect.right - ClientRect.left;
-			int Height = ClientRect.bottom - ClientRect.top;
+			RECT WindowRect;
+			GetClientRect(Window,&WindowRect);
+			int Width = WindowRect.right - WindowRect.left;
+			int Height = WindowRect.bottom - WindowRect.top;
 			Win32ResizeDIBSection(Width, Height);
 			if (Debug) { OutputDebugStringA("WM_SIZE\n"); }
 		} break;
@@ -105,9 +103,9 @@ LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPARAM WPara
 			int Y = Paint.rcPaint.top;
 			int Width = Paint.rcPaint.right - Paint.rcPaint.left;
 			int Height = Paint.rcPaint.bottom - Paint.rcPaint.top;
-			RECT ClientRect;
-			GetClientRect(Window, &ClientRect);
-			Win32UpdateWindow(DeviceContext, &ClientRect, X, Y, Width, Height);
+			RECT WindowRect;
+			GetClientRect(Window, &WindowRect);
+			Win32UpdateWindow(DeviceContext, &WindowRect, X, Y, Width, Height);
 			EndPaint(Window,&Paint);
 			if (Debug) { OutputDebugStringA("WM_PAINT\n"); }
 		} break;
@@ -146,6 +144,8 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 			0);
 		if (WindowHandle)
 		{
+			int XOffset = 0;
+			int YOffset = 0;
 			Running = true;
 			while(Running)
 			{
@@ -157,6 +157,16 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 					TranslateMessage(&Message);
 					DispatchMessage(&Message);
 				}
+				Win32RenderGradient(XOffset, YOffset);
+				
+				HDC DeviceContext = GetDC(WindowHandle);
+				RECT WindowRect;
+				GetClientRect(WindowHandle, &WindowRect);
+				int WindowWidth = WindowRect.right - WindowRect.left;
+				int WindowHeight = WindowRect.bottom - WindowRect.top;
+				Win32UpdateWindow(DeviceContext,&WindowRect,0,0,WindowWidth,WindowHeight);
+				ReleaseDC(WindowHandle, DeviceContext);
+				++XOffset;
 			}
 			
 		}
