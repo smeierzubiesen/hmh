@@ -13,6 +13,15 @@ $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 #include <stdint.h>
 #include "win32_handmade.h"
 
+win32_window_dimensions Win32GetWindowDimensions(HWND WindowHandle) {
+	win32_window_dimensions Result;
+	RECT WindowRect;
+	GetClientRect(WindowHandle, &WindowRect);
+	int Result.Width = WindowRect.right - WindowRect.left;
+	int ResultHeight = WindowRect.bottom - WindowRect.top;
+	return Result;
+}
+
 internal void Win32RenderGradient(win32_offscreen_buffer Buffer, int XOffset, int YOffset) {
 	uint8 *Row = (uint8 *)Buffer.Memory;
 	for (int Y = 0; Y < Buffer.Height; ++Y) {
@@ -46,9 +55,7 @@ internal void Win32ResizeDIBSection(win32_offscreen_buffer *Buffer, int Width, i
 	Buffer->Pitch = Buffer->Width*Buffer->BytesPerPixel;
 }
 
-internal void Win32DisplayBufferInWindow(HDC DeviceContext, RECT WindowRect, win32_offscreen_buffer Buffer, int X, int Y, int Width, int Height) {
-	int WindowWidth = WindowRect.right - WindowRect.left;
-	int WindowHeight = WindowRect.bottom - WindowRect.top;
+internal void Win32DisplayBufferInWindow(HDC DeviceContext, int WindowWidth, int WindowHeight, win32_offscreen_buffer Buffer, int X, int Y, int Width, int Height) {
 	StretchDIBits(DeviceContext, 0, 0, Buffer.Width, Buffer.Height, 0, 0, WindowWidth, WindowHeight, Buffer.Memory, &Buffer.Info, DIB_RGB_COLORS, SRCCOPY);
 }
 
@@ -58,11 +65,8 @@ LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPARAM WPara
 	switch (Message) {
 		case WM_SIZE:
 		{
-			RECT WindowRect;
-			GetClientRect(Window,&WindowRect);
-			int Width = WindowRect.right - WindowRect.left;
-			int Height = WindowRect.bottom - WindowRect.top;
-			Win32ResizeDIBSection(&GlobalBackBuffer, Width, Height);
+			win32_window_dimensions Dimensions = Win32GetWindowDimensions(Window);
+			Win32ResizeDIBSection(&GlobalBackBuffer, Dimensions.Width, Dimensions.Height);
 			if (Debug) { OutputDebugStringA("WM_SIZE\n"); }
 		} break;
 		case WM_DESTROY:
@@ -91,9 +95,8 @@ LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPARAM WPara
 			int Y = Paint.rcPaint.top;
 			int Width = Paint.rcPaint.right - Paint.rcPaint.left;
 			int Height = Paint.rcPaint.bottom - Paint.rcPaint.top;
-			RECT WindowRect;
-			GetClientRect(Window, &WindowRect);
-			Win32DisplayBufferInWindow(DeviceContext, WindowRect, GlobalBackBuffer , X, Y, Width, Height);
+			win32_window_dimensions Dimensions = Win32GetWindowDimensions(Window);
+			Win32DisplayBufferInWindow(DeviceContext, Dimensions.Width, Dimensions.Height, GlobalBackBuffer , X, Y, Width, Height);
 			EndPaint(Window,&Paint);
 			if (Debug) { OutputDebugStringA("WM_PAINT\n"); }
 		} break;
@@ -148,11 +151,8 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 				Win32RenderGradient(GlobalBackBuffer, XOffset, YOffset);
 				
 				HDC DeviceContext = GetDC(WindowHandle);
-				RECT WindowRect;
-				GetClientRect(WindowHandle, &WindowRect);
-				int WindowWidth = WindowRect.right - WindowRect.left;
-				int WindowHeight = WindowRect.bottom - WindowRect.top;
-				Win32DisplayBufferInWindow(DeviceContext, WindowRect, GlobalBackBuffer, 0, 0, WindowWidth, WindowHeight);
+				win32_window_dimensions Dimensions = Win32GetWindowDimensions(WindowHandle);
+				Win32DisplayBufferInWindow(DeviceContext, Dimensions.Width, Dimensions.Height, GlobalBackBuffer, 0, 0, Dimensions.Width, Dimensions.Height);
 				ReleaseDC(WindowHandle, DeviceContext);
 				++XOffset;
 			}

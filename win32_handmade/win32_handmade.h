@@ -32,6 +32,11 @@ struct win32_offscreen_buffer {
 	int Pitch;
 };
 
+struct win32_window_dimensions {
+	int Width;
+	int Height;
+};
+
 global_variable bool Running;
 global_variable bool Debug = 0;
 global_variable win32_offscreen_buffer GlobalBackBuffer;
