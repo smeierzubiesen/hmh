@@ -13,19 +13,6 @@ $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 #include <stdint.h>
 #include "win32_handmade.h"
 
-struct win32_offscreen_buffer {
-	BITMAPINFO Info;
-	void *Memory;
-	int BytesPerPixel = 4;
-	int Width;
-	int Height;
-	int Pitch;
-};
-
-global_variable bool Running;
-global_variable bool Debug = 0;
-global_variable win32_offscreen_buffer GlobalBackBuffer;
-
 internal void Win32RenderGradient(win32_offscreen_buffer Buffer, int XOffset, int YOffset) {
 	uint8 *Row = (uint8 *)Buffer.Memory;
 	for (int Y = 0; Y < Buffer.Height; ++Y) {
@@ -46,6 +33,7 @@ internal void Win32ResizeDIBSection(win32_offscreen_buffer *Buffer, int Width, i
 	}
 	Buffer->Width = Width;
 	Buffer->Height = Height;
+	Buffer->BytesPerPixel = 4;
 	Buffer->Info.bmiHeader.biSize = sizeof(Buffer->Info.bmiHeader);
 	Buffer->Info.bmiHeader.biWidth = Buffer->Width;
 	Buffer->Info.bmiHeader.biHeight = -Buffer->Height;
