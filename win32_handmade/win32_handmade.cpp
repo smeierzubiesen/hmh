@@ -17,8 +17,8 @@ win32_window_dimensions Win32GetWindowDimensions(HWND WindowHandle) {
 	win32_window_dimensions Result;
 	RECT WindowRect;
 	GetClientRect(WindowHandle, &WindowRect);
-	int Result.Width = WindowRect.right - WindowRect.left;
-	int ResultHeight = WindowRect.bottom - WindowRect.top;
+	Result.Width = WindowRect.right - WindowRect.left;
+	Result.Height = WindowRect.bottom - WindowRect.top;
 	return Result;
 }
 
