@@ -23,4 +23,22 @@ typedef int16_t int16;
 typedef int32_t int32;
 typedef int64_t int64;
 
+struct win32_offscreen_buffer {
+	BITMAPINFO Info;
+	void *Memory;
+	int BytesPerPixel;
+	int Width;
+	int Height;
+	int Pitch;
+};
+
+struct win32_window_dimensions {
+	int Width;
+	int Height;
+};
+
+global_variable bool GlobalRunning;
+global_variable bool Debug = 0;
+global_variable win32_offscreen_buffer GlobalBackBuffer;
+
 #endif

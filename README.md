@@ -26,6 +26,8 @@ This is my take on and progress of the above mentioned (lol)
 
 [Changelog](/hmh/changelog.md)
 <pre>this is not working yet</pre>
+ - 03/02/2017 : Day 5
+  - We have finished day 5, reviewed the code and have cleaned up the codebase.
  - 02/02/2017 : Day 4
   - We are drawing into the window.
  - 01//2/2017 : Day 3
