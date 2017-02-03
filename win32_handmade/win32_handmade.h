@@ -37,7 +37,7 @@ struct win32_window_dimensions {
 	int Height;
 };
 
-global_variable bool Running;
+global_variable bool GlobalRunning;
 global_variable bool Debug = 0;
 global_variable win32_offscreen_buffer GlobalBackBuffer;
 

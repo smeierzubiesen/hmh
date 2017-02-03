@@ -4,7 +4,7 @@
 /* ========================================================================
 $File: $
 $Date: $
-$Revision: 0.1.d4.b(build#) $
+$Revision: 0.1.d5 $
 $Creator: Sebastian Meier zu Biesen $
 $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 ======================================================================== */
@@ -69,12 +69,12 @@ LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPARAM WPara
 		} break;
 		case WM_DESTROY:
 		{
-			Running = false;
+			GlobalRunning = false;
 			if (Debug) { OutputDebugStringA("WM_DESTROY\n"); }
 		} break;
 		case WM_CLOSE:
 		{
-			Running = false;
+			GlobalRunning = false;
 			if (Debug) { OutputDebugStringA("WM_CLOSE\n"); }
 		} break;
 		case WM_QUIT:
@@ -136,13 +136,13 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 		{
 			int XOffset = 0;
 			int YOffset = 0;
-			Running = true;
-			while(Running)
+			GlobalRunning = true;
+			while(GlobalRunning)
 			{
 				MSG Message;
 				while (PeekMessage(&Message, 0, 0, 0, PM_REMOVE)) {
 					if (Message.message == WM_QUIT) {
-						Running = false;
+						GlobalRunning = false;
 					}
 					TranslateMessage(&Message);
 					DispatchMessage(&Message);
