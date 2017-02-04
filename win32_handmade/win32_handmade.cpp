@@ -108,6 +108,7 @@ LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPARAM WPara
 	return(Result);
 }
 
+
 int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int ShowCode) {
 	WNDCLASS WindowClass = {};
 	Win32ResizeDIBSection(&GlobalBackBuffer, 1280, 720);
