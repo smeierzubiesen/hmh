@@ -102,8 +102,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a35d63b9cd689f290bd1cd6b7fc7fb2c8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="win32__handmade_8h.html#ae2fbec0fb24e703b10fda10b1ec34109">internal</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="win32__handmade_8cpp.html#a35d63b9cd689f290bd1cd6b7fc7fb2c8">Win32DisplayBufferInWindow</a> (HDC DeviceContext, int WindowWidth, int WindowHeight, <a class="el" href="structwin32__offscreen__buffer.html">win32_offscreen_buffer</a> Buffer, int X, int Y, int Width, int Height)</td></tr>
 <tr class="separator:a35d63b9cd689f290bd1cd6b7fc7fb2c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29f3d4e7ef4e324134cd8f1ee244cae2"><td class="memItemLeft" align="right" valign="top">LRESULT CALLBACK&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="win32__handmade_8cpp.html#a29f3d4e7ef4e324134cd8f1ee244cae2">Win32MainWindowCallback</a> (HWND Window, UINT Message, WPARAM WParam, LPARAM LParam)</td></tr>
+<tr class="memdesc:a29f3d4e7ef4e324134cd8f1ee244cae2"><td class="mdescLeft">&#160;</td><td class="mdescRight">This guy deals with the messages from the PeekMessage() function in <a class="el" href="win32__handmade_8cpp.html#a03979b05149816546e308d78246fe41a" title="This is the main window call for windows as entry point to the app. ">WinMain()</a>.  <a href="#a29f3d4e7ef4e324134cd8f1ee244cae2">More...</a><br /></td></tr>
 <tr class="separator:a29f3d4e7ef4e324134cd8f1ee244cae2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03979b05149816546e308d78246fe41a"><td class="memItemLeft" align="right" valign="top">int CALLBACK&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="win32__handmade_8cpp.html#a03979b05149816546e308d78246fe41a">WinMain</a> (HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int ShowCode)</td></tr>
+<tr class="memdesc:a03979b05149816546e308d78246fe41a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the main window call for windows as entry point to the app.  <a href="#a03979b05149816546e308d78246fe41a">More...</a><br /></td></tr>
 <tr class="separator:a03979b05149816546e308d78246fe41a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
@@ -231,7 +233,19 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="win32__handmade_8cpp_source.html#l00062">62</a> of file <a class="el" href="win32__handmade_8cpp_source.html">win32_handmade.cpp</a>.</p>
+<p>This guy deals with the messages from the PeekMessage() function in <a class="el" href="win32__handmade_8cpp.html#a03979b05149816546e308d78246fe41a" title="This is the main window call for windows as entry point to the app. ">WinMain()</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Window</td><td></td></tr>
+    <tr><td class="paramname">Message</td><td></td></tr>
+    <tr><td class="paramname">WParam</td><td></td></tr>
+    <tr><td class="paramname">LParam</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="win32__handmade_8cpp_source.html#l00070">70</a> of file <a class="el" href="win32__handmade_8cpp_source.html">win32_handmade.cpp</a>.</p>
 
 </div>
 </div>
@@ -345,7 +359,19 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="win32__handmade_8cpp_source.html#l00112">112</a> of file <a class="el" href="win32__handmade_8cpp_source.html">win32_handmade.cpp</a>.</p>
+<p>This is the main window call for windows as entry point to the app. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Instance</td><td></td></tr>
+    <tr><td class="paramname">hPrevInstance</td><td></td></tr>
+    <tr><td class="paramname">CommandLine</td><td></td></tr>
+    <tr><td class="paramname">ShowCode</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="win32__handmade_8cpp_source.html#l00127">127</a> of file <a class="el" href="win32__handmade_8cpp_source.html">win32_handmade.cpp</a>.</p>
 
 </div>
 </div>
