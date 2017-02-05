@@ -6,9 +6,13 @@ configuration: Release
 platform:
 - x86
 - x64
+install:
+  - choco install doxygen.portable
 build:
   parallel: true
   verbosity: minimal
+after_build:
+  - doxygen.exe "C:\projects\hmh\hmh.Doxyfile"
 artifacts:
 - path: build\${platform}\hmh-${platform}.exe
   name: hmh-${platform}
