@@ -114,6 +114,7 @@
       <AssemblerOutput>All</AssemblerOutput>
       <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
       <SuppressStartupBanner>false</SuppressStartupBanner>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
     </ClCompile>
     <Link />
     <Link>
