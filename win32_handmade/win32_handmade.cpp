@@ -199,6 +199,14 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 						bool YButton = (Pad->wButtons & XINPUT_GAMEPAD_Y);
 						int16 StickX = Pad->sThumbLX;
 						int16 StickY = Pad->sThumbLY;
+
+						if (AButton) {
+							YOffset += 2;
+						}
+						if (BButton) {
+							YOffset -= 2;
+						}
+
 					}
 					else
 					{
@@ -213,7 +221,7 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 				Win32DisplayBufferInWindow(DeviceContext, Dimensions.Width, Dimensions.Height, GlobalBackBuffer, 0, 0, Dimensions.Width, Dimensions.Height);
 				ReleaseDC(WindowHandle, DeviceContext);
 				++XOffset;
-				YOffset += 2;
+				
 			}
 			
 		}
