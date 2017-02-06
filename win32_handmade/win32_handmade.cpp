@@ -15,10 +15,10 @@ $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 #include "win32_handmade.h"
 
 internal void Win32LoadXInput(void) {
-	HMODULE XInputLibrary = LoadLibrary("xinput1_3.dll");
+	HMODULE XInputLibrary = LoadLibrary("xinput1_4.dll");
 	if (XInputLibrary) {
-		XInputGetState = (x_input_get_state *)GetProcAddress(XInputLibrary, "XinputGetState");
-		XInputSetState = (x_input_set_state *)GetProcAddress(XInputLibrary, "XinputSetState");
+		XInputGetState = (x_input_get_state *)GetProcAddress(XInputLibrary, "XInputGetState");
+		XInputSetState = (x_input_set_state *)GetProcAddress(XInputLibrary, "XInputSetState");
 	}
 }
 
@@ -213,6 +213,7 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 				Win32DisplayBufferInWindow(DeviceContext, Dimensions.Width, Dimensions.Height, GlobalBackBuffer, 0, 0, Dimensions.Width, Dimensions.Height);
 				ReleaseDC(WindowHandle, DeviceContext);
 				++XOffset;
+				YOffset += 2;
 			}
 			
 		}
