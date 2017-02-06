@@ -200,12 +200,20 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 						int16 StickX = Pad->sThumbLX;
 						int16 StickY = Pad->sThumbLY;
 
+						XINPUT_VIBRATION Vibration;
+						Vibration.wLeftMotorSpeed = 0;
+						Vibration.wRightMotorSpeed = 0;
 						if (AButton) {
 							YOffset += 2;
+							Vibration.wLeftMotorSpeed = 60000;
+							XInputSetState(ControllerIndex, &Vibration);
 						}
 						if (BButton) {
 							YOffset -= 2;
+							Vibration.wRightMotorSpeed = 60000;
+							XInputSetState(ControllerIndex, &Vibration);
 						}
+						XInputSetState(ControllerIndex, &Vibration);
 
 					}
 					else
