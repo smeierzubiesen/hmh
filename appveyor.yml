@@ -1,4 +1,4 @@
-version: 0.1.d5.{build}
+version: 0.1.d6.{build}
 pull_requests:
   do_not_increment_build_number: true
 skip_branch_with_pr: true
@@ -6,12 +6,19 @@ configuration: Release
 platform:
 - x86
 - x64
+install:
+  - choco install doxygen.portable
 build:
   parallel: true
   verbosity: minimal
+after_build:
+  - doxygen.exe "C:\projects\hmh\hmh.Doxyfile"
 artifacts:
 - path: build\${platform}\hmh-${platform}.exe
   name: hmh-${platform}
+- path: hmh-docs\html
+  name: hmh-docs
+  type: zip
 deploy:
 - provider: GitHub
   description: Handmade Hero v$(appveyor_build_version)
