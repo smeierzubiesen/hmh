@@ -17,7 +17,7 @@ artifacts:
 - path: build\${platform}\hmh-${platform}.exe
   name: hmh-${platform}
 - path: hmh-docs\html
-  name: hmh-v$(appveyor_build_version)-docs
+  name: hmh-docs-v$(appveyor_build_version)
   type: zip
 deploy:
 - provider: GitHub
