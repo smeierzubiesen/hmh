@@ -14,25 +14,15 @@ $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 #include <Xinput.h>
 #include "win32_handmade.h"
 
-// NOTE(smzb): XInputGetState
-#define X_INPUT_GET_STATE(name) DWORD WINAPI name(DWORD dwUserIndex, XINPUT_STATE *pState)
-typedef X_INPUT_GET_STATE(x_input_get_state);
-X_INPUT_GET_STATE(XInputGetStateStub) {
-	return(0);
+internal void Win32LoadXInput(void) {
+	HMODULE XInputLibrary = LoadLibrary("xinput1_3.dll");
+	if (XInputLibrary) {
+		XInputGetState = (x_input_get_state *)GetProcAddress(XInputLibrary, "XinputGetState");
+		XInputSetState = (x_input_set_state *)GetProcAddress(XInputLibrary, "XinputSetState");
+	}
 }
-global_variable x_input_get_state *XInputGetState_ = XInputGetStateStub;
-#define XInputGetState XInputGetState_
 
-// NOTE(smzb): XInputSetState
-#define X_INPUT_SET_STATE(name) DWORD WINAPI name(DWORD dwUserIndex, XINPUT_VIBRATION *pVibration)
-typedef X_INPUT_SET_STATE(x_input_set_state);
-X_INPUT_SET_STATE(XInputSetStateStub) {
-	return(0);
-}
-global_variable x_input_set_state *XInputSetState_ = XInputSetStateStub;
-#define XInputSetState XInputSetState_
-
-win32_window_dimensions Win32GetWindowDimensions(HWND WindowHandle) {
+internal win32_window_dimensions Win32GetWindowDimensions(HWND WindowHandle) {
 	win32_window_dimensions Result;
 	RECT WindowRect;
 	GetClientRect(WindowHandle, &WindowRect);
@@ -86,7 +76,7 @@ internal void Win32DisplayBufferInWindow(HDC DeviceContext, int WindowWidth, int
 /// <param name="WParam"></param>
 /// <param name="LParam"></param>
 /// <returns></returns>
-LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPARAM WParam, LPARAM LParam)
+internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPARAM WParam, LPARAM LParam)
 {
 	LRESULT Result = 0;
 	switch (Message) {
@@ -143,7 +133,8 @@ LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPARAM WPara
 /// <param name="CommandLine"></param>
 /// <param name="ShowCode"></param>
 /// <returns></returns>
-int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int ShowCode) {
+internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int ShowCode) {
+	Win32LoadXInput();
 	WNDCLASS WindowClass = {};
 	Win32ResizeDIBSection(&GlobalBackBuffer, 1280, 720);
 	WindowClass.style = CS_HREDRAW|CS_VREDRAW;
