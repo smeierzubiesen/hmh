@@ -13,6 +13,9 @@
 #define local_persist static
 #define global_variable static
 
+global_variable bool GlobalRunning;
+global_variable bool Debug = 1;
+
 typedef uint8_t uint8;
 typedef uint16_t uint16;
 typedef uint32_t uint32;
@@ -37,8 +40,6 @@ struct win32_window_dimensions {
 	int Height;
 };
 
-global_variable bool GlobalRunning;
-global_variable bool Debug = 0;
 global_variable win32_offscreen_buffer GlobalBackBuffer;
 
 // NOTE(smzb): XInputGetState
