@@ -114,6 +114,7 @@
       <AssemblerOutput>All</AssemblerOutput>
       <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
       <SuppressStartupBanner>false</SuppressStartupBanner>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
     </ClCompile>
     <Link />
     <Link>
@@ -237,6 +238,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win32_handmade.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -59,6 +59,14 @@ internal void Win32DisplayBufferInWindow(HDC DeviceContext, int WindowWidth, int
 	StretchDIBits(DeviceContext, 0, 0, WindowWidth, WindowHeight, 0, 0, Buffer.Width, Buffer.Height, Buffer.Memory, &Buffer.Info, DIB_RGB_COLORS, SRCCOPY);
 }
 
+/// <summary>
+/// This guy deals with the messages from the PeekMessage() function in WinMain().
+/// </summary>
+/// <param name="Window"></param>
+/// <param name="Message"></param>
+/// <param name="WParam"></param>
+/// <param name="LParam"></param>
+/// <returns></returns>
 LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPARAM WParam, LPARAM LParam)
 {
 	LRESULT Result = 0;
@@ -108,6 +116,14 @@ LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPARAM WPara
 	return(Result);
 }
 
+/// <summary>
+/// This is the main window call for windows as entry point to the app.
+/// </summary>
+/// <param name="Instance"></param>
+/// <param name="hPrevInstance"></param>
+/// <param name="CommandLine"></param>
+/// <param name="ShowCode"></param>
+/// <returns></returns>
 int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int ShowCode) {
 	WNDCLASS WindowClass = {};
 	Win32ResizeDIBSection(&GlobalBackBuffer, 1280, 720);
