@@ -11,9 +11,18 @@ $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 
 #include <Windows.h>
 #include <stdint.h>
+#include <Xinput.h>
 #include "win32_handmade.h"
 
-win32_window_dimensions Win32GetWindowDimensions(HWND WindowHandle) {
+internal void Win32LoadXInput(void) {
+	HMODULE XInputLibrary = LoadLibraryA("xinput1_4.dll");
+	if (XInputLibrary) {
+		XInputGetState = (x_input_get_state *)GetProcAddress(XInputLibrary, "XInputGetState");
+		XInputSetState = (x_input_set_state *)GetProcAddress(XInputLibrary, "XInputSetState");
+	}
+}
+
+internal win32_window_dimensions Win32GetWindowDimensions(HWND WindowHandle) {
 	win32_window_dimensions Result;
 	RECT WindowRect;
 	GetClientRect(WindowHandle, &WindowRect);
@@ -22,17 +31,17 @@ win32_window_dimensions Win32GetWindowDimensions(HWND WindowHandle) {
 	return Result;
 }
 
-internal void Win32RenderGradient(win32_offscreen_buffer Buffer, int XOffset, int YOffset) {
-	uint8 *Row = (uint8 *)Buffer.Memory;
-	for (int Y = 0; Y < Buffer.Height; ++Y) {
+internal void Win32RenderGradient(win32_offscreen_buffer *Buffer, int XOffset, int YOffset) {
+	uint8 *Row = (uint8 *)Buffer->Memory;
+	for (int Y = 0; Y < Buffer->Height; ++Y) {
 		uint32 *Pixel = (uint32 *)Row;
-		for (int X = 0; X < Buffer.Width; ++X) {
+		for (int X = 0; X < Buffer->Width; ++X) {
 			uint8 Blue = (X + XOffset);
 			uint8 Green = (Y + YOffset);
 			uint8 Red = (X + XOffset);
 			*Pixel++ = ((Red << 16) | (Green << 8) | (Blue));
 		}
-		Row += Buffer.Pitch;
+		Row += Buffer->Pitch;
 	}
 }
 
@@ -55,8 +64,8 @@ internal void Win32ResizeDIBSection(win32_offscreen_buffer *Buffer, int Width, i
 	Buffer->Pitch = Buffer->Width*Buffer->BytesPerPixel;
 }
 
-internal void Win32DisplayBufferInWindow(HDC DeviceContext, int WindowWidth, int WindowHeight, win32_offscreen_buffer Buffer, int X, int Y, int Width, int Height) {
-	StretchDIBits(DeviceContext, 0, 0, WindowWidth, WindowHeight, 0, 0, Buffer.Width, Buffer.Height, Buffer.Memory, &Buffer.Info, DIB_RGB_COLORS, SRCCOPY);
+internal void Win32DisplayBufferInWindow(win32_offscreen_buffer *Buffer, HDC DeviceContext, int WindowWidth, int WindowHeight, int X, int Y, int Width, int Height) {
+	StretchDIBits(DeviceContext, 0, 0, WindowWidth, WindowHeight, 0, 0, Buffer->Width, Buffer->Height, Buffer->Memory, &Buffer->Info, DIB_RGB_COLORS, SRCCOPY);
 }
 
 /// <summary>
@@ -67,10 +76,177 @@ internal void Win32DisplayBufferInWindow(HDC DeviceContext, int WindowWidth, int
 /// <param name="WParam"></param>
 /// <param name="LParam"></param>
 /// <returns></returns>
-LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPARAM WParam, LPARAM LParam)
+internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPARAM WParam, LPARAM LParam)
 {
 	LRESULT Result = 0;
 	switch (Message) {
+		case WM_SYSKEYUP:
+		case WM_SYSKEYDOWN:
+		case WM_KEYUP:
+		case WM_KEYDOWN:
+		{
+			uint32 VKCode = WParam;
+			bool WasDown = ((LParam & (1 << 30)) != 0);
+			bool IsDown = ((LParam & (1 << 31)) == 0);
+			if (WasDown != IsDown) {
+				if (VKCode == 'A')
+				{
+					if (Debug) { 
+						OutputDebugStringA("A: "); 
+						if (IsDown) {
+							OutputDebugStringA("is down");
+						}
+						if (WasDown) {
+							OutputDebugStringA("was down");
+						}
+						OutputDebugStringA("\n");
+					}
+				}
+				else if (VKCode == 'S')
+				{
+					if (Debug) {
+						OutputDebugStringA("S: ");
+						if (IsDown) {
+							OutputDebugStringA("is down");
+						}
+						if (WasDown) {
+							OutputDebugStringA("was down");
+						}
+						OutputDebugStringA("\n");
+					}
+				}
+				else if (VKCode == 'W')
+				{
+					if (Debug) {
+						OutputDebugStringA("W: ");
+						if (IsDown) {
+							OutputDebugStringA("is down");
+						}
+						if (WasDown) {
+							OutputDebugStringA("was down");
+						}
+						OutputDebugStringA("\n");
+					}
+				}
+				else if (VKCode == 'D')
+				{
+					if (Debug) {
+						OutputDebugStringA("D: ");
+						if (IsDown) {
+							OutputDebugStringA("is down");
+						}
+						if (WasDown) {
+							OutputDebugStringA("was down");
+						}
+						OutputDebugStringA("\n");
+					}
+				}
+				else if (VKCode == 'Q')
+				{
+					if (Debug) {
+						OutputDebugStringA("Q: ");
+						if (IsDown) {
+							OutputDebugStringA("is down");
+						}
+						if (WasDown) {
+							OutputDebugStringA("was down");
+						}
+						OutputDebugStringA("\n");
+					}
+				}
+				else if (VKCode == 'E')
+				{
+					if (Debug) {
+						OutputDebugStringA("E: ");
+						if (IsDown) {
+							OutputDebugStringA("is down");
+						}
+						if (WasDown) {
+							OutputDebugStringA("was down");
+						}
+						OutputDebugStringA("\n");
+					}
+				}
+				else if (VKCode == VK_UP)
+				{
+					if (Debug) {
+						OutputDebugStringA("Up: ");
+						if (IsDown) {
+							OutputDebugStringA("is down");
+						}
+						if (WasDown) {
+							OutputDebugStringA("was down");
+						}
+						OutputDebugStringA("\n");
+					}
+				}
+				else if (VKCode == VK_DOWN)
+				{
+					if (Debug) {
+						OutputDebugStringA("Down: ");
+						if (IsDown) {
+							OutputDebugStringA("is down");
+						}
+						if (WasDown) {
+							OutputDebugStringA("was down");
+						}
+						OutputDebugStringA("\n");
+					}
+				}
+				else if (VKCode == VK_LEFT)
+				{
+					if (Debug) {
+						OutputDebugStringA("Left: ");
+						if (IsDown) {
+							OutputDebugStringA("is down");
+						}
+						if (WasDown) {
+							OutputDebugStringA("was down");
+						}
+						OutputDebugStringA("\n");
+					}
+				}
+				else if (VKCode == VK_RIGHT)
+				{
+					if (Debug) {
+						OutputDebugStringA("Right: ");
+						if (IsDown) {
+							OutputDebugStringA("is down");
+						}
+						if (WasDown) {
+							OutputDebugStringA("was down");
+						}
+						OutputDebugStringA("\n");
+					}
+				}
+				else if (VKCode == VK_SPACE)
+				{
+					if (Debug) {
+						OutputDebugStringA("Space: ");
+						if (IsDown) {
+							OutputDebugStringA("is down");
+						}
+						if (WasDown) {
+							OutputDebugStringA("was down");
+						}
+						OutputDebugStringA("\n");
+					}
+				}
+				else if (VKCode == VK_ESCAPE)
+				{
+					if (Debug) {
+						OutputDebugStringA("Escape: ");
+						if (IsDown) {
+							OutputDebugStringA("is down");
+						}
+						if (WasDown) {
+							OutputDebugStringA("was down");
+						}
+						OutputDebugStringA("\n");
+					}
+				}
+			}
+		} break;
 		case WM_SIZE:
 		{
 			if (Debug) { OutputDebugStringA("WM_SIZE\n"); }
@@ -102,7 +278,7 @@ LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPARAM WPara
 			int Width = Paint.rcPaint.right - Paint.rcPaint.left;
 			int Height = Paint.rcPaint.bottom - Paint.rcPaint.top;
 			win32_window_dimensions Dimensions = Win32GetWindowDimensions(Window);
-			Win32DisplayBufferInWindow(DeviceContext, Dimensions.Width, Dimensions.Height, GlobalBackBuffer , X, Y, Width, Height);
+			Win32DisplayBufferInWindow(&GlobalBackBuffer, DeviceContext, Dimensions.Width, Dimensions.Height, X, Y, Width, Height);
 			EndPaint(Window,&Paint);
 			if (Debug) { OutputDebugStringA("WM_PAINT\n"); }
 		} break;
@@ -124,8 +300,9 @@ LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPARAM WPara
 /// <param name="CommandLine"></param>
 /// <param name="ShowCode"></param>
 /// <returns></returns>
-int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int ShowCode) {
-	WNDCLASS WindowClass = {};
+internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int ShowCode) {
+	Win32LoadXInput();
+	WNDCLASSA WindowClass = {};
 	Win32ResizeDIBSection(&GlobalBackBuffer, 1280, 720);
 	WindowClass.style = CS_HREDRAW|CS_VREDRAW;
 	WindowClass.lpfnWndProc = Win32MainWindowCallback;
@@ -163,13 +340,63 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 					TranslateMessage(&Message);
 					DispatchMessage(&Message);
 				}
-				Win32RenderGradient(GlobalBackBuffer, XOffset, YOffset);
+				DWORD dwResult;
+				for (DWORD ControllerIndex = 0; ControllerIndex< XUSER_MAX_COUNT; ++ControllerIndex) {
+					XINPUT_STATE ControllerState;
+					ZeroMemory(&ControllerState, sizeof(XINPUT_STATE));
+
+					// Simply get the state of the controller from XInput.
+					dwResult = XInputGetState(ControllerIndex, &ControllerState);
+
+					if (dwResult == ERROR_SUCCESS)
+					{
+						// Controller is connected 
+						XINPUT_GAMEPAD *Pad = &ControllerState.Gamepad;
+						bool Up = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_UP);
+						bool Down = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_DOWN);
+						bool Left = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_LEFT);
+						bool Right = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_RIGHT);
+						bool Start = (Pad->wButtons & XINPUT_GAMEPAD_START);
+						bool Back = (Pad->wButtons & XINPUT_GAMEPAD_BACK);
+						bool LeftShoulder = (Pad->wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER);
+						bool RightShoulder = (Pad->wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER);
+						bool AButton = (Pad->wButtons & XINPUT_GAMEPAD_A);
+						bool BButton = (Pad->wButtons & XINPUT_GAMEPAD_B);
+						bool XButton = (Pad->wButtons & XINPUT_GAMEPAD_X);
+						bool YButton = (Pad->wButtons & XINPUT_GAMEPAD_Y);
+						int16 StickX = Pad->sThumbLX;
+						int16 StickY = Pad->sThumbLY;
+
+						XINPUT_VIBRATION Vibration;
+						Vibration.wLeftMotorSpeed = 0;
+						Vibration.wRightMotorSpeed = 0;
+						if (AButton) {
+							YOffset += 2;
+							Vibration.wLeftMotorSpeed = 60000;
+							XInputSetState(ControllerIndex, &Vibration);
+						}
+						if (BButton) {
+							YOffset -= 2;
+							Vibration.wRightMotorSpeed = 60000;
+							XInputSetState(ControllerIndex, &Vibration);
+						}
+						XInputSetState(ControllerIndex, &Vibration);
+
+					}
+					else
+					{
+						// Controller is not connected 
+					}
+				}
+
+				Win32RenderGradient(&GlobalBackBuffer, XOffset, YOffset);
 				
 				HDC DeviceContext = GetDC(WindowHandle);
 				win32_window_dimensions Dimensions = Win32GetWindowDimensions(WindowHandle);
-				Win32DisplayBufferInWindow(DeviceContext, Dimensions.Width, Dimensions.Height, GlobalBackBuffer, 0, 0, Dimensions.Width, Dimensions.Height);
+				Win32DisplayBufferInWindow(&GlobalBackBuffer, DeviceContext, Dimensions.Width, Dimensions.Height, 0, 0, Dimensions.Width, Dimensions.Height);
 				ReleaseDC(WindowHandle, DeviceContext);
 				++XOffset;
+				
 			}
 			
 		}
