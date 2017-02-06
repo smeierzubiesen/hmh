@@ -11,6 +11,7 @@ $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 
 #include <Windows.h>
 #include <stdint.h>
+#include <Xinput.h>
 #include "win32_handmade.h"
 
 win32_window_dimensions Win32GetWindowDimensions(HWND WindowHandle) {
@@ -163,6 +164,39 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 					TranslateMessage(&Message);
 					DispatchMessage(&Message);
 				}
+				DWORD dwResult;
+				for (DWORD ControllerIndex = 0; ControllerIndex< XUSER_MAX_COUNT; ++ControllerIndex) {
+					XINPUT_STATE ControllerState;
+					ZeroMemory(&ControllerState, sizeof(XINPUT_STATE));
+
+					// Simply get the state of the controller from XInput.
+					dwResult = XInputGetState(ControllerIndex, &ControllerState);
+
+					if (dwResult == ERROR_SUCCESS)
+					{
+						// Controller is connected 
+						XINPUT_GAMEPAD *Pad = &ControllerState.Gamepad;
+						bool Up = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_UP);
+						bool Down = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_DOWN);
+						bool Left = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_LEFT);
+						bool Right = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_RIGHT);
+						bool Start = (Pad->wButtons & XINPUT_GAMEPAD_START);
+						bool Back = (Pad->wButtons & XINPUT_GAMEPAD_BACK);
+						bool LeftShoulder = (Pad->wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER);
+						bool RightShoulder = (Pad->wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER);
+						bool AButton = (Pad->wButtons & XINPUT_GAMEPAD_A);
+						bool BButton = (Pad->wButtons & XINPUT_GAMEPAD_B);
+						bool XButton = (Pad->wButtons & XINPUT_GAMEPAD_X);
+						bool YButton = (Pad->wButtons & XINPUT_GAMEPAD_Y);
+						int16 StickX = Pad->sThumbLX;
+						int16 StickY = Pad->sThumbLY;
+					}
+					else
+					{
+						// Controller is not connected 
+					}
+				}
+
 				Win32RenderGradient(GlobalBackBuffer, XOffset, YOffset);
 				
 				HDC DeviceContext = GetDC(WindowHandle);
