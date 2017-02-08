@@ -37,18 +37,66 @@ internal void Win32LoadXInput(void) {
 /// This should however still allow to run the game in the rare event, that DirectSound is not available.
 /// </summary>
 /// <returns></returns>
-internal void Win32InitDirectSound() {
+internal void Win32InitDirectSound(HWND WindowHandle, int32 SamplesPerSecond, int32 BufferSize) {
 	// Note(smzb): Load DirectSound
 	HMODULE DSoundLibrary = LoadLibraryA("dsound.dll");
 	if (DSoundLibrary)
 	{
 		// Note(smzb): Get a a DirectSound Object
-		 = ( *)GetProcAddress(DSoundLibrary, "DirectSoundCreate");
-		// Note(smzb): "Create" a primary buffer
+		direct_sound_create *DirectSoundCreate = (direct_sound_create *)GetProcAddress(DSoundLibrary, "DirectSoundCreate");
+		LPDIRECTSOUND DirectSound;
+		if (DirectSoundCreate && SUCCEEDED(DirectSoundCreate(0, &DirectSound,0))) {
+			WAVEFORMATEX WaveFormat = {};
+			WaveFormat.wFormatTag = WAVE_FORMAT_PCM;
+			WaveFormat.nChannels = 2;
+			WaveFormat.nSamplesPerSec = SamplesPerSecond;
+			WaveFormat.nBlockAlign = (WaveFormat.nChannels*WaveFormat.wBitsPerSample) / 9;
+			WaveFormat.nAvgBytesPerSec = WaveFormat.nSamplesPerSec*WaveFormat.nBlockAlign;
+			WaveFormat.wBitsPerSample = 16;
+			WaveFormat.cbSize = 0;
+			if (SUCCEEDED(DirectSound->SetCooperativeLevel(WindowHandle, DSSCL_PRIORITY))) {
+				// Note(smzb): "Create" a primary buffer
+				DSBUFFERDESC BufferDescription = {};
+				BufferDescription.dwSize = sizeof(BufferDescription);
+				BufferDescription.dwFlags = DSBCAPS_PRIMARYBUFFER;
+				LPDIRECTSOUNDBUFFER PrimaryBuffer;
+				if (SUCCEEDED(DirectSound->CreateSoundBuffer(&BufferDescription, &PrimaryBuffer, 0))) {
 
-		// Note(smzb): "Create" a secondary buffer
 
-		// Note(smzb): Start playing
+					//BufferDescription.dwSize;
+					if (SUCCEEDED(PrimaryBuffer->SetFormat(&WaveFormat))) {
+						// NOTE(smzb): Finally the format of the sound is set
+					}
+					else {
+						// TODO(smzb): Diagnostic Log here
+					}
+				}
+				else {
+					// (TODO(smzb): Diagnostic
+				}
+				
+			}
+			else {
+				// TODO(smzb): DirectSound Diagnostic
+			}
+			// Note(smzb): "Create" a secondary buffer
+			DSBUFFERDESC BufferDescription = {};
+			BufferDescription.dwSize = sizeof(BufferDescription);
+			BufferDescription.dwFlags = 0;
+			BufferDescription.dwBufferBytes = BufferSize;
+			BufferDescription.lpwfxFormat = &WaveFormat;
+			LPDIRECTSOUNDBUFFER SecondaryBuffer;
+			if (SUCCEEDED(DirectSound->CreateSoundBuffer(&BufferDescription, &SecondaryBuffer, 0))) {
+				// Note(smzb): Start playing
+			}
+			else {
+				// TODO(smzb): Diagnostic
+			}
+		}
+		else {
+			// TODO(smzb): Diagnostic Feedback
+		}
+		
 	}
 }
 
@@ -394,7 +442,7 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 		{
 			int XOffset = 0;
 			int YOffset = 0;
-			Win32InitDirectSound();
+			Win32InitDirectSound(WindowHandle, 48000, 48000*sizeof(int16)*2);
 			GlobalRunning = true;
 			while(GlobalRunning)
 			{

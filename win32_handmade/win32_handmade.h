@@ -5,9 +5,11 @@
    $Creator: Sebastian Meier zu Biesen $
    $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
    ======================================================================== */
-#include <Xinput.h>
 #if !defined(WIN32_HANDMADE_H)
 #define WIN32_HANDMADE_H
+
+#include <Xinput.h>
+#include <dsound.h>
 
 #define internal static
 #define local_persist static
@@ -65,11 +67,15 @@ global_variable x_input_set_state *XInputSetState_ = XInputSetStateStub;
 // NOTE(smzb): DirectSoundCreate
 #define DIRECT_SOUND_CREATE(name) HRESULT WINAPI name(LPCGUID pcGuidDevice, LPDIRECTSOUND *ppDS, LPUNKNOWN pUnkOuter)
 typedef DIRECT_SOUND_CREATE(direct_sound_create);
+
+/*
+// NOTE this might not be necessary
 DIRECT_SOUND_CREATE(DirectSoundCreateStub) {
 	return(ERROR_DEVICE_NOT_CONNECTED);
 }
 global_variable direct_sound_create *DirectSoundCreate_ = DirectSoundCreateStub;
 #define DirectSoundCreate DirectSoundCreate_
+*/
 
 
 #endif
