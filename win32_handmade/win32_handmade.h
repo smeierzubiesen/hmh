@@ -62,4 +62,14 @@ X_INPUT_SET_STATE(XInputSetStateStub) {
 global_variable x_input_set_state *XInputSetState_ = XInputSetStateStub;
 #define XInputSetState XInputSetState_
 
+// NOTE(smzb): DirectSoundCreate
+#define DIRECT_SOUND_CREATE(name) HRESULT WINAPI name(LPCGUID pcGuidDevice, LPDIRECTSOUND *ppDS, LPUNKNOWN pUnkOuter)
+typedef DIRECT_SOUND_CREATE(direct_sound_create);
+DIRECT_SOUND_CREATE(DirectSoundCreateStub) {
+	return(ERROR_DEVICE_NOT_CONNECTED);
+}
+global_variable direct_sound_create *DirectSoundCreate_ = DirectSoundCreateStub;
+#define DirectSoundCreate DirectSoundCreate_
+
+
 #endif

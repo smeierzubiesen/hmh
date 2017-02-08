@@ -12,6 +12,7 @@ $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 #include <Windows.h>
 #include <stdint.h>
 #include <Xinput.h>
+#include <dsound.h>
 #include "win32_handmade.h"
 
 /// <summary>
@@ -38,14 +39,17 @@ internal void Win32LoadXInput(void) {
 /// <returns></returns>
 internal void Win32InitDirectSound() {
 	// Note(smzb): Load DirectSound
+	HMODULE DSoundLibrary = LoadLibraryA("dsound.dll");
+	if (DSoundLibrary)
+	{
+		// Note(smzb): Get a a DirectSound Object
+		 = ( *)GetProcAddress(DSoundLibrary, "DirectSoundCreate");
+		// Note(smzb): "Create" a primary buffer
 
-	// Note(smzb): Get a a DirectSound Object
+		// Note(smzb): "Create" a secondary buffer
 
-	// Note(smzb): "Create" a primary buffer
-
-	// Note(smzb): "Create" a secondary buffer
-
-	// Note(smzb): Start playing
+		// Note(smzb): Start playing
+	}
 }
 
 /// <summary>
