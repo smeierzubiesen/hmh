@@ -1,4 +1,4 @@
-version: 0.1.d6.{build}
+version: 0.1.d7.{build}
 environment:
  BUILD_NUMBER: $(APPVEYOR_BUILD_NUMBER)
  APPVEYOR_CACHE_ENTRY_ZIP_ARGS: -t7z -m0=lzma -mx=9
@@ -23,7 +23,7 @@ artifacts:
 - path: build\${platform}\hmh-${platform}.exe
   name: hmh-${platform}
 - path: hmh-docs\html
-  name: hmh-docs
+  name: hmh-docs-${platform}
   type: zip
 deploy:
 - provider: GitHub

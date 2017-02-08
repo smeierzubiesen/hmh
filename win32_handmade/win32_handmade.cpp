@@ -4,7 +4,7 @@
 /* ========================================================================
 $File: $
 $Date: $
-$Revision: 0.1.d5 $
+$Revision: 0.1.d7 $
 $Creator: Sebastian Meier zu Biesen $
 $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 ======================================================================== */
@@ -12,16 +12,99 @@ $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 #include <Windows.h>
 #include <stdint.h>
 #include <Xinput.h>
+#include <dsound.h>
 #include "win32_handmade.h"
 
+/// <summary>
+/// Load the XInput library for XBox Xontroller Support. Depending on OS version either 1.3 or 1.4 is loaded.
+/// </summary>
+/// <see cref="X_INPUT_GET_STATE"/>
+/// <see cref="X_INPUT_SET_STATE"/>
+/// <returns>void</returns>
 internal void Win32LoadXInput(void) {
 	HMODULE XInputLibrary = LoadLibraryA("xinput1_4.dll");
+	if (!XInputLibrary) {
+		HMODULE XInputLibrary = LoadLibraryA("xinput1_3.dll");
+	}
 	if (XInputLibrary) {
 		XInputGetState = (x_input_get_state *)GetProcAddress(XInputLibrary, "XInputGetState");
 		XInputSetState = (x_input_set_state *)GetProcAddress(XInputLibrary, "XInputSetState");
 	}
 }
 
+/// <summary>
+/// PROTOTYPE: This function will load and initialize DirectSound to output sound to the default sound output channel.
+/// This should however still allow to run the game in the rare event, that DirectSound is not available.
+/// </summary>
+/// <returns></returns>
+internal void Win32InitDirectSound(HWND WindowHandle, int32 SamplesPerSecond, int32 BufferSize) {
+	// Note(smzb): Load DirectSound
+	HMODULE DSoundLibrary = LoadLibraryA("dsound.dll");
+	if (DSoundLibrary)
+	{
+		// Note(smzb): Get a a DirectSound Object
+		direct_sound_create *DirectSoundCreate = (direct_sound_create *)GetProcAddress(DSoundLibrary, "DirectSoundCreate");
+		LPDIRECTSOUND DirectSound;
+		if (DirectSoundCreate && SUCCEEDED(DirectSoundCreate(0, &DirectSound,0))) {
+			WAVEFORMATEX WaveFormat = {};
+			WaveFormat.wFormatTag = WAVE_FORMAT_PCM;
+			WaveFormat.nChannels = 2;
+			WaveFormat.nSamplesPerSec = SamplesPerSecond;
+			WaveFormat.nBlockAlign = (WaveFormat.nChannels*WaveFormat.wBitsPerSample) / 9;
+			WaveFormat.nAvgBytesPerSec = WaveFormat.nSamplesPerSec*WaveFormat.nBlockAlign;
+			WaveFormat.wBitsPerSample = 16;
+			WaveFormat.cbSize = 0;
+			if (SUCCEEDED(DirectSound->SetCooperativeLevel(WindowHandle, DSSCL_PRIORITY))) {
+				// Note(smzb): "Create" a primary buffer
+				DSBUFFERDESC BufferDescription = {};
+				BufferDescription.dwSize = sizeof(BufferDescription);
+				BufferDescription.dwFlags = DSBCAPS_PRIMARYBUFFER;
+				LPDIRECTSOUNDBUFFER PrimaryBuffer;
+				if (SUCCEEDED(DirectSound->CreateSoundBuffer(&BufferDescription, &PrimaryBuffer, 0))) {
+
+
+					//BufferDescription.dwSize;
+					if (SUCCEEDED(PrimaryBuffer->SetFormat(&WaveFormat))) {
+						// NOTE(smzb): Finally the format of the sound is set
+					}
+					else {
+						// TODO(smzb): Diagnostic Log here
+					}
+				}
+				else {
+					// (TODO(smzb): Diagnostic
+				}
+				
+			}
+			else {
+				// TODO(smzb): DirectSound Diagnostic
+			}
+			// Note(smzb): "Create" a secondary buffer
+			DSBUFFERDESC BufferDescription = {};
+			BufferDescription.dwSize = sizeof(BufferDescription);
+			BufferDescription.dwFlags = 0;
+			BufferDescription.dwBufferBytes = BufferSize;
+			BufferDescription.lpwfxFormat = &WaveFormat;
+			LPDIRECTSOUNDBUFFER SecondaryBuffer;
+			if (SUCCEEDED(DirectSound->CreateSoundBuffer(&BufferDescription, &SecondaryBuffer, 0))) {
+				// Note(smzb): Start playing
+			}
+			else {
+				// TODO(smzb): Diagnostic
+			}
+		}
+		else {
+			// TODO(smzb): Diagnostic Feedback
+		}
+		
+	}
+}
+
+/// <summary>
+/// Calculate Width and Height of the main window by subtracting right and left & bottom - top
+/// </summary>
+/// <param name="WindowHandle">The Window Handle to calculate</param>
+/// <returns>struct win32_window_dimensions</returns>
 internal win32_window_dimensions Win32GetWindowDimensions(HWND WindowHandle) {
 	win32_window_dimensions Result;
 	RECT WindowRect;
@@ -31,6 +114,13 @@ internal win32_window_dimensions Win32GetWindowDimensions(HWND WindowHandle) {
 	return Result;
 }
 
+/// <summary>
+/// This is just a dummy function to display somethign on the screen after we have assigned memory to the bitmap
+/// </summary>
+/// <param name="Buffer">Bitmap Backbuffer to us (pointer to)</param>
+/// <param name="XOffset">X Offset to start Moevement of the bitmap</param>
+/// <param name="YOffset">X Offset to start Moevement of the bitmap</param>
+/// <returns>void</returns>
 internal void Win32RenderGradient(win32_offscreen_buffer *Buffer, int XOffset, int YOffset) {
 	uint8 *Row = (uint8 *)Buffer->Memory;
 	for (int Y = 0; Y < Buffer->Height; ++Y) {
@@ -45,6 +135,13 @@ internal void Win32RenderGradient(win32_offscreen_buffer *Buffer, int XOffset, i
 	}
 }
 
+/// <summary>
+/// This re/creates a DeviceIndapendentBitmap Bufferand calculates the necessary memory allocation. 
+/// </summary>
+/// <param name="Buffer">Pointer to the BitmapBuffer</param>
+/// <param name="Width">Width of the Bitmap Buffer</param>
+/// <param name="Height">Height of the Bitmap Buffer</param>
+/// <returns>void</returns>
 internal void Win32ResizeDIBSection(win32_offscreen_buffer *Buffer, int Width, int Height) {
 	if (Buffer->Memory) {
 		VirtualFree(Buffer->Memory,0,MEM_RELEASE);
@@ -64,6 +161,18 @@ internal void Win32ResizeDIBSection(win32_offscreen_buffer *Buffer, int Width, i
 	Buffer->Pitch = Buffer->Width*Buffer->BytesPerPixel;
 }
 
+/// <summary>
+/// This function will blt the bitmap to the window defined in the below parameters.
+/// </summary>
+/// <param name="Buffer">Which bitmap buffer are we dealing with.</param>
+/// <param name="DeviceContext">Hardware Device Context (passed from WinMain()</param>
+/// <param name="WindowWidth">Integer Window Width</param>
+/// <param name="WindowHeight">Integer Window Height</param>
+/// <param name="X">X Coordinate for origin of bitmap</param>
+/// <param name="Y">y Coordinate for origin of bitmap</param>
+/// <param name="Width">Bitmap Width</param>
+/// <param name="Height">Bitmap Height</param>
+/// <returns>void</returns>
 internal void Win32DisplayBufferInWindow(win32_offscreen_buffer *Buffer, HDC DeviceContext, int WindowWidth, int WindowHeight, int X, int Y, int Width, int Height) {
 	StretchDIBits(DeviceContext, 0, 0, WindowWidth, WindowHeight, 0, 0, Buffer->Width, Buffer->Height, Buffer->Memory, &Buffer->Info, DIB_RGB_COLORS, SRCCOPY);
 }
@@ -71,11 +180,11 @@ internal void Win32DisplayBufferInWindow(win32_offscreen_buffer *Buffer, HDC Dev
 /// <summary>
 /// This guy deals with the messages from the PeekMessage() function in WinMain().
 /// </summary>
-/// <param name="Window"></param>
-/// <param name="Message"></param>
-/// <param name="WParam"></param>
-/// <param name="LParam"></param>
-/// <returns></returns>
+/// <param name="Window">Window Handle to the messenger</param>
+/// <param name="Message">Content of the message passed from windows to us</param>
+/// <param name="WParam">Parameter/function passed to us</param>
+/// <param name="LParam">Low Parameter for above function call</param>
+/// <returns>LResult integer</returns>
 internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPARAM WParam, LPARAM LParam)
 {
 	LRESULT Result = 0;
@@ -246,6 +355,10 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 					}
 				}
 			}
+			bool32 AltKeyWasDown = (LParam & (1 << 29));
+			if ((VKCode == VK_F4) && AltKeyWasDown) {
+				GlobalRunning = false;
+			}
 		} break;
 		case WM_SIZE:
 		{
@@ -295,11 +408,11 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 /// <summary>
 /// This is the main window call for windows as entry point to the app.
 /// </summary>
-/// <param name="Instance"></param>
-/// <param name="hPrevInstance"></param>
-/// <param name="CommandLine"></param>
-/// <param name="ShowCode"></param>
-/// <returns></returns>
+/// <param name="Instance">A handle to the current instance of the application.</param>
+/// <param name="hPrevInstance">A handle to the previous instance of the application. This parameter is always NULL.</param>
+/// <param name="CommandLine">The command line for the application, excluding the program name. To retrieve the entire command line, use the GetCommandLine function.</param>
+/// <param name="ShowCode">Controls how the window is to be shown.</param>
+/// <returns>If the function succeeds, terminating when it receives a WM_QUIT message, it should return the exit value contained in that message's wParam parameter. If the function terminates before entering the message loop, it should return zero.</returns>
 internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int ShowCode) {
 	Win32LoadXInput();
 	WNDCLASSA WindowClass = {};
@@ -329,6 +442,7 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 		{
 			int XOffset = 0;
 			int YOffset = 0;
+			Win32InitDirectSound(WindowHandle, 48000, 48000*sizeof(int16)*2);
 			GlobalRunning = true;
 			while(GlobalRunning)
 			{
@@ -386,6 +500,7 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 					else
 					{
 						// Controller is not connected 
+						// NOTE(smzb): In this case the Stub functions for xinputset/getstate should return the correct value;
 					}
 				}
 

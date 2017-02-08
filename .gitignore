@@ -44,3 +44,6 @@
 *.log
 
 *.suo
+
+win32_handmade/Debug/
+build/
