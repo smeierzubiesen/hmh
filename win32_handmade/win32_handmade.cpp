@@ -67,6 +67,7 @@ internal void Win32InitDirectSound(HWND WindowHandle, int32 SamplesPerSecond, in
 					//BufferDescription.dwSize;
 					if (SUCCEEDED(Result)) {
 						// NOTE(smzb): Finally the format of the sound is set
+						if (Debug) { OutputDebugStringA("Primary Buffer created!\n"); }
 					}
 					else {
 						// TODO(smzb): Diagnostic Log here
@@ -86,10 +87,10 @@ internal void Win32InitDirectSound(HWND WindowHandle, int32 SamplesPerSecond, in
 			BufferDescription.dwFlags = 0;
 			BufferDescription.dwBufferBytes = BufferSize;
 			BufferDescription.lpwfxFormat = &WaveFormat;
-			LPDIRECTSOUNDBUFFER SecondaryBuffer;
-			HRESULT Result = DirectSound->CreateSoundBuffer(&BufferDescription, &SecondaryBuffer, 0);
+			HRESULT Result = DirectSound->CreateSoundBuffer(&BufferDescription, &GlobalSecondaryBuffer, 0);
 			if (SUCCEEDED(Result)) {
-				// Note(smzb): Start playing
+				if (Debug) { OutputDebugStringA("Secondary Buffer created!"); }
+					// Note(smzb): Start playing
 			}
 			else {
 				// TODO(smzb): Diagnostic
