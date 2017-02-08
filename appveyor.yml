@@ -23,7 +23,7 @@ artifacts:
 - path: build\${platform}\hmh-${platform}.exe
   name: hmh-${platform}
 - path: hmh-docs\html
-  name: hmh-docs
+  name: hmh-docs-${platform}
   type: zip
 deploy:
 - provider: GitHub
