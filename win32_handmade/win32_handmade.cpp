@@ -15,7 +15,7 @@ $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 #include "win32_handmade.h"
 
 /// <summary>
-/// Load the XInput library for XBox Xontroller Support. Depending on OS version either 1.3 or 1.4 are loaded.
+/// Load the XInput library for XBox Xontroller Support. Depending on OS version either 1.3 or 1.4 is loaded.
 /// </summary>
 /// <see cref="X_INPUT_GET_STATE"/>
 /// <see cref="X_INPUT_SET_STATE"/>
@@ -29,6 +29,23 @@ internal void Win32LoadXInput(void) {
 		XInputGetState = (x_input_get_state *)GetProcAddress(XInputLibrary, "XInputGetState");
 		XInputSetState = (x_input_set_state *)GetProcAddress(XInputLibrary, "XInputSetState");
 	}
+}
+
+/// <summary>
+/// PROTOTYPE: This function will load and initialize DirectSound to output sound to the default sound output channel.
+/// This should however still allow to run the game in the rare event, that DirectSound is not available.
+/// </summary>
+/// <returns></returns>
+internal void Win32InitDirectSound() {
+	// Note(smzb): Load DirectSound
+
+	// Note(smzb): Get a a DirectSound Object
+
+	// Note(smzb): "Create" a primary buffer
+
+	// Note(smzb): "Create" a secondary buffer
+
+	// Note(smzb): Start playing
 }
 
 /// <summary>
@@ -373,6 +390,7 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 		{
 			int XOffset = 0;
 			int YOffset = 0;
+			Win32InitDirectSound();
 			GlobalRunning = true;
 			while(GlobalRunning)
 			{
