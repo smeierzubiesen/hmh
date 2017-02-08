@@ -14,7 +14,7 @@
 #define global_variable static
 
 global_variable bool GlobalRunning;
-global_variable bool Debug = 1;
+global_variable bool Debug = 0;
 
 typedef uint8_t uint8;
 typedef uint16_t uint16;
@@ -25,6 +25,8 @@ typedef int8_t int8;
 typedef int16_t int16;
 typedef int32_t int32;
 typedef int64_t int64;
+
+typedef int32 bool32;
 
 struct win32_offscreen_buffer {
 	BITMAPINFO Info;

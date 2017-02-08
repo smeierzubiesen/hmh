@@ -249,7 +249,7 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 					}
 				}
 			}
-			bool AltKeyWasDown = ((LParam & (1 << 29)) != 0);
+			bool32 AltKeyWasDown = (LParam & (1 << 29));
 			if ((VKCode == VK_F4) && AltKeyWasDown) {
 				GlobalRunning = false;
 			}
@@ -393,6 +393,7 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 					else
 					{
 						// Controller is not connected 
+						// NOTE(smzb): In this case the Stub functions for xinputset/getstate should return the correct value;
 					}
 				}
 
