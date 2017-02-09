@@ -16,7 +16,7 @@
 #define global_variable static
 
 global_variable bool GlobalRunning;
-global_variable bool Debug = 0;
+global_variable bool Debug = 1;
 
 typedef uint8_t uint8;
 typedef uint16_t uint16;
@@ -45,6 +45,7 @@ struct win32_window_dimensions {
 };
 
 global_variable win32_offscreen_buffer GlobalBackBuffer;
+global_variable LPDIRECTSOUNDBUFFER GlobalSecondaryBuffer;
 
 // NOTE(smzb): XInputGetState
 #define X_INPUT_GET_STATE(name) DWORD WINAPI name(DWORD dwUserIndex, XINPUT_STATE *pState)
