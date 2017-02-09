@@ -10,6 +10,7 @@
 
 #include <Windows.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <Xinput.h>
 #include <dsound.h>
 #include <math.h>
@@ -18,10 +19,13 @@
 #define local_persist static
 #define global_variable static
 
+/// <summary>
+/// Pi as per google.com : pi
+/// </summary>
 #define Pi32 3.14159265359f
 
 global_variable bool GlobalRunning;
-global_variable bool Debug = 0;
+global_variable bool Debug = 1;
 
 typedef uint8_t uint8;
 typedef uint16_t uint16;
@@ -38,6 +42,9 @@ typedef int32 bool32;
 typedef float real32;
 typedef double real64;
 
+/// <summary>
+/// Width/Height and Memory information for the bitmap buffer
+/// </summary>
 struct win32_offscreen_buffer {
 	BITMAPINFO Info;
 	void *Memory;
@@ -47,11 +54,18 @@ struct win32_offscreen_buffer {
 	int Pitch;
 };
 
+/// <summary>
+/// Simply the Width and Height of the main window (drawable area only)
+/// </summary>
 struct win32_window_dimensions {
 	int Width;
 	int Height;
 };
 
+/// <summary>
+/// A struct containing the configuration and size of the DirectSound Oject
+/// </summary>
+/// <see cref="Dsound"/>
 struct win32_sound_output {
 	//NOTE(smzb): Sound stuff setup
 	int SamplesPerSecond; // Samplerate of Output
@@ -64,9 +78,18 @@ struct win32_sound_output {
 
 };
 
+/// <summary>
+/// The Global Bitmap Buffer
+/// </summary>
 global_variable win32_offscreen_buffer GlobalBackBuffer;
+/// <summary>
+/// The DSound Buffer to which we actually write sound.
+/// </summary>
+/// <see cref="DSound"/>
 global_variable LPDIRECTSOUNDBUFFER GlobalSecondaryBuffer;
 
+#if !defined(WIN32_HANDMADE_X_INPUT)
+#define WIN32_HANDMADE_X_INPUT
 //NOTE(smzb): XInputGetState
 #define X_INPUT_GET_STATE(name) DWORD WINAPI name(DWORD dwUserIndex, XINPUT_STATE *pState)
 typedef X_INPUT_GET_STATE(x_input_get_state);
@@ -84,19 +107,22 @@ X_INPUT_SET_STATE(XInputSetStateStub) {
 }
 global_variable x_input_set_state *XInputSetState_ = XInputSetStateStub;
 #define XInputSetState XInputSetState_
+#endif
 
 //NOTE(smzb): DirectSoundCreate
 #define DIRECT_SOUND_CREATE(name) HRESULT WINAPI name(LPCGUID pcGuidDevice, LPDIRECTSOUND *ppDS, LPUNKNOWN pUnkOuter)
 typedef DIRECT_SOUND_CREATE(direct_sound_create);
 
-/*
-//NOTE this might not be necessary
-DIRECT_SOUND_CREATE(DirectSoundCreateStub) {
-	return(ERROR_DEVICE_NOT_CONNECTED);
+/// <summary>
+/// Formats the debug output for timing stuff (this is only enabled, when `Debug==true`
+/// </summary>
+/// <param name="ms">float: Milliseconds per frame.</param>
+/// <param name="fps">float: Frames per second.</param>
+/// <param name="MCyclesPerFrame">float: Millions of Cycles per second.</param>
+void PrintDebugTime(real32 ms, real32 fps, real32 MCyclesPerFrame) {
+	char Buffer[256];
+	sprintf_s(Buffer, "[:: %.03f ms/frame ::][:: %.03f FPS ::][:: %.03f MegaCycles/frame ::]\n", ms, fps, MCyclesPerFrame);
+	OutputDebugStringA(Buffer);
 }
-global_variable direct_sound_create *DirectSoundCreate_ = DirectSoundCreateStub;
-#define DirectSoundCreate DirectSoundCreate_
-*/
-
 
 #endif

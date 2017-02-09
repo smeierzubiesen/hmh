@@ -27,6 +27,8 @@ This is my take on and progress of the above mentioned (lol)
 
 [Changelog](/hmh/changelog.md)
 <pre>this is not working yet</pre>
+ - 09/02/2017 : Day10 done
+  - Now generating timing information in debug mode
  - 04/02/2017 - 08/02/2017 : Day6-9
   - Implemented Sound Output
    - At the moment only a sine-wave output but a clearer sound an ear has never harkened!!
