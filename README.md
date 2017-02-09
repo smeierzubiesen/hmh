@@ -5,7 +5,6 @@ a complete game development in C(++) from scratch
 
 |                |                                                                               Build Status                                                                               |
 |----------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/df831b31c02e458aab74c6f77fce60ae)](https://www.codacy.com/app/smeierzubiesen/hmh?utm_source=github.com&utm_medium=referral&utm_content=smeierzubiesen/hmh&utm_campaign=badger)
 | Project Status |               [![Build status](https://ci.appveyor.com/api/projects/status/ut2kjvfxq7ceny9x?svg=true)](https://ci.appveyor.com/project/smeierzubiesen/hmh)               |
 | branch:master  | [![Build status](https://ci.appveyor.com/api/projects/status/ut2kjvfxq7ceny9x/branch/master?svg=true)](https://ci.appveyor.com/project/smeierzubiesen/hmh/branch/master) |
 
@@ -13,7 +12,7 @@ a complete game development in C(++) from scratch
 |-------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | [![Stories in Backlog](https://badge.waffle.io/smeierzubiesen/hmh.svg?label=Backlog&title=Backlog)](https://waffle.io/smeierzubiesen/hmh) | [![Stories in Ready](https://badge.waffle.io/smeierzubiesen/hmh.svg?label=Ready&title=Ready)](http://waffle.io/smeierzubiesen/hmh) | [![Stories in In Progress](https://badge.waffle.io/smeierzubiesen/hmh.svg?label=In%20Progess&title=In%20Progress)](https://waffle.io/smeierzubiesen/hmh) | [![Stories in Done](https://badge.waffle.io/smeierzubiesen/hmh.svg?label=done&title=Done)](https://waffle.io/smeierzubiesen/hmh) |
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/df831b31c02e458aab74c6f77fce60ae)](https://www.codacy.com/app/smeierzubiesen/hmh?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=smeierzubiesen/hmh&amp;utm_campaign=Badge_Grade)  
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/df831b31c02e458aab74c6f77fce60ae)](https://www.codacy.com/app/smeierzubiesen/hmh?utm_source=github.com&utm_medium=referral&utm_content=smeierzubiesen/hmh&utm_campaign=badger)  
 [![Code Climate](https://codeclimate.com/github/smeierzubiesen/hmh/badges/gpa.svg)](https://codeclimate.com/github/smeierzubiesen/hmh)  
 [![Test Coverage](https://codeclimate.com/github/smeierzubiesen/hmh/badges/coverage.svg)](https://codeclimate.com/github/smeierzubiesen/hmh/coverage)  
 [![Issue Count](https://codeclimate.com/github/smeierzubiesen/hmh/badges/issue_count.svg)](https://codeclimate.com/github/smeierzubiesen/hmh)
