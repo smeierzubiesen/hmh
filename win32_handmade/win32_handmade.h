@@ -8,12 +8,17 @@
 #if !defined(WIN32_HANDMADE_H)
 #define WIN32_HANDMADE_H
 
+#include <Windows.h>
+#include <stdint.h>
 #include <Xinput.h>
 #include <dsound.h>
+#include <math.h>
 
 #define internal static
 #define local_persist static
 #define global_variable static
+
+#define Pi32 3.14159265359f
 
 global_variable bool GlobalRunning;
 global_variable bool Debug = 1;
@@ -29,6 +34,9 @@ typedef int32_t int32;
 typedef int64_t int64;
 
 typedef int32 bool32;
+
+typedef float real32;
+typedef double real64;
 
 struct win32_offscreen_buffer {
 	BITMAPINFO Info;

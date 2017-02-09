@@ -9,10 +9,6 @@ $Creator: Sebastian Meier zu Biesen $
 $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 ======================================================================== */
 
-#include <Windows.h>
-#include <stdint.h>
-#include <Xinput.h>
-#include <dsound.h>
 #include "win32_handmade.h"
 
 /// <summary>
@@ -450,14 +446,16 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 			//NOTE(smzb): Sound stuff setup
 			int SamplesPerSecond = 48000;
 			int ToneHz = 256;
-			int16 ToneVolume = 500;
+			int16 ToneVolume = 3000;
 			uint32 RunningSampleIndex = 0;
-			int SquareWavePeriod =SamplesPerSecond/ToneHz;
-			int HalfSquareWavePeriod = SquareWavePeriod / 2;
+			int WavePeriod = SamplesPerSecond/ToneHz;
+			//NOTE(smzb): Only needed for squarewave
+			//int HalfWavePeriod = WavePeriod / 2;
 			int BytesPerSample = sizeof(int16) * 2;
 			int SecondaryBufferSize = SamplesPerSecond * BytesPerSample;
 			Win32InitDirectSound(WindowHandle, SamplesPerSecond, SecondaryBufferSize);
-			GlobalSecondaryBuffer->Play(0, 0, DSBPLAY_LOOPING);
+			bool32 SoundIsPlaying = false;
+
 			//NOTE(smzb): The actual program loop
 			GlobalRunning = true;
 			while(GlobalRunning)
@@ -547,19 +545,34 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 						DWORD Region1SampleCount = Region1Size / BytesPerSample;
 						int16 *SampleOut = (int16 *)Region1;
 						for (DWORD SampleIndex = 0; SampleIndex < Region1SampleCount; ++SampleIndex) {
-							int16 SampleValue = ((RunningSampleIndex++ / HalfSquareWavePeriod) % 2) ? ToneVolume : -ToneVolume;
+							real32 t = 2.0f*Pi32*(real32)RunningSampleIndex / (real32)WavePeriod;
+							real32 SineValue = sinf(t);
+							int16 SampleValue = (int16)(SineValue*ToneVolume);
+							//NOTE(smzb):Squarewave generator
+							//int16 SampleValue = ((RunningSampleIndex++ / HalfWavePeriod) % 2) ? ToneVolume : -ToneVolume;
 							*SampleOut++ = SampleValue;
 							*SampleOut++ = SampleValue;
+							++RunningSampleIndex;
 						}
 						DWORD Region2SampleCount = Region2Size / BytesPerSample;
 						SampleOut = (int16 *)Region2;
 						for (DWORD SampleIndex = 0; SampleIndex < Region2SampleCount; ++SampleIndex) {
-							int16 SampleValue = ((RunningSampleIndex++ / HalfSquareWavePeriod) % 2) ? ToneVolume : -ToneVolume;
+							real32 t = 2.0f*Pi32*(real32)RunningSampleIndex / (real32)WavePeriod;
+							real32 SineValue = sinf(t);
+							int16 SampleValue = (int16)(SineValue*ToneVolume);
+							//NOTE(smzb):Squarewave generator
+							//int16 SampleValue = ((RunningSampleIndex++ / HalfWavePeriod) % 2) ? ToneVolume : -ToneVolume;
 							*SampleOut++ = SampleValue;
 							*SampleOut++ = SampleValue;
+							++RunningSampleIndex;
 						}
 						GlobalSecondaryBuffer->Unlock(Region1, Region1Size, Region2, Region2Size);
 					}
+				}
+
+				if (!SoundIsPlaying) {
+					GlobalSecondaryBuffer->Play(0,0,DSBPLAY_LOOPING);
+					SoundIsPlaying = true;
 				}
 
 				HDC DeviceContext = GetDC(WindowHandle);
