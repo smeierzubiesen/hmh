@@ -16,11 +16,12 @@ install:
 cache:
  - C:\ProgramData\chocolatey\bin -> appveyor.yml
  - C:\ProgramData\chocolatey\lib -> appveyor.yml
+ - packages -> **\packages.config
 build:
   parallel: true
   verbosity: minimal
 before_build:
-  nuget restore
+  appveyor-retry nuget restore
 after_build:
   - doxygen.exe "C:\projects\hmh\hmh.Doxyfile"
 artifacts:
