@@ -73,7 +73,7 @@ internal void Win32InitDirectSound(HWND WindowHandle, int32 SamplesPerSecond, in
 					}
 				}
 				else {
-					// (TODO(smzb): Diagnostic
+					//TODO(smzb): Diagnostic
 				}
 				
 			}
