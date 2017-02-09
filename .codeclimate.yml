@@ -7,7 +7,7 @@ engines:
       language: c++
       stds:
         - c++11
-      platform: Win32A
+      platform: win64
       defines:
       - "DEBUG=1"
       - "__cplusplus"
@@ -16,12 +16,12 @@ engines:
       includes:
       - include/
       max_configs: 12
-      inconclusive: true
+      inconclusive: false
   fixme:
     enabled: true
     config:
       strings:
-      - TODO
+      - TODO(smzb)
 ratings:
   paths:
   - "**.cpp"
