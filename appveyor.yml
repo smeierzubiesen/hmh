@@ -18,7 +18,7 @@ cache:
  - C:\ProgramData\chocolatey\lib -> appveyor.yml
 build:
   parallel: true
-  verbosity: quiet
+  verbosity: minimal
 before_build:
   nuget restore
 after_build:
