@@ -201,7 +201,6 @@ internal void Win32ResizeDIBSection(win32_offscreen_buffer *Buffer, int Width, i
 	Buffer->Info.bmiHeader.biPlanes = 1;
 	Buffer->Info.bmiHeader.biBitCount = 32;
 	Buffer->Info.bmiHeader.biCompression = BI_RGB;
-
 	int BitmapMemorySize = (Buffer->Width*Buffer->Height)*Buffer->BytesPerPixel;
 	Buffer->Memory = VirtualAlloc(0, BitmapMemorySize, MEM_COMMIT, PAGE_READWRITE);
 	Buffer->Pitch = Buffer->Width*Buffer->BytesPerPixel;
@@ -460,6 +459,11 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 /// <param name="ShowCode">Controls how the window is to be shown.</param>
 /// <returns>If the function succeeds, terminating when it receives a WM_QUIT message, it should return the exit value contained in that message's wParam parameter. If the function terminates before entering the message loop, it should return zero.</returns>
 internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int ShowCode) {
+	//NOTE(smzb): Timing Stuff
+	LARGE_INTEGER PerfCounterFrequencyResult;
+	QueryPerformanceFrequency(&PerfCounterFrequencyResult);
+	int64 PerfCounterFrequency = PerfCounterFrequencyResult.QuadPart;
+	//NOTE(smzb): Init of I/O and window.
 	Win32LoadXInput();
 	WNDCLASSA WindowClass = {};
 	Win32ResizeDIBSection(&GlobalBackBuffer, 1280, 720);
@@ -503,8 +507,13 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 			GlobalSecondaryBuffer->Play(0, 0, DSBPLAY_LOOPING);
 			//NOTE(smzb): The actual program loop
 			GlobalRunning = true;
+			//NOTE(smzb): Timing Variable
+			LARGE_INTEGER LastCounter;
+			QueryPerformanceCounter(&LastCounter);
 			while(GlobalRunning)
 			{
+				LARGE_INTEGER BeginCounter;
+				QueryPerformanceCounter(&BeginCounter);
 				MSG Message;
 				while (PeekMessage(&Message, 0, 0, 0, PM_REMOVE)) {
 					if (Message.message == WM_QUIT) {
@@ -587,7 +596,16 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 				Win32DisplayBufferInWindow(&GlobalBackBuffer, DeviceContext, Dimensions.Width, Dimensions.Height, 0, 0, Dimensions.Width, Dimensions.Height);
 				ReleaseDC(WindowHandle, DeviceContext);
 				++XOffset;
+				LARGE_INTEGER EndCounter;
+				QueryPerformanceCounter(&EndCounter);
 				
+				//TODO(smzb): Output time value here
+				int64 CounterElapsed = EndCounter.QuadPart - LastCounter.QuadPart;
+				int32 MsPerFrame = (int32)((1000*CounterElapsed) / PerfCounterFrequency);
+				if (Debug) { 
+					PrintDebugTime(MsPerFrame);
+				}
+				LastCounter = EndCounter;
 			}
 			
 		}

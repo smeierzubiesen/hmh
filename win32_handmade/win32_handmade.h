@@ -98,5 +98,10 @@ global_variable direct_sound_create *DirectSoundCreate_ = DirectSoundCreateStub;
 #define DirectSoundCreate DirectSoundCreate_
 */
 
+void PrintDebugTime(int32 ms) {
+	char Buffer[256];
+	wsprintf(Buffer, "Milliseconds/frame : %dms\n", ms);
+	OutputDebugStringA(Buffer);
+}
 
 #endif
