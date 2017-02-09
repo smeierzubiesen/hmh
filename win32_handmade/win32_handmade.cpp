@@ -459,13 +459,11 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 /// <param name="ShowCode">Controls how the window is to be shown.</param>
 /// <returns>If the function succeeds, terminating when it receives a WM_QUIT message, it should return the exit value contained in that message's wParam parameter. If the function terminates before entering the message loop, it should return zero.</returns>
 internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int ShowCode) {
-	if (Debug) {
-		//NOTE(smzb): Timing Stuff
-		LARGE_INTEGER PerfCounterFrequencyResult;
-		QueryPerformanceFrequency(&PerfCounterFrequencyResult);
-		int64 PerfCounterFrequency = PerfCounterFrequencyResult.QuadPart;
-		int64 LastCycleCount = __rdtsc();
-	}
+	//NOTE(smzb): Timing Stuff
+	LARGE_INTEGER PerfCounterFrequencyResult;
+	QueryPerformanceFrequency(&PerfCounterFrequencyResult);
+	int64 PerfCounterFrequency = PerfCounterFrequencyResult.QuadPart;
+	int64 LastCycleCount = __rdtsc();
 	//NOTE(smzb): Init of I/O and window.
 	Win32LoadXInput();
 	WNDCLASSA WindowClass = {};
@@ -510,12 +508,9 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 			GlobalSecondaryBuffer->Play(0, 0, DSBPLAY_LOOPING);
 			//NOTE(smzb): The actual program loop
 			GlobalRunning = true;
-			if (Debug)
-			{
-				//NOTE(smzb): Timing Variable
-				LARGE_INTEGER LastCounter;
-				QueryPerformanceCounter(&LastCounter);
-			}
+			//NOTE(smzb): Timing Variable
+			LARGE_INTEGER LastCounter;
+			QueryPerformanceCounter(&LastCounter);
 			while(GlobalRunning)
 			{
 				MSG Message;
