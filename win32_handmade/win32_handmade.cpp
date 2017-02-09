@@ -88,7 +88,7 @@ internal void Win32InitDirectSound(HWND WindowHandle, int32 SamplesPerSecond, in
 			BufferDescription.lpwfxFormat = &WaveFormat;
 			HRESULT Result = DirectSound->CreateSoundBuffer(&BufferDescription, &GlobalSecondaryBuffer, 0);
 			if (SUCCEEDED(Result)) {
-				if (Debug) { OutputDebugStringA("Secondary Buffer created!"); }
+				if (Debug) { OutputDebugStringA("Secondary Buffer created!\n"); }
 					//NOTE(smzb): Start playing
 			}
 			else {
@@ -463,6 +463,7 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 	LARGE_INTEGER PerfCounterFrequencyResult;
 	QueryPerformanceFrequency(&PerfCounterFrequencyResult);
 	int64 PerfCounterFrequency = PerfCounterFrequencyResult.QuadPart;
+	int64 LastCycleCount = __rdtsc();
 	//NOTE(smzb): Init of I/O and window.
 	Win32LoadXInput();
 	WNDCLASSA WindowClass = {};
@@ -497,7 +498,7 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 			//NOTE(smzb): Sound stuff setup
 			SoundOutput.SamplesPerSecond = 48000; // Samplerate of Output
 			SoundOutput.ToneHz = 256; // The tone to generate
-			SoundOutput.ToneVolume = 5000; // The volume of output
+			SoundOutput.ToneVolume = 3000; // The volume of output
 			SoundOutput.RunningSampleIndex = 0; // Counter used in Squarewave/Sinewave functions
 			SoundOutput.WavePeriod = SoundOutput.SamplesPerSecond / SoundOutput.ToneHz; // The Waveperiod describing the "duration" of one wave phase.
 			SoundOutput.BytesPerSample = sizeof(int16) * 2; // How many bytes do we need per sample (L/R * 16bytes)
@@ -596,16 +597,23 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 				Win32DisplayBufferInWindow(&GlobalBackBuffer, DeviceContext, Dimensions.Width, Dimensions.Height, 0, 0, Dimensions.Width, Dimensions.Height);
 				ReleaseDC(WindowHandle, DeviceContext);
 				++XOffset;
+				
+				int64 EndCycleCount = __rdtsc();
 				LARGE_INTEGER EndCounter;
 				QueryPerformanceCounter(&EndCounter);
 				
+				
 				//TODO(smzb): Output time value here
+				int64 CyclesElapsed = EndCycleCount - LastCycleCount; 
 				int64 CounterElapsed = EndCounter.QuadPart - LastCounter.QuadPart;
 				int32 MsPerFrame = (int32)((1000*CounterElapsed) / PerfCounterFrequency);
+				int32 FPS = (int32)(PerfCounterFrequency / CounterElapsed);
+				int32 MCyclesPerFrame = (int32)CyclesElapsed / (1000 * 1000);
 				if (Debug) { 
-					PrintDebugTime(MsPerFrame);
+					PrintDebugTime(MsPerFrame, FPS, MCyclesPerFrame);
 				}
 				LastCounter = EndCounter;
+				LastCycleCount = EndCycleCount;
 			}
 			
 		}

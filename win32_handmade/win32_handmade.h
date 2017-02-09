@@ -21,7 +21,7 @@
 #define Pi32 3.14159265359f
 
 global_variable bool GlobalRunning;
-global_variable bool Debug = 0;
+global_variable bool Debug = 1;
 
 typedef uint8_t uint8;
 typedef uint16_t uint16;
@@ -98,9 +98,9 @@ global_variable direct_sound_create *DirectSoundCreate_ = DirectSoundCreateStub;
 #define DirectSoundCreate DirectSoundCreate_
 */
 
-void PrintDebugTime(int32 ms) {
+void PrintDebugTime(int32 ms, int32 fps, int32 MCyclesPerFrame) {
 	char Buffer[256];
-	wsprintf(Buffer, "Milliseconds/frame : %dms\n", ms);
+	wsprintf(Buffer, "[:: %dms/frame ::][:: %dFPS ::][:: %d MegaCycles/frame ::]\n", ms, fps, MCyclesPerFrame);
 	OutputDebugStringA(Buffer);
 }
 
