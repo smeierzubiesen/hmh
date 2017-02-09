@@ -49,10 +49,10 @@ internal void Win32InitDirectSound(HWND WindowHandle, int32 SamplesPerSecond, in
 			WAVEFORMATEX WaveFormat = {};
 			WaveFormat.wFormatTag = WAVE_FORMAT_PCM;
 			WaveFormat.nChannels = 2;
-			WaveFormat.nSamplesPerSec = SamplesPerSecond;
-			WaveFormat.nBlockAlign = (WaveFormat.nChannels*WaveFormat.wBitsPerSample) / 9;
-			WaveFormat.nAvgBytesPerSec = WaveFormat.nSamplesPerSec*WaveFormat.nBlockAlign;
 			WaveFormat.wBitsPerSample = 16;
+			WaveFormat.nSamplesPerSec = SamplesPerSecond;
+			WaveFormat.nBlockAlign = (WaveFormat.nChannels*WaveFormat.wBitsPerSample) / 8;
+			WaveFormat.nAvgBytesPerSec = WaveFormat.nSamplesPerSec*WaveFormat.nBlockAlign;
 			WaveFormat.cbSize = 0;
 			if (SUCCEEDED(DirectSound->SetCooperativeLevel(WindowHandle, DSSCL_PRIORITY))) {
 				// Note(smzb): "Create" a primary buffer
@@ -509,6 +509,9 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 
 				Win32RenderGradient(&GlobalBackBuffer, XOffset, YOffset);
 				
+				// NOTE(smzb): DirectSound output test
+				
+
 				HDC DeviceContext = GetDC(WindowHandle);
 				win32_window_dimensions Dimensions = Win32GetWindowDimensions(WindowHandle);
 				Win32DisplayBufferInWindow(&GlobalBackBuffer, DeviceContext, Dimensions.Width, Dimensions.Height, 0, 0, Dimensions.Width, Dimensions.Height);

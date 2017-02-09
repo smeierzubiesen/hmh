@@ -16,7 +16,7 @@
 #define global_variable static
 
 global_variable bool GlobalRunning;
-global_variable bool Debug = 0;
+global_variable bool Debug = 1;
 
 typedef uint8_t uint8;
 typedef uint16_t uint16;
