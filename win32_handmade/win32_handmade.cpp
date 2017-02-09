@@ -530,20 +530,20 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 					{
 						//NOTE(smzb): Controller is connected 
 						XINPUT_GAMEPAD *Pad = &ControllerState.Gamepad;
-						bool Up = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_UP);
+						/*bool Up = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_UP);
 						bool Down = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_DOWN);
 						bool Left = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_LEFT);
 						bool Right = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_RIGHT);
 						bool Start = (Pad->wButtons & XINPUT_GAMEPAD_START);
 						bool Back = (Pad->wButtons & XINPUT_GAMEPAD_BACK);
 						bool LeftShoulder = (Pad->wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER);
-						bool RightShoulder = (Pad->wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER);
+						bool RightShoulder = (Pad->wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER);*/
 						bool AButton = (Pad->wButtons & XINPUT_GAMEPAD_A);
 						bool BButton = (Pad->wButtons & XINPUT_GAMEPAD_B);
-						bool XButton = (Pad->wButtons & XINPUT_GAMEPAD_X);
+						/*bool XButton = (Pad->wButtons & XINPUT_GAMEPAD_X);
 						bool YButton = (Pad->wButtons & XINPUT_GAMEPAD_Y);
 						int16 StickX = Pad->sThumbLX;
-						int16 StickY = Pad->sThumbLY;
+						int16 StickY = Pad->sThumbLY;*/
 						XINPUT_VIBRATION Vibration;
 						Vibration.wLeftMotorSpeed = 0;
 						Vibration.wRightMotorSpeed = 0;
