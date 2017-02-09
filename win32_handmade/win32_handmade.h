@@ -52,6 +52,18 @@ struct win32_window_dimensions {
 	int Height;
 };
 
+struct win32_sound_output {
+	//NOTE(smzb): Sound stuff setup
+	int SamplesPerSecond; // Samplerate of Output
+	int ToneHz; // The tone to generate
+	int16 ToneVolume; // The volume of output
+	uint32 RunningSampleIndex; // Counter used in Squarewave/Sinewave functions
+	int WavePeriod; // The Waveperiod describing the "duration" of one wave phase.
+	int BytesPerSample; // How many bytes do we need per sample (L/R * 16bytes)
+	int SecondaryBufferSize; // The Buffersize to actually generate sound in.
+
+};
+
 global_variable win32_offscreen_buffer GlobalBackBuffer;
 global_variable LPDIRECTSOUNDBUFFER GlobalSecondaryBuffer;
 
