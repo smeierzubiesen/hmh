@@ -19,6 +19,8 @@ cache:
 build:
   parallel: true
   verbosity: quiet
+before_build:
+  nuget restore
 after_build:
   - doxygen.exe "C:\projects\hmh\hmh.Doxyfile"
 artifacts:
