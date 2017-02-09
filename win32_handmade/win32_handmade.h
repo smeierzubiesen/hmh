@@ -10,6 +10,7 @@
 
 #include <Windows.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <Xinput.h>
 #include <dsound.h>
 #include <math.h>
@@ -100,7 +101,7 @@ global_variable direct_sound_create *DirectSoundCreate_ = DirectSoundCreateStub;
 
 void PrintDebugTime(int32 ms, int32 fps, int32 MCyclesPerFrame) {
 	char Buffer[256];
-	wsprintf(Buffer, "[:: %dms/frame ::][:: %dFPS ::][:: %d MegaCycles/frame ::]\n", ms, fps, MCyclesPerFrame);
+	sprintf(Buffer, "[:: %fms/frame ::][:: %fFPS ::][:: %f MegaCycles/frame ::]\n", ms, fps, MCyclesPerFrame);
 	OutputDebugStringA(Buffer);
 }
 

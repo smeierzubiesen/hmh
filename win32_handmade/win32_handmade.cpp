@@ -606,9 +606,9 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 				//TODO(smzb): Output time value here
 				int64 CyclesElapsed = EndCycleCount - LastCycleCount; 
 				int64 CounterElapsed = EndCounter.QuadPart - LastCounter.QuadPart;
-				int32 MsPerFrame = (int32)((1000*CounterElapsed) / PerfCounterFrequency);
-				int32 FPS = (int32)(PerfCounterFrequency / CounterElapsed);
-				int32 MCyclesPerFrame = (int32)CyclesElapsed / (1000 * 1000);
+				real32 MsPerFrame = (((1000.0f*(real32)CounterElapsed) / (real32)PerfCounterFrequency));
+				real32 FPS = (real32)(PerfCounterFrequency / (real32)CounterElapsed);
+				real32 MCyclesPerFrame = (real32)CyclesElapsed / (1000.0f * 1000.0f);
 				if (Debug) { 
 					PrintDebugTime(MsPerFrame, FPS, MCyclesPerFrame);
 				}
