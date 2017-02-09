@@ -21,7 +21,6 @@ engines:
     enabled: true
     config:
       strings:
-      - NOTE
       - TODO
 ratings:
   paths:
