@@ -32,7 +32,10 @@ internal void Win32LoadXInput(void) {
 /// PROTOTYPE: This function will load and initialize DirectSound to output sound to the default sound output channel.
 /// This should however still allow to run the game in the rare event, that DirectSound is not available.
 /// </summary>
-/// <returns></returns>
+/// <param name="WindowHandle">A Handle to the MainWindow</param>
+/// <param name="SamplesPerSecond">How many samples per second? (aka SampleRate)</param>
+/// <param name="BufferSize">How big is our buffer? (int32) [default:1 second]</param>
+/// <returns>void</returns>
 internal void Win32InitDirectSound(HWND WindowHandle, int32 SamplesPerSecond, int32 BufferSize) {
 	//NOTE(smzb): Load DirectSound
 	HMODULE DSoundLibrary = LoadLibraryA("dsound.dll");
@@ -95,10 +98,16 @@ internal void Win32InitDirectSound(HWND WindowHandle, int32 SamplesPerSecond, in
 		else {
 			//TODO(smzb): Diagnostic Feedback
 		}
-		
 	}
 }
 
+/// <summary>
+/// Fill the Soundbuffer with a Sine wave
+/// </summary>
+/// <param name="SoundOutput">Pointer to the Struct describing the Sound Output</param>
+/// <param name="ByteToLock">Where do we want to apply our dsound lock</param>
+/// <param name="BytesToWrite">.. and how many bytes do we have to commit to memory?</param>
+/// <returns>void</returns>
 internal void Win32FillSoundBuffer(win32_sound_output *SoundOutput, DWORD ByteToLock, DWORD BytesToWrite) {
 	VOID *Region1;
 	DWORD Region1Size;
@@ -492,7 +501,6 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 			Win32InitDirectSound(WindowHandle, SoundOutput.SamplesPerSecond, SoundOutput.SecondaryBufferSize);
 			Win32FillSoundBuffer(&SoundOutput, 0, SoundOutput.SecondaryBufferSize);
 			GlobalSecondaryBuffer->Play(0, 0, DSBPLAY_LOOPING);
-
 			//NOTE(smzb): The actual program loop
 			GlobalRunning = true;
 			while(GlobalRunning)
@@ -509,10 +517,8 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 				for (DWORD ControllerIndex = 0; ControllerIndex< XUSER_MAX_COUNT; ++ControllerIndex) {
 					XINPUT_STATE ControllerState;
 					ZeroMemory(&ControllerState, sizeof(XINPUT_STATE));
-
 					// Simply get the state of the controller from XInput.
 					dwResult = XInputGetState(ControllerIndex, &ControllerState);
-
 					if (dwResult == ERROR_SUCCESS)
 					{
 						// Controller is connected 
@@ -531,7 +537,6 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 						bool YButton = (Pad->wButtons & XINPUT_GAMEPAD_Y);
 						int16 StickX = Pad->sThumbLX;
 						int16 StickY = Pad->sThumbLY;
-
 						XINPUT_VIBRATION Vibration;
 						Vibration.wLeftMotorSpeed = 0;
 						Vibration.wRightMotorSpeed = 0;
@@ -546,7 +551,6 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 							XInputSetState(ControllerIndex, &Vibration);
 						}
 						XInputSetState(ControllerIndex, &Vibration);
-
 					}
 					else
 					{
@@ -577,10 +581,6 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 					}
 					Win32FillSoundBuffer(&SoundOutput, ByteToLock, BytesToWrite);
 				}
-
-				//FUNCTION CALL
-
-				
 
 				HDC DeviceContext = GetDC(WindowHandle);
 				win32_window_dimensions Dimensions = Win32GetWindowDimensions(WindowHandle);

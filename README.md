@@ -26,6 +26,17 @@ This is my take on and progress of the above mentioned (lol)
 
 [Changelog](/hmh/changelog.md)
 <pre>this is not working yet</pre>
+ - 04/02/2017 - 08/02/2017 : Day6-9
+  - Implemented Sound Output
+   - At the moment only a sine-wave output but a clearer sound an ear has never harkened!!
+  - Implemented Controller and Keyboard Input
+   - Alt+F4 is now handled by us as well
+  - Bugfixes
+  - Perfomance Improvents
+   - Improved code Readability by moving stuff into a .h file.
+   - Timing fixes etc.
+  - Documenation Updates
+   - The Documentation is now generated upon each build of the latest dayX->master pull-request
  - 03/02/2017 : Day 5
   - We have finished day 5, reviewed the code and have cleaned up the codebase.
  - 02/02/2017 : Day 4
