@@ -4,7 +4,7 @@
 /* ========================================================================
 $File: $
 $Date: $
-$Revision: 0.1.d10 $
+$Revision: 0.1.d11 $
 $Creator: Sebastian Meier zu Biesen $
 $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 ======================================================================== */
@@ -63,7 +63,6 @@ internal void Win32InitDirectSound(HWND WindowHandle, int32 SamplesPerSecond, in
 
 
 					HRESULT Result = PrimaryBuffer->SetFormat(&WaveFormat);
-					//BufferDescription.dwSize;
 					if (SUCCEEDED(Result)) {
 						//NOTE(smzb): Finally the format of the sound is set
 						if (Debug) { OutputDebugStringA("Primary Buffer created!\n"); }
@@ -73,7 +72,7 @@ internal void Win32InitDirectSound(HWND WindowHandle, int32 SamplesPerSecond, in
 					}
 				}
 				else {
-					// (TODO(smzb): Diagnostic
+					//TODO(smzb): Diagnostic
 				}
 				
 			}
@@ -124,7 +123,7 @@ internal void Win32FillSoundBuffer(win32_sound_output *SoundOutput, DWORD ByteTo
 			real32 t = 2.0f*Pi32*(real32)SoundOutput->RunningSampleIndex / (real32)SoundOutput->WavePeriod;
 			real32 SineValue = sinf(t);
 			int16 SampleValue = (int16)(SineValue*SoundOutput->ToneVolume);
-			//NOTE(smzb):Squarewave generator
+			//NOTE(smzb): Squarewave generator
 			//int16 SampleValue = ((RunningSampleIndex++ / HalfWavePeriod) % 2) ? ToneVolume : -ToneVolume;
 			*SampleOut++ = SampleValue;
 			*SampleOut++ = SampleValue;
@@ -136,7 +135,7 @@ internal void Win32FillSoundBuffer(win32_sound_output *SoundOutput, DWORD ByteTo
 			real32 t = 2.0f*Pi32*(real32)SoundOutput->RunningSampleIndex / (real32)SoundOutput->WavePeriod;
 			real32 SineValue = sinf(t);
 			int16 SampleValue = (int16)(SineValue*SoundOutput->ToneVolume);
-			//NOTE(smzb):Squarewave generator
+			//NOTE(smzb): Squarewave generator
 			//int16 SampleValue = ((RunningSampleIndex++ / HalfWavePeriod) % 2) ? ToneVolume : -ToneVolume;
 			*SampleOut++ = SampleValue;
 			*SampleOut++ = SampleValue;
@@ -496,12 +495,12 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 			int YOffset = 0;
 			win32_sound_output SoundOutput = {};
 			//NOTE(smzb): Sound stuff setup
-			SoundOutput.SamplesPerSecond = 48000; // Samplerate of Output
-			SoundOutput.ToneHz = 256; // The tone to generate
-			SoundOutput.ToneVolume = 3000; // The volume of output
-			SoundOutput.RunningSampleIndex = 0; // Counter used in Squarewave/Sinewave functions
-			SoundOutput.WavePeriod = SoundOutput.SamplesPerSecond / SoundOutput.ToneHz; // The Waveperiod describing the "duration" of one wave phase.
-			SoundOutput.BytesPerSample = sizeof(int16) * 2; // How many bytes do we need per sample (L/R * 16bytes)
+			SoundOutput.SamplesPerSecond = 48000; //NOTE(smzb): Samplerate of Output
+			SoundOutput.ToneHz = 256; //NOTE(smzb): The tone to generate
+			SoundOutput.ToneVolume = 3000; //NOTE(smzb): The volume of output
+			SoundOutput.RunningSampleIndex = 0; //NOTE(smzb): Counter used in Squarewave/Sinewave functions
+			SoundOutput.WavePeriod = SoundOutput.SamplesPerSecond / SoundOutput.ToneHz; //NOTE(smzb): The Waveperiod describing the "duration" of one wave phase.
+			SoundOutput.BytesPerSample = sizeof(int16) * 2; //NOTE(smzb): How many bytes do we need per sample (L/R * 16bytes)
 			SoundOutput.SecondaryBufferSize = SoundOutput.SamplesPerSecond * SoundOutput.BytesPerSample; // The Buffersize to actually generate sound in.
 			Win32InitDirectSound(WindowHandle, SoundOutput.SamplesPerSecond, SoundOutput.SecondaryBufferSize);
 			Win32FillSoundBuffer(&SoundOutput, 0, SoundOutput.SecondaryBufferSize);
@@ -525,26 +524,26 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 				for (DWORD ControllerIndex = 0; ControllerIndex< XUSER_MAX_COUNT; ++ControllerIndex) {
 					XINPUT_STATE ControllerState;
 					ZeroMemory(&ControllerState, sizeof(XINPUT_STATE));
-					// Simply get the state of the controller from XInput.
+					//NOTE(smzb): Simply get the state of the controller from XInput.
 					dwResult = XInputGetState(ControllerIndex, &ControllerState);
 					if (dwResult == ERROR_SUCCESS)
 					{
-						// Controller is connected 
+						//NOTE(smzb): Controller is connected 
 						XINPUT_GAMEPAD *Pad = &ControllerState.Gamepad;
-						bool Up = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_UP);
+						/*bool Up = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_UP);
 						bool Down = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_DOWN);
 						bool Left = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_LEFT);
 						bool Right = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_RIGHT);
 						bool Start = (Pad->wButtons & XINPUT_GAMEPAD_START);
 						bool Back = (Pad->wButtons & XINPUT_GAMEPAD_BACK);
 						bool LeftShoulder = (Pad->wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER);
-						bool RightShoulder = (Pad->wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER);
+						bool RightShoulder = (Pad->wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER);*/
 						bool AButton = (Pad->wButtons & XINPUT_GAMEPAD_A);
 						bool BButton = (Pad->wButtons & XINPUT_GAMEPAD_B);
-						bool XButton = (Pad->wButtons & XINPUT_GAMEPAD_X);
+						/*bool XButton = (Pad->wButtons & XINPUT_GAMEPAD_X);
 						bool YButton = (Pad->wButtons & XINPUT_GAMEPAD_Y);
 						int16 StickX = Pad->sThumbLX;
-						int16 StickY = Pad->sThumbLY;
+						int16 StickY = Pad->sThumbLY;*/
 						XINPUT_VIBRATION Vibration;
 						Vibration.wLeftMotorSpeed = 0;
 						Vibration.wRightMotorSpeed = 0;
@@ -562,7 +561,7 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 					}
 					else
 					{
-						// Controller is not connected 
+						//NOTE(smzb): Controller is not connected 
 						//NOTE(smzb): In this case the Stub functions for xinputset/getstate should return the correct value;
 					}
 				}

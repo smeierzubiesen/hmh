@@ -25,35 +25,35 @@ This is my take on and progress of the above mentioned (lol)
 ## Progress
 
 [Changelog](/hmh/changelog.md)
-<pre>this is not working yet</pre>
+<pre>this is not working yet as intended</pre>
  - 09/02/2017 : Day10 done
-  - Now generating timing information in debug mode
+   - Now generating timing information in debug mode
  - 04/02/2017 - 08/02/2017 : Day6-9
-  - Implemented Sound Output
+   - Implemented Sound Output
    - At the moment only a sine-wave output but a clearer sound an ear has never harkened!!
-  - Implemented Controller and Keyboard Input
+   - Implemented Controller and Keyboard Input
    - Alt+F4 is now handled by us as well
-  - Bugfixes
-  - Perfomance Improvents
+   - Bugfixes
+   - Perfomance Improvents
    - Improved code Readability by moving stuff into a .h file.
    - Timing fixes etc.
-  - Documenation Updates
-   - The Documentation is now generated upon each build of the latest dayX->master pull-request
+   - Documenation Updates
+     - The Documentation is now generated upon each build of the latest dayX->master pull-request
  - 03/02/2017 : Day 5
-  - We have finished day 5, reviewed the code and have cleaned up the codebase.
+   - We have finished day 5, reviewed the code and have cleaned up the codebase.
  - 02/02/2017 : Day 4
-  - We are drawing into the window.
+   - We are drawing into the window.
  - 01//2/2017 : Day 3
-  - We have created a backbuffer in which we can now paint.
+   - We have created a backbuffer in which we can now paint.
  - 30/01/2017 : Day 2
-  - we have created an actual window in which we either set white or black upon WM_SIZE
+   - we have created an actual window in which we either set white or black upon WM_SIZE
  - 29/01/17 : Day1 finished and ready for merge
-  - Added simple MsgBox function
-  - Compiler options set.
-  - Documentation is being generated
+   - Added simple MsgBox function
+   - Compiler options set.
+   - Documentation is being generated
  - 29/01/17 : We are currently on Day 1 and have not actually started yet
-  - Set up dev environnment.
-  - Changed approach from emacs based and cmd builds to [VS2015][] as I prefer it, but it's personal choice.
+   - Set up dev environnment.
+   - Changed approach from emacs based and cmd builds to [VS2015][] as I prefer it, but it's personal choice.
 
 First of all I had to set up my dev environment.
 So simply install [VS2015][] (Community Edition is free and does everything we need it to)

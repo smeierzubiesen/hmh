@@ -1,4 +1,4 @@
-version: 0.1.d10.{build}
+version: 0.1.d11.{build}
 environment:
  BUILD_NUMBER: $(APPVEYOR_BUILD_NUMBER)
  APPVEYOR_CACHE_ENTRY_ZIP_ARGS: -t7z -m0=lzma -mx=9
@@ -11,12 +11,17 @@ platform:
 - x64
 install:
   - choco install doxygen.portable
+##  - choco install cppcheck.portable
+## TODO(smzb): We need to find a way to do c++ code analysis...
 cache:
  - C:\ProgramData\chocolatey\bin -> appveyor.yml
  - C:\ProgramData\chocolatey\lib -> appveyor.yml
+ - packages -> **\packages.config
 build:
   parallel: true
   verbosity: minimal
+before_build:
+  appveyor-retry nuget restore
 after_build:
   - doxygen.exe "C:\projects\hmh\hmh.Doxyfile"
 artifacts:

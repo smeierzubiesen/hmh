@@ -1,6 +1,29 @@
 engines:
+  cppcheck:
+    enabled: true
+    config:
+      check: all
+      project: hmh.sln
+      language: c++
+      stds:
+        - c++11
+      platform: win64
+      defines:
+      - "DEBUG=1"
+      - "__cplusplus"
+      undefines:
+      - "DEBUG"
+      includes:
+      - include/
+      max_configs: 12
+      inconclusive: false
   fixme:
     enabled: true
+    config:
+      strings:
+      - TODO(smzb)
 ratings:
-  paths: []
+  paths:
+  - "**.cpp"
+  - "**.h"
 exclude_paths: []
