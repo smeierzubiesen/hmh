@@ -459,11 +459,13 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 /// <param name="ShowCode">Controls how the window is to be shown.</param>
 /// <returns>If the function succeeds, terminating when it receives a WM_QUIT message, it should return the exit value contained in that message's wParam parameter. If the function terminates before entering the message loop, it should return zero.</returns>
 internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int ShowCode) {
-	//NOTE(smzb): Timing Stuff
-	LARGE_INTEGER PerfCounterFrequencyResult;
-	QueryPerformanceFrequency(&PerfCounterFrequencyResult);
-	int64 PerfCounterFrequency = PerfCounterFrequencyResult.QuadPart;
-	int64 LastCycleCount = __rdtsc();
+	if (Debug) {
+		//NOTE(smzb): Timing Stuff
+		LARGE_INTEGER PerfCounterFrequencyResult;
+		QueryPerformanceFrequency(&PerfCounterFrequencyResult);
+		int64 PerfCounterFrequency = PerfCounterFrequencyResult.QuadPart;
+		int64 LastCycleCount = __rdtsc();
+	}
 	//NOTE(smzb): Init of I/O and window.
 	Win32LoadXInput();
 	WNDCLASSA WindowClass = {};
@@ -508,13 +510,14 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 			GlobalSecondaryBuffer->Play(0, 0, DSBPLAY_LOOPING);
 			//NOTE(smzb): The actual program loop
 			GlobalRunning = true;
-			//NOTE(smzb): Timing Variable
-			LARGE_INTEGER LastCounter;
-			QueryPerformanceCounter(&LastCounter);
+			if (Debug)
+			{
+				//NOTE(smzb): Timing Variable
+				LARGE_INTEGER LastCounter;
+				QueryPerformanceCounter(&LastCounter);
+			}
 			while(GlobalRunning)
 			{
-				LARGE_INTEGER BeginCounter;
-				QueryPerformanceCounter(&BeginCounter);
 				MSG Message;
 				while (PeekMessage(&Message, 0, 0, 0, PM_REMOVE)) {
 					if (Message.message == WM_QUIT) {
@@ -598,24 +601,21 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 				ReleaseDC(WindowHandle, DeviceContext);
 				++XOffset;
 				
-				int64 EndCycleCount = __rdtsc();
-				LARGE_INTEGER EndCounter;
-				QueryPerformanceCounter(&EndCounter);
-				
-				
-				//TODO(smzb): Output time value here
-				int64 CyclesElapsed = EndCycleCount - LastCycleCount; 
-				int64 CounterElapsed = EndCounter.QuadPart - LastCounter.QuadPart;
-				real32 MsPerFrame = (((1000.0f*(real32)CounterElapsed) / (real32)PerfCounterFrequency));
-				real32 FPS = (real32)(PerfCounterFrequency / (real32)CounterElapsed);
-				real32 MCyclesPerFrame = (real32)CyclesElapsed / (1000.0f * 1000.0f);
-				if (Debug) { 
+				//NOTE(smzb): Timing counters are here, but only if in debug mode.
+				if (Debug) {
+					int64 EndCycleCount = __rdtsc();
+					LARGE_INTEGER EndCounter;
+					QueryPerformanceCounter(&EndCounter);
+					int64 CyclesElapsed = EndCycleCount - LastCycleCount;
+					int64 CounterElapsed = EndCounter.QuadPart - LastCounter.QuadPart;
+					real32 MsPerFrame = (((1000.0f*(real32)CounterElapsed) / (real32)PerfCounterFrequency));
+					real32 FPS = (real32)(PerfCounterFrequency / (real32)CounterElapsed);
+					real32 MCyclesPerFrame = (real32)CyclesElapsed / (1000.0f * 1000.0f);
 					PrintDebugTime(MsPerFrame, FPS, MCyclesPerFrame);
+					LastCounter = EndCounter;
+					LastCycleCount = EndCycleCount;
 				}
-				LastCounter = EndCounter;
-				LastCycleCount = EndCycleCount;
 			}
-			
 		}
 		else
 		{
