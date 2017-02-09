@@ -5,6 +5,7 @@ a complete game development in C(++) from scratch
 
 |                |                                                                               Build Status                                                                               |
 |----------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/df831b31c02e458aab74c6f77fce60ae)](https://www.codacy.com/app/smeierzubiesen/hmh?utm_source=github.com&utm_medium=referral&utm_content=smeierzubiesen/hmh&utm_campaign=badger)
 | Project Status |               [![Build status](https://ci.appveyor.com/api/projects/status/ut2kjvfxq7ceny9x?svg=true)](https://ci.appveyor.com/project/smeierzubiesen/hmh)               |
 | branch:master  | [![Build status](https://ci.appveyor.com/api/projects/status/ut2kjvfxq7ceny9x/branch/master?svg=true)](https://ci.appveyor.com/project/smeierzubiesen/hmh/branch/master) |
 
