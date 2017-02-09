@@ -99,9 +99,9 @@ global_variable direct_sound_create *DirectSoundCreate_ = DirectSoundCreateStub;
 #define DirectSoundCreate DirectSoundCreate_
 */
 
-void PrintDebugTime(int32 ms, int32 fps, int32 MCyclesPerFrame) {
+void PrintDebugTime(real32 ms, real32 fps, real32 MCyclesPerFrame) {
 	char Buffer[256];
-	sprintf(Buffer, "[:: %fms/frame ::][:: %fFPS ::][:: %f MegaCycles/frame ::]\n", ms, fps, MCyclesPerFrame);
+	sprintf_s(Buffer, "[:: %fms/frame ::][:: %fFPS ::][:: %f MegaCycles/frame ::]\n", ms, fps, MCyclesPerFrame);
 	OutputDebugStringA(Buffer);
 }
 
