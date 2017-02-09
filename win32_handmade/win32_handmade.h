@@ -65,7 +65,7 @@ struct win32_window_dimensions {
 /// <summary>
 /// A struct containing the configuration and size of the DirectSound Oject
 /// </summary>
-/// <see cref="Dsound"/>
+/// <see cref="DIRECT_SOUND_CREATE"/>
 struct win32_sound_output {
 	//NOTE(smzb): Sound stuff setup
 	int SamplesPerSecond; // Samplerate of Output
@@ -85,7 +85,7 @@ global_variable win32_offscreen_buffer GlobalBackBuffer;
 /// <summary>
 /// The DSound Buffer to which we actually write sound.
 /// </summary>
-/// <see cref="DSound"/>
+/// <see cref="DIRECT_SOUND_CREATE"/>
 global_variable LPDIRECTSOUNDBUFFER GlobalSecondaryBuffer;
 
 #if !defined(WIN32_HANDMADE_X_INPUT)
@@ -119,6 +119,7 @@ typedef DIRECT_SOUND_CREATE(direct_sound_create);
 /// <param name="ms">float: Milliseconds per frame.</param>
 /// <param name="fps">float: Frames per second.</param>
 /// <param name="MCyclesPerFrame">float: Millions of Cycles per second.</param>
+/// <see cref="DIRECT_SOUND_CREATE"/>
 void PrintDebugTime(real32 ms, real32 fps, real32 MCyclesPerFrame) {
 	char Buffer[256];
 	sprintf_s(Buffer, "[:: %.03f ms/frame ::][:: %.03f FPS ::][:: %.03f MegaCycles/frame ::]\n", ms, fps, MCyclesPerFrame);
