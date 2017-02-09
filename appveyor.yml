@@ -16,7 +16,7 @@ cache:
  - C:\ProgramData\chocolatey\lib -> appveyor.yml
 build:
   parallel: true
-  verbosity: minimal
+  verbosity: quiet
 after_build:
   - doxygen.exe "C:\projects\hmh\hmh.Doxyfile"
 artifacts:
