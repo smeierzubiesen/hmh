@@ -1,4 +1,4 @@
-version: 0.1.d9.{build}
+version: 0.1.d10.{build}
 environment:
  BUILD_NUMBER: $(APPVEYOR_BUILD_NUMBER)
  APPVEYOR_CACHE_ENTRY_ZIP_ARGS: -t7z -m0=lzma -mx=9
