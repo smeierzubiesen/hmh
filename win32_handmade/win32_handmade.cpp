@@ -9,7 +9,99 @@ $Creator: Sebastian Meier zu Biesen $
 $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 ======================================================================== */
 
-#include "win32_handmade.h"
+/*
+TODO(smzb): This is not a final win32 platform layer.
+ - Saved Game locations
+ - Getting a handle to the executable
+ - Asset loading path(s)
+ - Threading (how-to launch a thread)
+ - Raw Input (support for multiple keyboards)
+ - Sleep/time BeginPeriod
+ - ClipCursor() (multi monitor support)
+ - Fullscreen support
+ - WM_SETCURSOR (control cursor visibility)
+ - QueryCancelAutoplay
+ - WM_ACTIVATEAPP (for when we are not in focus)
+ - Blit speed improvement
+ - Hardware acceleration (OpenGL||Direct3D||both??)
+ - GetKeyboardlayout() suppoprt (international keyboards)
+`part list of stuff to be done`
+*/
+
+#include "handmade.h"
+
+/// <summary>
+/// Simply the Width and Height of the main window (drawable area only)
+/// </summary>
+struct win32_window_dimensions {
+	int Width;
+	int Height;
+};
+
+/// <summary>
+/// A struct containing the configuration and size of the DirectSound Oject
+/// </summary>
+/// <see cref="DIRECT_SOUND_CREATE"/>
+struct win32_sound_output {
+	//NOTE(smzb): Sound stuff setup
+	int SamplesPerSecond; // Samplerate of Output
+	int ToneHz; // The tone to generate
+	int16 ToneVolume; // The volume of output
+	uint32 RunningSampleIndex; // Counter used in Squarewave/Sinewave functions
+	int WavePeriod; // The Waveperiod describing the "duration" of one wave phase.
+	int BytesPerSample; // How many bytes do we need per sample (L/R * 16bytes)
+	int SecondaryBufferSize; // The Buffersize to actually generate sound in.
+
+};
+
+/// <summary>
+/// The Global Bitmap Buffer
+/// </summary>
+global_variable win32_offscreen_buffer GlobalBitmapBuffer;
+
+/// <summary>
+/// The DSound Buffer to which we actually write sound.
+/// </summary>
+/// <see cref="DIRECT_SOUND_CREATE"/>
+global_variable LPDIRECTSOUNDBUFFER GlobalSecondaryBuffer;
+
+#if !defined(WIN32_HANDMADE_X_INPUT)
+#define WIN32_HANDMADE_X_INPUT
+//NOTE(smzb): XInputGetState
+#define X_INPUT_GET_STATE(name) DWORD WINAPI name(DWORD dwUserIndex, XINPUT_STATE *pState)
+typedef X_INPUT_GET_STATE(x_input_get_state);
+X_INPUT_GET_STATE(XInputGetStateStub) {
+	return(ERROR_DEVICE_NOT_CONNECTED);
+}
+global_variable x_input_get_state *XInputGetState_ = XInputGetStateStub;
+#define XInputGetState XInputGetState_
+
+//NOTE(smzb): XInputSetState
+#define X_INPUT_SET_STATE(name) DWORD WINAPI name(DWORD dwUserIndex, XINPUT_VIBRATION *pVibration)
+typedef X_INPUT_SET_STATE(x_input_set_state);
+X_INPUT_SET_STATE(XInputSetStateStub) {
+	return(ERROR_DEVICE_NOT_CONNECTED);
+}
+global_variable x_input_set_state *XInputSetState_ = XInputSetStateStub;
+#define XInputSetState XInputSetState_
+#endif
+
+//NOTE(smzb): DirectSoundCreate
+#define DIRECT_SOUND_CREATE(name) HRESULT WINAPI name(LPCGUID pcGuidDevice, LPDIRECTSOUND *ppDS, LPUNKNOWN pUnkOuter)
+typedef DIRECT_SOUND_CREATE(direct_sound_create);
+
+/// <summary>
+/// Formats the debug output for timing stuff (this is only enabled, when `Debug==true`
+/// </summary>
+/// <param name="ms">float: Milliseconds per frame.</param>
+/// <param name="fps">float: Frames per second.</param>
+/// <param name="MCyclesPerFrame">float: Millions of Cycles per second.</param>
+/// <see cref="DIRECT_SOUND_CREATE"/>
+void PrintDebugTime(real32 ms, real32 fps, real32 MCyclesPerFrame) {
+	char Buffer[256];
+	sprintf_s(Buffer, "[:: %.03f ms/frame ::][:: %.03f FPS ::][:: %.03f MegaCycles/frame ::]\n", ms, fps, MCyclesPerFrame);
+	OutputDebugStringA(Buffer);
+}
 
 /// <summary>
 /// Load the XInput library for XBox Xontroller Support. Depending on OS version either 1.3 or 1.4 is loaded.
@@ -157,27 +249,6 @@ internal win32_window_dimensions Win32GetWindowDimensions(HWND WindowHandle) {
 	Result.Width = WindowRect.right - WindowRect.left;
 	Result.Height = WindowRect.bottom - WindowRect.top;
 	return Result;
-}
-
-/// <summary>
-/// This is just a dummy function to display something on the screen after we have assigned memory to the bitmap
-/// </summary>
-/// <param name="Buffer">Bitmap Backbuffer to us (pointer to)</param>
-/// <param name="XOffset">X Offset to start Moevement of the bitmap</param>
-/// <param name="YOffset">X Offset to start Moevement of the bitmap</param>
-/// <returns>void</returns>
-internal void Win32RenderGradient(win32_offscreen_buffer *Buffer, int XOffset, int YOffset) {
-	uint8 *Row = (uint8 *)Buffer->Memory;
-	for (int Y = 0; Y < Buffer->Height; ++Y) {
-		uint32 *Pixel = (uint32 *)Row;
-		for (int X = 0; X < Buffer->Width; ++X) {
-			uint8 Blue = (X + XOffset);
-			uint8 Green = (Y + YOffset);
-			uint8 Red = (X + XOffset);
-			*Pixel++ = ((Red << 16) | (Green << 8) | (Blue));
-		}
-		Row += Buffer->Pitch;
-	}
 }
 
 /// <summary>
@@ -435,7 +506,7 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 			int Width = Paint.rcPaint.right - Paint.rcPaint.left;
 			int Height = Paint.rcPaint.bottom - Paint.rcPaint.top;
 			win32_window_dimensions Dimensions = Win32GetWindowDimensions(Window);
-			Win32DisplayBufferInWindow(&GlobalBackBuffer, DeviceContext, Dimensions.Width, Dimensions.Height, X, Y, Width, Height);
+			Win32DisplayBufferInWindow(&GlobalBitmapBuffer, DeviceContext, Dimensions.Width, Dimensions.Height, X, Y, Width, Height);
 			EndPaint(Window,&Paint);
 			if (Debug) { OutputDebugStringA("WM_PAINT\n"); }
 		} break;
@@ -449,6 +520,7 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 	return(Result);
 }
 
+
 /// <summary>
 /// This is the main window call for windows as entry point to the app.
 /// </summary>
@@ -457,7 +529,17 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 /// <param name="CommandLine">The command line for the application, excluding the program name. To retrieve the entire command line, use the GetCommandLine function.</param>
 /// <param name="ShowCode">Controls how the window is to be shown.</param>
 /// <returns>If the function succeeds, terminating when it receives a WM_QUIT message, it should return the exit value contained in that message's wParam parameter. If the function terminates before entering the message loop, it should return zero.</returns>
-internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int ShowCode) {
+int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int ShowCode) 
+
+/// <summary>
+/// This is the main entry point to the app called from linux.
+/// </summary>
+/// <param name="argc">Number of arguments passed into the main call</param>
+/// <param name="argv">An array (I think) of chars[] with command line parameters</param>
+/// <returns>An integer as return code. (This wouold normally be exxpected to be zero to indicate normal program termination</returns>
+///int main(int argc, char **argv)
+
+{
 	//NOTE(smzb): Timing Stuff
 	LARGE_INTEGER PerfCounterFrequencyResult;
 	QueryPerformanceFrequency(&PerfCounterFrequencyResult);
@@ -466,7 +548,8 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 	//NOTE(smzb): Init of I/O and window.
 	Win32LoadXInput();
 	WNDCLASSA WindowClass = {};
-	Win32ResizeDIBSection(&GlobalBackBuffer, 1280, 720);
+	//Win32ResizeDIBSection(&GlobalBitmapBuffer, 1280, 720);
+	Win32ResizeDIBSection(&GlobalBitmapBuffer, 640, 480);
 	WindowClass.style = CS_HREDRAW|CS_VREDRAW;
 	WindowClass.lpfnWndProc = Win32MainWindowCallback;
 	WindowClass.hInstance = Instance;
@@ -495,9 +578,9 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 			int YOffset = 0;
 			win32_sound_output SoundOutput = {};
 			//NOTE(smzb): Sound stuff setup
-			SoundOutput.SamplesPerSecond = 48000; //NOTE(smzb): Samplerate of Output
-			SoundOutput.ToneHz = 256; //NOTE(smzb): The tone to generate
-			SoundOutput.ToneVolume = 3000; //NOTE(smzb): The volume of output
+			SoundOutput.SamplesPerSecond = 44100; //NOTE(smzb): Samplerate of Output
+			SoundOutput.ToneHz = 261; //NOTE(smzb): The tone to generate
+			SoundOutput.ToneVolume = 5000; //NOTE(smzb): The volume of output
 			SoundOutput.RunningSampleIndex = 0; //NOTE(smzb): Counter used in Squarewave/Sinewave functions
 			SoundOutput.WavePeriod = SoundOutput.SamplesPerSecond / SoundOutput.ToneHz; //NOTE(smzb): The Waveperiod describing the "duration" of one wave phase.
 			SoundOutput.BytesPerSample = sizeof(int16) * 2; //NOTE(smzb): How many bytes do we need per sample (L/R * 16bytes)
@@ -565,8 +648,15 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 						//NOTE(smzb): In this case the Stub functions for xinputset/getstate should return the correct value;
 					}
 				}
-
-				Win32RenderGradient(&GlobalBackBuffer, XOffset, YOffset);
+				
+				game_offscreen_buffer Buffer2 = {};
+				Buffer2.Memory = GlobalBitmapBuffer.Memory;
+				Buffer2.Width = GlobalBitmapBuffer.Width;
+				Buffer2.Height = GlobalBitmapBuffer.Height;;
+				Buffer2.Pitch = GlobalBitmapBuffer.Pitch;
+				//Buffer2.BytesPerPixel;
+				GameUpdateAndRender(&Buffer2, XOffset, YOffset);
+				//Win32RenderGradient(&GlobalBitmapBuffer, XOffset, YOffset);
 				
 				//NOTE(smzb): DirectSound output test
 				DWORD PlayCursorPosition;
@@ -591,7 +681,7 @@ internal int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR
 
 				HDC DeviceContext = GetDC(WindowHandle);
 				win32_window_dimensions Dimensions = Win32GetWindowDimensions(WindowHandle);
-				Win32DisplayBufferInWindow(&GlobalBackBuffer, DeviceContext, Dimensions.Width, Dimensions.Height, 0, 0, Dimensions.Width, Dimensions.Height);
+				Win32DisplayBufferInWindow(&GlobalBitmapBuffer, DeviceContext, Dimensions.Width, Dimensions.Height, 0, 0, Dimensions.Width, Dimensions.Height);
 				ReleaseDC(WindowHandle, DeviceContext);
 				++XOffset;
 				

@@ -77,22 +77,23 @@
     <EnableManagedIncrementalBuild>false</EnableManagedIncrementalBuild>
     <TargetName>$(SolutionName)-$(PlatformShortName)</TargetName>
     <EmbedManifest>true</EmbedManifest>
-    <LinkIncremental>false</LinkIncremental>
+    <EnableCppCoreCheck>false</EnableCppCoreCheck>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>$(SolutionName)-$(PlatformShortName)</TargetName>
     <OutDir>$(SolutionDir)build\$(PlatformShortName)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
-    <EmbedManifest>true</EmbedManifest>
+    <EmbedManifest>false</EmbedManifest>
     <CodeAnalysisRuleSet>MixedRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <LinkIncremental>false</LinkIncremental>
+    <EnableCppCoreCheck>false</EnableCppCoreCheck>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)build\$(PlatformShortName)\</OutDir>
     <TargetName>$(SolutionName)-$(PlatformShortName)</TargetName>
     <EmbedManifest>false</EmbedManifest>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <GenerateManifest>false</GenerateManifest>
+    <GenerateManifest>true</GenerateManifest>
+    <CodeAnalysisRuleSet>MixedRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)build\$(PlatformShortName)\</OutDir>
@@ -100,7 +101,8 @@
     <TargetName>$(SolutionName)-$(PlatformShortName)</TargetName>
     <EmbedManifest>false</EmbedManifest>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <GenerateManifest>false</GenerateManifest>
+    <GenerateManifest>true</GenerateManifest>
+    <CodeAnalysisRuleSet>MixedRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -108,22 +110,21 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <CompileAs>CompileAsCpp</CompileAs>
       <EnablePREfast>false</EnablePREfast>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AssemblerOutput>All</AssemblerOutput>
+      <AssemblerOutput>NoListing</AssemblerOutput>
       <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link />
     <Link>
-      <ShowProgress>LinkVerboseCLR</ShowProgress>
       <TargetMachine>MachineX86</TargetMachine>
       <LargeAddressAware>false</LargeAddressAware>
       <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
       <GenerateMapFile>true</GenerateMapFile>
+      <AssemblyDebug>true</AssemblyDebug>
     </Link>
     <Manifest>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -144,6 +145,7 @@
       <OmitFramePointers>false</OmitFramePointers>
       <AssemblerOutput>All</AssemblerOutput>
       <CompileAs>CompileAsCpp</CompileAs>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Manifest>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -152,13 +154,12 @@
     <ManifestResourceCompile>
       <ResourceOutputFileName>$(IntDir)$(TargetName)$(TargetExt).embed.manifest.res</ResourceOutputFileName>
     </ManifestResourceCompile>
-    <Link>
-      <ShowProgress>LinkVerboseCLR</ShowProgress>
-    </Link>
+    <Link />
     <Link>
       <LargeAddressAware>true</LargeAddressAware>
       <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
       <GenerateMapFile>true</GenerateMapFile>
+      <AssemblyDebug>true</AssemblyDebug>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -182,6 +183,7 @@
       <ShowProgress>NotSet</ShowProgress>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <GenerateDebugInformation>false</GenerateDebugInformation>
+      <ManifestFile>$(IntDir)$(TargetName)$(TargetExt).manifest</ManifestFile>
     </Link>
     <Manifest>
       <SuppressStartupBanner>false</SuppressStartupBanner>
@@ -219,6 +221,7 @@
       <ShowProgress>NotSet</ShowProgress>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <GenerateDebugInformation>false</GenerateDebugInformation>
+      <ManifestFile>$(IntDir)$(TargetName)$(TargetExt).manifest</ManifestFile>
     </Link>
     <Manifest>
       <SuppressStartupBanner>false</SuppressStartupBanner>
@@ -235,9 +238,11 @@
     </Xdcmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="handmade.h" />
     <ClInclude Include="win32_handmade.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="handmade.cpp" />
     <ClCompile Include="win32_handmade.cpp" />
   </ItemGroup>
   <ItemGroup>
