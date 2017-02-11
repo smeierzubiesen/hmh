@@ -26,4 +26,13 @@ ratings:
   paths:
   - "**.cpp"
   - "**.h"
-exclude_paths: []
+exclude_paths:
+  - build/
+  - Debug/
+  - hmh-docs
+  - packages/
+  - "**.yml"
+  - "**.md"
+  - win32_handmade/Debug/
+  - win32_handmade/Release/
+  - win32_handmade/Docs/
