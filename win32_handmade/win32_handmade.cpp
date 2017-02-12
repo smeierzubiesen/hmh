@@ -578,8 +578,8 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 			int YOffset = 0;
 			win32_sound_output SoundOutput = {};
 			//NOTE(smzb): Sound stuff setup
-			SoundOutput.SamplesPerSecond = 44100; //NOTE(smzb): Samplerate of Output
-			SoundOutput.ToneHz = 261; //NOTE(smzb): The tone to generate
+			SoundOutput.SamplesPerSecond = 48000; //NOTE(smzb): Samplerate of Output
+			SoundOutput.ToneHz = 440; //NOTE(smzb): The tone to generate
 			SoundOutput.ToneVolume = 5000; //NOTE(smzb): The volume of output
 			SoundOutput.RunningSampleIndex = 0; //NOTE(smzb): Counter used in Squarewave/Sinewave functions
 			SoundOutput.WavePeriod = SoundOutput.SamplesPerSecond / SoundOutput.ToneHz; //NOTE(smzb): The Waveperiod describing the "duration" of one wave phase.
@@ -687,14 +687,14 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 				
 				//NOTE(smzb): Timing counters are here, but only if in debug mode.
 				if (Debug) {
-					int64 EndCycleCount = __rdtsc();
+					uint64 EndCycleCount = __rdtsc();
 					LARGE_INTEGER EndCounter;
 					QueryPerformanceCounter(&EndCounter);
-					int64 CyclesElapsed = EndCycleCount - LastCycleCount;
+					uint64 CyclesElapsed = EndCycleCount - LastCycleCount;
 					int64 CounterElapsed = EndCounter.QuadPart - LastCounter.QuadPart;
-					real32 MsPerFrame = (((1000.0f*(real32)CounterElapsed) / (real32)PerfCounterFrequency));
-					real32 FPS = (real32)(PerfCounterFrequency / (real32)CounterElapsed);
-					real32 MCyclesPerFrame = (real32)CyclesElapsed / (1000.0f * 1000.0f);
+					real64 MsPerFrame = (((1000.0f*(real64)CounterElapsed) / (real64)PerfCounterFrequency));
+					real64 FPS = (real64)(PerfCounterFrequency / (real64)CounterElapsed);
+					real64 MCyclesPerFrame = ((real64)CyclesElapsed / (1000.0f * 1000.0f));
 					PrintDebugTime(MsPerFrame, FPS, MCyclesPerFrame);
 					LastCounter = EndCounter;
 					LastCycleCount = EndCycleCount;

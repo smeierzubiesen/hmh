@@ -1,10 +1,4 @@
-#include <Windows.h>
 #include <stdint.h>
-#include <stdio.h>
-#include <Xinput.h>
-#include <dsound.h>
-#include <math.h>
-#include "win32_handmade.h"
 
 /// <summary>
 /// Pi as per google.com : pi
@@ -17,9 +11,6 @@
 
 global_variable bool GlobalRunning;
 global_variable bool Debug = 1;
-
-#if !defined(HANDMADE_H)
-#define HANDMADE_H
 
 typedef uint8_t uint8;
 typedef uint16_t uint16;
@@ -35,6 +26,20 @@ typedef int32 bool32;
 
 typedef float real32;
 typedef double real64;
+
+#include "handmade.cpp"
+#include "win32_handmade.h"
+
+#include <Windows.h>
+#include <stdio.h>
+#include <Xinput.h>
+#include <dsound.h>
+#include <math.h>
+
+
+#if !defined(HANDMADE_H)
+#define HANDMADE_H
+
 
 //NOTE(smzb): Services that the game provides to the platform layer
 
