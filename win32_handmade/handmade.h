@@ -27,14 +27,13 @@ typedef int32 bool32;
 typedef float real32;
 typedef double real64;
 
-#include "handmade.cpp"
-#include "win32_handmade.h"
-
 #include <Windows.h>
 #include <stdio.h>
 #include <Xinput.h>
 #include <dsound.h>
 #include <math.h>
+
+#include "win32_handmade.h"
 
 
 #if !defined(HANDMADE_H)
