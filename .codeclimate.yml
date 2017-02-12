@@ -36,3 +36,8 @@ exclude_paths:
   - win32_handmade/Debug/
   - win32_handmade/Release/
   - win32_handmade/Docs/
+  - UNLICENSE
+  - "**.doxyfile"
+  - "**.sln"
+  - "**.config"
+  - "**.vcproj*"
