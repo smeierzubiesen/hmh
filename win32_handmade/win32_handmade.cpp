@@ -516,10 +516,8 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 			//OutputDebugStringA("default\n");
 		} break;
 	}
-	
 	return(Result);
 }
-
 
 /// <summary>
 /// This is the main window call for windows as entry point to the app.
@@ -530,15 +528,6 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 /// <param name="ShowCode">Controls how the window is to be shown.</param>
 /// <returns>If the function succeeds, terminating when it receives a WM_QUIT message, it should return the exit value contained in that message's wParam parameter. If the function terminates before entering the message loop, it should return zero.</returns>
 int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int ShowCode) 
-
-/// <summary>
-/// This is the main entry point to the app called from linux.
-/// </summary>
-/// <param name="argc">Number of arguments passed into the main call</param>
-/// <param name="argv">An array (I think) of chars[] with command line parameters</param>
-/// <returns>An integer as return code. (This wouold normally be exxpected to be zero to indicate normal program termination</returns>
-///int main(int argc, char **argv)
-
 {
 	//NOTE(smzb): Timing Stuff
 	LARGE_INTEGER PerfCounterFrequencyResult;
