@@ -7,6 +7,8 @@
 # Precompiled Headers
 *.gch
 *.pch
+*.igch
+*.ipch
 
 # Libraries
 *.lib
@@ -45,6 +47,8 @@
 
 *.suo
 
+.vs/hmh/v1*/
 win32_handmade/Debug/
+win32_handmade/Release/
 build/
-/packages
+packages/
