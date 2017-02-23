@@ -32,6 +32,22 @@ internal void RenderGradient(game_offscreen_buffer *Buffer, int XOffset, int YOf
 	}
 }
 
-void GameUpdateAndRender(game_offscreen_buffer *Buffer, int XOffset, int YOffset) {
+internal void OutputGameSound(game_sound_buffer *SoundBuffer, int ToneHz) {
+	local_persist real32 tSine;
+	int16 ToneVolume = 5000; //NOTE(smzb): The volume of output
+	int WavePeriod = SoundBuffer->SamplesPerSecond / ToneHz; //NOTE(smzb): The Wave-period describing the "duration" of one wave phase.
+	int16 *SampleOut = SoundBuffer->Samples;
+	for (int SampleIndex = 0; SampleIndex < SoundBuffer->SampleCount; ++SampleIndex) {
+		real32 SineValue = sinf(tSine);
+		int16 SampleValue = (int16)(SineValue*ToneVolume);
+		*SampleOut++ = SampleValue;
+		*SampleOut++ = SampleValue;
+		tSine += 2.0f*Pi32*1.0f / (real32)WavePeriod;
+	}
+}
+
+void GameUpdateAndRender(game_offscreen_buffer *Buffer, game_sound_buffer *SoundBuffer, int XOffset, int YOffset, int ToneHz) {
+	//TODO(smzb): Allow sample offset here for more robust platform handling
+	OutputGameSound(SoundBuffer, ToneHz);
 	RenderGradient(Buffer, XOffset, YOffset);
 }
