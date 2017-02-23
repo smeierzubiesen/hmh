@@ -257,7 +257,7 @@ internal void Win32ResizeDIBSection(win32_offscreen_buffer *Buffer, int Width, i
 	Buffer->Info.bmiHeader.biBitCount = 32;
 	Buffer->Info.bmiHeader.biCompression = BI_RGB;
 	int BitmapMemorySize = (Buffer->Width*Buffer->Height)*Buffer->BytesPerPixel;
-	Buffer->Memory = VirtualAlloc(0, BitmapMemorySize, MEM_COMMIT, PAGE_READWRITE);
+	Buffer->Memory = VirtualAlloc(0, BitmapMemorySize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 	Buffer->Pitch = Buffer->Width*Buffer->BytesPerPixel;
 }
 
@@ -302,12 +302,8 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				{
 					if (Debug) { 
 						OutputDebugStringA("A: "); 
-						if (IsDown) {
-							OutputDebugStringA("is down");
-						}
-						if (WasDown) {
-							OutputDebugStringA("was down");
-						}
+						if (IsDown) { OutputDebugStringA("is down"); }
+						if (WasDown) { OutputDebugStringA("was down"); }
 						OutputDebugStringA("\n");
 					}
 				}
@@ -315,12 +311,8 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				{
 					if (Debug) {
 						OutputDebugStringA("S: ");
-						if (IsDown) {
-							OutputDebugStringA("is down");
-						}
-						if (WasDown) {
-							OutputDebugStringA("was down");
-						}
+						if (IsDown) { OutputDebugStringA("is down"); }
+						if (WasDown) { OutputDebugStringA("was down"); }
 						OutputDebugStringA("\n");
 					}
 				}
@@ -328,12 +320,8 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				{
 					if (Debug) {
 						OutputDebugStringA("W: ");
-						if (IsDown) {
-							OutputDebugStringA("is down");
-						}
-						if (WasDown) {
-							OutputDebugStringA("was down");
-						}
+						if (IsDown) { OutputDebugStringA("is down"); }
+						if (WasDown) { OutputDebugStringA("was down"); }
 						OutputDebugStringA("\n");
 					}
 				}
@@ -341,12 +329,8 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				{
 					if (Debug) {
 						OutputDebugStringA("D: ");
-						if (IsDown) {
-							OutputDebugStringA("is down");
-						}
-						if (WasDown) {
-							OutputDebugStringA("was down");
-						}
+						if (IsDown) { OutputDebugStringA("is down"); }
+						if (WasDown) { OutputDebugStringA("was down"); }
 						OutputDebugStringA("\n");
 					}
 				}
@@ -354,12 +338,8 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				{
 					if (Debug) {
 						OutputDebugStringA("Q: ");
-						if (IsDown) {
-							OutputDebugStringA("is down");
-						}
-						if (WasDown) {
-							OutputDebugStringA("was down");
-						}
+						if (IsDown) { OutputDebugStringA("is down"); }
+						if (WasDown) { OutputDebugStringA("was down"); }
 						OutputDebugStringA("\n");
 					}
 				}
@@ -367,12 +347,8 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				{
 					if (Debug) {
 						OutputDebugStringA("E: ");
-						if (IsDown) {
-							OutputDebugStringA("is down");
-						}
-						if (WasDown) {
-							OutputDebugStringA("was down");
-						}
+						if (IsDown) { OutputDebugStringA("is down"); }
+						if (WasDown) { OutputDebugStringA("was down"); }
 						OutputDebugStringA("\n");
 					}
 				}
@@ -380,12 +356,8 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				{
 					if (Debug) {
 						OutputDebugStringA("Up: ");
-						if (IsDown) {
-							OutputDebugStringA("is down");
-						}
-						if (WasDown) {
-							OutputDebugStringA("was down");
-						}
+						if (IsDown) { OutputDebugStringA("is down"); }
+						if (WasDown) { OutputDebugStringA("was down"); }
 						OutputDebugStringA("\n");
 					}
 				}
@@ -393,12 +365,8 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				{
 					if (Debug) {
 						OutputDebugStringA("Down: ");
-						if (IsDown) {
-							OutputDebugStringA("is down");
-						}
-						if (WasDown) {
-							OutputDebugStringA("was down");
-						}
+						if (IsDown) { OutputDebugStringA("is down"); }
+						if (WasDown) { OutputDebugStringA("was down"); }
 						OutputDebugStringA("\n");
 					}
 				}
@@ -406,12 +374,8 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				{
 					if (Debug) {
 						OutputDebugStringA("Left: ");
-						if (IsDown) {
-							OutputDebugStringA("is down");
-						}
-						if (WasDown) {
-							OutputDebugStringA("was down");
-						}
+						if (IsDown) { OutputDebugStringA("is down"); }
+						if (WasDown) { OutputDebugStringA("was down"); }
 						OutputDebugStringA("\n");
 					}
 				}
@@ -419,12 +383,8 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				{
 					if (Debug) {
 						OutputDebugStringA("Right: ");
-						if (IsDown) {
-							OutputDebugStringA("is down");
-						}
-						if (WasDown) {
-							OutputDebugStringA("was down");
-						}
+						if (IsDown) { OutputDebugStringA("is down"); }
+						if (WasDown) { OutputDebugStringA("was down"); }
 						OutputDebugStringA("\n");
 					}
 				}
@@ -432,12 +392,8 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				{
 					if (Debug) {
 						OutputDebugStringA("Space: ");
-						if (IsDown) {
-							OutputDebugStringA("is down");
-						}
-						if (WasDown) {
-							OutputDebugStringA("was down");
-						}
+						if (IsDown) { OutputDebugStringA("is down"); }
+						if (WasDown) { OutputDebugStringA("was down"); }
 						OutputDebugStringA("\n");
 					}
 				}
@@ -445,12 +401,8 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				{
 					if (Debug) {
 						OutputDebugStringA("Escape: ");
-						if (IsDown) {
-							OutputDebugStringA("is down");
-						}
-						if (WasDown) {
-							OutputDebugStringA("was down");
-						}
+						if (IsDown) { OutputDebugStringA("is down"); }
+						if (WasDown) { OutputDebugStringA("was down"); }
 						OutputDebugStringA("\n");
 					}
 				}
@@ -556,9 +508,9 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 			//NOTE(smzb): Graphics Test stuff
 			int XOffset = 0;
 			int YOffset = 0;
-			
-			win32_sound_output SoundOutput = {};
+
 			//NOTE(smzb): Sound stuff setup
+			win32_sound_output SoundOutput = {};
 			SoundOutput.SamplesPerSecond = 44100; //NOTE(smzb): Sample rate of Output
 			SoundOutput.ToneHz = 440; //NOTE(smzb): The tone to generate
 			SoundOutput.ToneVolume = 5000; //NOTE(smzb): The volume of output
@@ -567,12 +519,10 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 			SoundOutput.BytesPerSample = sizeof(int16) * 2; //NOTE(smzb): How many bytes do we need per sample (L/R * 16bytes)
 			SoundOutput.SecondaryBufferSize = SoundOutput.SamplesPerSecond * SoundOutput.BytesPerSample; // The Buffersize to actually generate sound in.
 			SoundOutput.LatencySampleCount = SoundOutput.SamplesPerSecond / 15;
+			int16 *Samples = (int16 *)VirtualAlloc(0, SoundOutput.SecondaryBufferSize, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
 			Win32InitDirectSound(WindowHandle, SoundOutput.SamplesPerSecond, SoundOutput.SecondaryBufferSize);
 			Win32ClearSoundBuffer(&SoundOutput);
 			GlobalSoundBuffer->Play(0, 0, DSBPLAY_LOOPING);
-			
-			
-			
 			//NOTE(smzb): The actual program loop
 			while(GlobalRunning)
 			{
@@ -636,13 +586,15 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 				}
 				
 				//NOTE(smzb): DirectSound output test
+
+				bool32 SoundIsValid = false;
 				DWORD PlayCursorPosition;
 				DWORD WriteCursorPosition;
 				DWORD ByteToLock;
 				DWORD TargetCursorPosition;
 				DWORD BytesToWrite;
-
-				bool32 SoundIsValid = false;
+				game_sound_buffer SoundBuffer = {};
+				game_offscreen_buffer ScreenBuffer = {};
 				if (SUCCEEDED(GlobalSoundBuffer->GetCurrentPosition(&PlayCursorPosition, &WriteCursorPosition)))
 				{
 					ByteToLock = (SoundOutput.RunningSampleIndex*SoundOutput.BytesPerSample) % SoundOutput.SecondaryBufferSize;
@@ -656,27 +608,19 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 					}
 					SoundIsValid = true;
 				}
-				int16 Samples[48000 * 2];
-				game_sound_buffer SoundBuffer = {};
 				SoundBuffer.SamplesPerSecond = SoundOutput.SamplesPerSecond;
 				SoundBuffer.SampleCount = BytesToWrite / SoundOutput.BytesPerSample;
 				SoundBuffer.Samples = Samples;
-				
-				game_offscreen_buffer ScreenBuffer = {};
 				ScreenBuffer.Memory = GlobalBitmapBuffer.Memory;
 				ScreenBuffer.Width = GlobalBitmapBuffer.Width;
 				ScreenBuffer.Height = GlobalBitmapBuffer.Height;;
 				ScreenBuffer.Pitch = GlobalBitmapBuffer.Pitch;
-
 				GameUpdateAndRender(&ScreenBuffer, &SoundBuffer, XOffset, YOffset, SoundOutput.ToneHz);
 				if (SoundIsValid) { Win32FillSoundBuffer(&SoundOutput, &SoundBuffer, ByteToLock, BytesToWrite); }
-
 				HDC DeviceContext = GetDC(WindowHandle);
 				win32_window_dimensions Dimensions = Win32GetWindowDimensions(WindowHandle);
 				Win32DisplayBufferInWindow(&GlobalBitmapBuffer, DeviceContext, Dimensions.Width, Dimensions.Height, 0, 0, Dimensions.Width, Dimensions.Height);
 				ReleaseDC(WindowHandle, DeviceContext);
-				//++XOffset;
-				
 				//NOTE(smzb): Timing counters are here, but only if in debug mode.
 				if (Debug) {
 					uint64 EndCycleCount = __rdtsc();

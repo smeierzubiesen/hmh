@@ -5,6 +5,11 @@
    $Creator: Sebastian Meier zu Biesen $
    $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
    ======================================================================== */
+
+#include <dsound.h>
+#include <Xinput.h>
+#include <Windows.h>
+
 #if !defined(WIN32_HANDMADE_H)
 #define WIN32_HANDMADE_H
 

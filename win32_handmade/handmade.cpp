@@ -36,8 +36,6 @@ internal void OutputGameSound(game_sound_buffer *SoundBuffer, int ToneHz) {
 	local_persist real32 tSine;
 	int16 ToneVolume = 5000; //NOTE(smzb): The volume of output
 	int WavePeriod = SoundBuffer->SamplesPerSecond / ToneHz; //NOTE(smzb): The Wave-period describing the "duration" of one wave phase.
-
-
 	int16 *SampleOut = SoundBuffer->Samples;
 	for (int SampleIndex = 0; SampleIndex < SoundBuffer->SampleCount; ++SampleIndex) {
 		real32 SineValue = sinf(tSine);
