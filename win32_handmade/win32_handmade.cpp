@@ -563,7 +563,6 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 						XINPUT_VIBRATION Vibration;
 						Vibration.wLeftMotorSpeed = 0;
 						Vibration.wRightMotorSpeed = 0;
-
 						if (AButton) {
 							Vibration.wLeftMotorSpeed = 60000;
 							XInputSetState(ControllerIndex, &Vibration);
@@ -586,7 +585,6 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 				}
 				
 				//NOTE(smzb): DirectSound output test
-
 				bool32 SoundIsValid = false;
 				DWORD PlayCursorPosition;
 				DWORD WriteCursorPosition;
