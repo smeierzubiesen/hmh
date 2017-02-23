@@ -16,7 +16,7 @@
 #define global_variable static
 
 global_variable bool GlobalRunning;
-global_variable bool Debug = 1;
+global_variable bool Debug = 0;
 
 #if !defined(HANDMADE_H)
 #define HANDMADE_H
