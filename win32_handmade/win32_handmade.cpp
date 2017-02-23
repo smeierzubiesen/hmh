@@ -92,13 +92,13 @@ global_variable x_input_set_state *XInputSetState_ = XInputSetStateStub;
 typedef DIRECT_SOUND_CREATE(direct_sound_create);
 
 /// <summary>
-/// Formats the debug output for timing stuff (this is only enabled, when `Debug==true`
+/// Formats the debug output for timing stuff (this is only enabled, when `_DEBUG==true`
 /// </summary>
 /// <param name="ms">float: Milliseconds per frame.</param>
 /// <param name="fps">float: Frames per second.</param>
 /// <param name="MCyclesPerFrame">float: Millions of Cycles per second.</param>
 /// <see cref="DIRECT_SOUND_CREATE"/>
-void PrintDebugTime(real32 ms, real32 fps, real32 MCyclesPerFrame) {
+void PrintDebugTime(real64 ms, real64 fps, real64 MCyclesPerFrame) {
 	char Buffer[256];
 	sprintf_s(Buffer, "[:: %.03f ms/frame ::][:: %.03f FPS ::][:: %.03f MegaCycles/frame ::]\n", ms, fps, MCyclesPerFrame);
 	OutputDebugStringA(Buffer);
@@ -161,7 +161,7 @@ internal void Win32InitDirectSound(HWND WindowHandle, int32 SamplesPerSecond, in
 					HRESULT Result = PrimaryBuffer->SetFormat(&WaveFormat);
 					if (SUCCEEDED(Result)) {
 						//NOTE(smzb): Finally the format of the sound is set
-						if (Debug) { OutputDebugStringA("Primary Buffer created!\n"); }
+						if (_DEBUG) { OutputDebugStringA("Primary Buffer created!\n"); }
 					}
 					else {
 						//TODO(smzb): Diagnostic Log here
@@ -183,7 +183,7 @@ internal void Win32InitDirectSound(HWND WindowHandle, int32 SamplesPerSecond, in
 			BufferDescription.lpwfxFormat = &WaveFormat;
 			HRESULT Result = DirectSound->CreateSoundBuffer(&BufferDescription, &GlobalSecondaryBuffer, 0);
 			if (SUCCEEDED(Result)) {
-				if (Debug) { OutputDebugStringA("Secondary Buffer created!\n"); }
+				if (_DEBUG) { OutputDebugStringA("Secondary Buffer created!\n"); }
 					//NOTE(smzb): Start playing
 			}
 			else {
@@ -228,7 +228,6 @@ internal void Win32FillSoundBuffer(win32_sound_output *SoundOutput, DWORD ByteTo
 		DWORD Region2SampleCount = Region2Size / SoundOutput->BytesPerSample;
 		SampleOut = (int16 *)Region2;
 		for (DWORD SampleIndex = 0; SampleIndex < Region2SampleCount; ++SampleIndex) {
-			
 			real32 SineValue = sinf(SoundOutput->tSine);
 			int16 SampleValue = (int16)(SineValue*SoundOutput->ToneVolume);
 			//NOTE(smzb): Square-wave generator
@@ -320,7 +319,7 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 			if (WasDown != IsDown) {
 				if (VKCode == 'A')
 				{
-					if (Debug) { 
+					if (_DEBUG) { 
 						OutputDebugStringA("A: "); 
 						if (IsDown) {
 							OutputDebugStringA("is down");
@@ -333,7 +332,7 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				}
 				else if (VKCode == 'S')
 				{
-					if (Debug) {
+					if (_DEBUG) {
 						OutputDebugStringA("S: ");
 						if (IsDown) {
 							OutputDebugStringA("is down");
@@ -346,7 +345,7 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				}
 				else if (VKCode == 'W')
 				{
-					if (Debug) {
+					if (_DEBUG) {
 						OutputDebugStringA("W: ");
 						if (IsDown) {
 							OutputDebugStringA("is down");
@@ -359,7 +358,7 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				}
 				else if (VKCode == 'D')
 				{
-					if (Debug) {
+					if (_DEBUG) {
 						OutputDebugStringA("D: ");
 						if (IsDown) {
 							OutputDebugStringA("is down");
@@ -372,7 +371,7 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				}
 				else if (VKCode == 'Q')
 				{
-					if (Debug) {
+					if (_DEBUG) {
 						OutputDebugStringA("Q: ");
 						if (IsDown) {
 							OutputDebugStringA("is down");
@@ -385,7 +384,7 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				}
 				else if (VKCode == 'E')
 				{
-					if (Debug) {
+					if (_DEBUG) {
 						OutputDebugStringA("E: ");
 						if (IsDown) {
 							OutputDebugStringA("is down");
@@ -398,7 +397,7 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				}
 				else if (VKCode == VK_UP)
 				{
-					if (Debug) {
+					if (_DEBUG) {
 						OutputDebugStringA("Up: ");
 						if (IsDown) {
 							OutputDebugStringA("is down");
@@ -411,7 +410,7 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				}
 				else if (VKCode == VK_DOWN)
 				{
-					if (Debug) {
+					if (_DEBUG) {
 						OutputDebugStringA("Down: ");
 						if (IsDown) {
 							OutputDebugStringA("is down");
@@ -424,7 +423,7 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				}
 				else if (VKCode == VK_LEFT)
 				{
-					if (Debug) {
+					if (_DEBUG) {
 						OutputDebugStringA("Left: ");
 						if (IsDown) {
 							OutputDebugStringA("is down");
@@ -437,7 +436,7 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				}
 				else if (VKCode == VK_RIGHT)
 				{
-					if (Debug) {
+					if (_DEBUG) {
 						OutputDebugStringA("Right: ");
 						if (IsDown) {
 							OutputDebugStringA("is down");
@@ -450,7 +449,7 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				}
 				else if (VKCode == VK_SPACE)
 				{
-					if (Debug) {
+					if (_DEBUG) {
 						OutputDebugStringA("Space: ");
 						if (IsDown) {
 							OutputDebugStringA("is down");
@@ -463,7 +462,7 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 				}
 				else if (VKCode == VK_ESCAPE)
 				{
-					if (Debug) {
+					if (_DEBUG) {
 						OutputDebugStringA("Escape: ");
 						if (IsDown) {
 							OutputDebugStringA("is down");
@@ -482,25 +481,25 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 		} break;
 		case WM_SIZE:
 		{
-			if (Debug) { OutputDebugStringA("WM_SIZE\n"); }
+			if (_DEBUG) { OutputDebugStringA("WM_SIZE\n"); }
 		} break;
 		case WM_DESTROY:
 		{
 			GlobalRunning = false;
-			if (Debug) { OutputDebugStringA("WM_DESTROY\n"); }
+			if (_DEBUG) { OutputDebugStringA("WM_DESTROY\n"); }
 		} break;
 		case WM_CLOSE:
 		{
 			GlobalRunning = false;
-			if (Debug) { OutputDebugStringA("WM_CLOSE\n"); }
+			if (_DEBUG) { OutputDebugStringA("WM_CLOSE\n"); }
 		} break;
 		case WM_QUIT:
 		{
-			if (Debug) { OutputDebugStringA("WM_QUIT\n"); }
+			if (_DEBUG) { OutputDebugStringA("WM_QUIT\n"); }
 		} break;
 		case WM_ACTIVATEAPP:
 		{
-			if (Debug) { OutputDebugStringA("WM_ACTIVATEAPP\n"); }
+			if (_DEBUG) { OutputDebugStringA("WM_ACTIVATEAPP\n"); }
 		} break;
 		case WM_PAINT:
 		{
@@ -513,7 +512,7 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 			win32_window_dimensions Dimensions = Win32GetWindowDimensions(Window);
 			Win32DisplayBufferInWindow(&GlobalBitmapBuffer, DeviceContext, Dimensions.Width, Dimensions.Height, X, Y, Width, Height);
 			EndPaint(Window,&Paint);
-			if (Debug) { OutputDebugStringA("WM_PAINT\n"); }
+			if (_DEBUG) { OutputDebugStringA("WM_PAINT\n"); }
 		} break;
 		default:
 		{
@@ -535,10 +534,13 @@ internal LRESULT CALLBACK Win32MainWindowCallback(HWND Window, UINT Message, WPA
 int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int ShowCode) 
 {
 	//NOTE(smzb): Timing Stuff
-	LARGE_INTEGER PerfCounterFrequencyResult;
-	QueryPerformanceFrequency(&PerfCounterFrequencyResult);
-	int64 PerfCounterFrequency = PerfCounterFrequencyResult.QuadPart;
-	uint64 LastCycleCount = __rdtsc();
+	if (_DEBUG)
+	{
+		LARGE_INTEGER PerfCounterFrequencyResult;
+		QueryPerformanceFrequency(&PerfCounterFrequencyResult);
+		int64 PerfCounterFrequency = PerfCounterFrequencyResult.QuadPart;
+		uint64 LastCycleCount = __rdtsc();
+	}
 	//NOTE(smzb): Init of I/O and window.
 	Win32LoadXInput();
 	WNDCLASSA WindowClass = {};
@@ -608,18 +610,18 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 					{
 						//NOTE(smzb): Controller is connected 
 						XINPUT_GAMEPAD *Pad = &ControllerState.Gamepad;
-						/*bool32 Up = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_UP);
+						bool32 Up = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_UP);
 						bool32 Down = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_DOWN);
 						bool32 Left = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_LEFT);
 						bool32 Right = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_RIGHT);
 						bool32 Start = (Pad->wButtons & XINPUT_GAMEPAD_START);
 						bool32 Back = (Pad->wButtons & XINPUT_GAMEPAD_BACK);
 						bool32 LeftShoulder = (Pad->wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER);
-						bool32 RightShoulder = (Pad->wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER);*/
+						bool32 RightShoulder = (Pad->wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER);
 						bool32 AButton = (Pad->wButtons & XINPUT_GAMEPAD_A);
 						bool32 BButton = (Pad->wButtons & XINPUT_GAMEPAD_B);
-						/*bool32 XButton = (Pad->wButtons & XINPUT_GAMEPAD_X);
-						bool32 YButton = (Pad->wButtons & XINPUT_GAMEPAD_Y);*/
+						bool32 XButton = (Pad->wButtons & XINPUT_GAMEPAD_X);
+						bool32 YButton = (Pad->wButtons & XINPUT_GAMEPAD_Y);
 						int16 LStickX = Pad->sThumbLX;
 						int16 LStickY = Pad->sThumbLY;
 						int16 RStickX = Pad->sThumbRX;
@@ -627,6 +629,8 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 						XINPUT_VIBRATION Vibration;
 						Vibration.wLeftMotorSpeed = 0;
 						Vibration.wRightMotorSpeed = 0;
+						XOffset = 0;
+						YOffset = 0;
 						if (AButton) {
 							Vibration.wLeftMotorSpeed = 60000;
 							XInputSetState(ControllerIndex, &Vibration);
@@ -637,10 +641,8 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 						}
 						SoundOutput.ToneHz = 440 + (int)(220.0f*((real32)LStickX / 30000.0f));
 						SoundOutput.WavePeriod = SoundOutput.SamplesPerSecond / SoundOutput.ToneHz;
-						//XOffset -= LStickX >> 12;
-						//YOffset += LStickY >> 12;
-						XOffset -= LStickX / 4096;
-						YOffset += LStickY / 4096;
+						XOffset -= LStickX / XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
+						YOffset += LStickY / XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
 						XInputSetState(ControllerIndex, &Vibration);
 					}
 					else
@@ -650,14 +652,17 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 					}
 				}
 				
-				game_offscreen_buffer Buffer2 = {};
-				Buffer2.Memory = GlobalBitmapBuffer.Memory;
-				Buffer2.Width = GlobalBitmapBuffer.Width;
-				Buffer2.Height = GlobalBitmapBuffer.Height;;
-				Buffer2.Pitch = GlobalBitmapBuffer.Pitch;
-				//Buffer2.BytesPerPixel;
-				GameUpdateAndRender(&Buffer2, XOffset, YOffset);
-				//Win32RenderGradient(&GlobalBitmapBuffer, XOffset, YOffset);
+				int16 Samples[(48000 / 30) * 2];
+				game_offscreen_buffer ScreenBuffer = {};
+				game_sound_buffer SoundBuffer = {};
+				ScreenBuffer.Memory = GlobalBitmapBuffer.Memory;
+				ScreenBuffer.Width = GlobalBitmapBuffer.Width;
+				ScreenBuffer.Height = GlobalBitmapBuffer.Height;;
+				ScreenBuffer.Pitch = GlobalBitmapBuffer.Pitch;
+				SoundBuffer.SamplesPerSecond = SoundOutput.SamplesPerSecond;
+				SoundBuffer.SampleCount = SoundBuffer.SamplesPerSecond / 30;
+				SoundBuffer.Samples = Samples;
+				GameUpdateAndRender(&ScreenBuffer, &SoundBuffer, XOffset, YOffset);
 				
 				//NOTE(smzb): DirectSound output test
 				DWORD PlayCursorPosition;
@@ -685,7 +690,7 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 				//++XOffset;
 				
 				//NOTE(smzb): Timing counters are here, but only if in debug mode.
-				if (Debug) {
+				if (_DEBUG) {
 					uint64 EndCycleCount = __rdtsc();
 					LARGE_INTEGER EndCounter;
 					QueryPerformanceCounter(&EndCounter);
@@ -708,6 +713,6 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 	else {
 		//TODO(smzb): log this event
 	}
-	if (Debug) { MessageBox(0, "This is Handmade Hero", "Handmade Hero v0.1", MB_OK | MB_ICONINFORMATION); }
+	if (_DEBUG) { MessageBox(0, "This is Handmade Hero", "Handmade Hero v0.1", MB_OK | MB_ICONINFORMATION); }
 	return 0;
 }

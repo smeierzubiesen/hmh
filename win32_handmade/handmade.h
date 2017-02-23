@@ -10,7 +10,7 @@
 #define global_variable static
 
 global_variable bool GlobalRunning;
-global_variable bool Debug = 0;
+global_variable bool _DEBUG = 0;
 
 typedef uint8_t uint8;
 typedef uint16_t uint16;
@@ -56,10 +56,16 @@ struct game_offscreen_buffer {
 	int Pitch;
 };
 
+struct game_sound_buffer {
+	int16 *Samples;
+	int SamplesPerSecond;
+	int SampleCount;
+};
 
 ///Four things here : timing, controller/keyboard input, bitmap_buffer to use, sound_buffer to user
-void GameUpdateAndRender(game_offscreen_buffer *Buffer, int XOffset, int YOffset);
+void GameUpdateAndRender(game_offscreen_buffer *Buffer, game_sound_buffer *SoundBuffer, int XOffset, int YOffset);
 
+internal void OutputGameSound(game_sound_buffer *SoundBuffer);
 internal void RenderGradient(game_offscreen_buffer *Buffer, int XOffset, int YOffset);
 
 #endif
