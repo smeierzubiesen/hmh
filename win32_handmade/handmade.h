@@ -63,9 +63,9 @@ struct game_sound_buffer {
 };
 
 ///Four things here : timing, controller/keyboard input, bitmap_buffer to use, sound_buffer to user
-void GameUpdateAndRender(game_offscreen_buffer *Buffer, game_sound_buffer *SoundBuffer, int XOffset, int YOffset);
+void GameUpdateAndRender(game_offscreen_buffer *Buffer, game_sound_buffer *SoundBuffer, int XOffset, int YOffset, int ToneHz);
 
-internal void OutputGameSound(game_sound_buffer *SoundBuffer);
+internal void OutputGameSound(game_sound_buffer *SoundBuffer, int ToneHz);
 internal void RenderGradient(game_offscreen_buffer *Buffer, int XOffset, int YOffset);
 
 #endif

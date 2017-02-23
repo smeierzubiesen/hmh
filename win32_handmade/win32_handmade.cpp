@@ -613,8 +613,7 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 						XINPUT_VIBRATION Vibration;
 						Vibration.wLeftMotorSpeed = 0;
 						Vibration.wRightMotorSpeed = 0;
-						XOffset = 0;
-						YOffset = 0;
+
 						if (AButton) {
 							Vibration.wLeftMotorSpeed = 60000;
 							XInputSetState(ControllerIndex, &Vibration);
@@ -669,7 +668,7 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 				ScreenBuffer.Height = GlobalBitmapBuffer.Height;;
 				ScreenBuffer.Pitch = GlobalBitmapBuffer.Pitch;
 
-				GameUpdateAndRender(&ScreenBuffer, &SoundBuffer, XOffset, YOffset);
+				GameUpdateAndRender(&ScreenBuffer, &SoundBuffer, XOffset, YOffset, SoundOutput.ToneHz);
 				if (SoundIsValid) { Win32FillSoundBuffer(&SoundOutput, &SoundBuffer, ByteToLock, BytesToWrite); }
 
 				HDC DeviceContext = GetDC(WindowHandle);
