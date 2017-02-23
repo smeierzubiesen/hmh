@@ -538,7 +538,7 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 	LARGE_INTEGER PerfCounterFrequencyResult;
 	QueryPerformanceFrequency(&PerfCounterFrequencyResult);
 	int64 PerfCounterFrequency = PerfCounterFrequencyResult.QuadPart;
-	int64 LastCycleCount = __rdtsc();
+	uint64 LastCycleCount = __rdtsc();
 	//NOTE(smzb): Init of I/O and window.
 	Win32LoadXInput();
 	WNDCLASSA WindowClass = {};
@@ -581,7 +581,6 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 			SoundOutput.SecondaryBufferSize = SoundOutput.SamplesPerSecond * SoundOutput.BytesPerSample; // The Buffersize to actually generate sound in.
 			SoundOutput.LatencySampleCount = SoundOutput.SamplesPerSecond / 15;
 			Win32InitDirectSound(WindowHandle, SoundOutput.SamplesPerSecond, SoundOutput.SecondaryBufferSize);
-			//Win32FillSoundBuffer(&SoundOutput, 0, SoundOutput.SecondaryBufferSize);
 			Win32FillSoundBuffer(&SoundOutput, 0, SoundOutput.LatencySampleCount*SoundOutput.BytesPerSample);
 			GlobalSecondaryBuffer->Play(0, 0, DSBPLAY_LOOPING);
 			//NOTE(smzb): The actual program loop
