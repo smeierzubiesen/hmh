@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <math.h>
 #include <stdint.h>
 
 /// <summary>
@@ -23,11 +25,6 @@ typedef int64_t int64;
 typedef int32 bool32;
 typedef float real32;
 typedef double real64;
-
-#include <stdio.h>
-#include <math.h>
-#include "win32_handmade.h"
-
 
 #if !defined(HANDMADE_H)
 #define HANDMADE_H

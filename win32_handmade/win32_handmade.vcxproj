@@ -238,8 +238,8 @@
     </Xdcmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="handmade.h" />
-    <ClInclude Include="win32_handmade.h" />
+    <ClInclude Include="handmade.hpp" />
+    <ClInclude Include="win32_handmade.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="handmade.cpp" />
