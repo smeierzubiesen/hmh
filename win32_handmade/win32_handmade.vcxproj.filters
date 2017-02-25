@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="win32_handmade.h">
+    <ClInclude Include="handmade.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="handmade.h">
+    <ClInclude Include="win32_handmade.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

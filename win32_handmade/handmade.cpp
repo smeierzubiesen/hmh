@@ -9,12 +9,12 @@ $Creator: Sebastian Meier zu Biesen $
 $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 ======================================================================== */
 
-#include "handmade.h"
+#include "handmade.hpp"
 
 /// <summary>
 /// This is just a dummy function to display something on the screen after we have assigned memory to the bitmap
 /// </summary>
-/// <param name="Buffer">Bitmap Backbuffer to us (pointer to)</param>
+/// <param name="Buffer">Bitmap Back-buffer to us (pointer to)</param>
 /// <param name="XOffset">X Offset to start Movement of the bitmap</param>
 /// <param name="YOffset">X Offset to start Movement of the bitmap</param>
 /// <returns>void</returns>

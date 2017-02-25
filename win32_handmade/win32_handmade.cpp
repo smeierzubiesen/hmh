@@ -28,7 +28,8 @@ TODO(smzb): This is not a final win32 platform layer.
 `part list of stuff to be done`
 */
 
-#include "handmade.h"
+#include "handmade.hpp"
+#include "win32_handmade.hpp"
 
 /// <summary>
 /// The Global Bitmap Buffer
