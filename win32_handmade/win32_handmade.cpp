@@ -446,9 +446,6 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 			//NOTE(smzb): Timing Variable
 			LARGE_INTEGER LastCounter;
 			QueryPerformanceCounter(&LastCounter);
-			
-			
-
 			//NOTE(smzb): Sound stuff setup
 			win32_sound_output SoundOutput = {};
 			SoundOutput.SamplesPerSecond = 44100; //NOTE(smzb): Sample rate of Output
@@ -508,6 +505,8 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 						int16 RStickY = (real32)Pad->sThumbRY;
 */
 						NewController->IsAnalog = true;
+						//TODO(smzb): see what casey does here, but I am assuming, that we will have to assign IsAnalog to both/all controllers
+						OldController->IsAnalog = true;
 						NewController->LStartX = OldController->LEndX;
 						NewController->LStartY = OldController->LEndY;
 
@@ -578,7 +577,7 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 				ScreenBuffer.Width = GlobalBitmapBuffer.Width;
 				ScreenBuffer.Height = GlobalBitmapBuffer.Height;;
 				ScreenBuffer.Pitch = GlobalBitmapBuffer.Pitch;
-				GameUpdateAndRender(NewInput, &ScreenBuffer, &SoundBuffer);
+				GlobalRunning = GameUpdateAndRender(NewInput, &ScreenBuffer, &SoundBuffer);
 				if (SoundIsValid) { Win32FillSoundBuffer(&SoundOutput, &SoundBuffer, ByteToLock, BytesToWrite); }
 				HDC DeviceContext = GetDC(WindowHandle);
 				win32_window_dimensions Dimensions = Win32GetWindowDimensions(WindowHandle);

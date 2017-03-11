@@ -22,7 +22,7 @@ internal void RenderGradient(game_offscreen_buffer *Buffer, int XOffset, int YOf
 		for (int X = 0; X < Buffer->Width; ++X) {
 			uint8 Blue = (X + XOffset);
 			uint8 Green = (Y + YOffset);
-			uint8 Red = (X + XOffset);
+			uint8 Red = (Y + X);
 			*Pixel++ = ((Red << 16) | (Green << 8) | (Blue));
 		}
 		Row += Buffer->Pitch;
@@ -43,31 +43,37 @@ internal void OutputGameSound(game_sound_buffer *SoundBuffer, int ToneHz) {
 	}
 }
 
-void GameUpdateAndRender(game_input *Input, game_offscreen_buffer *Buffer, game_sound_buffer *SoundBuffer) {
-	local_persist int XOffset = 1;
-	local_persist int YOffset = 1;
+/// <summary>
+/// The actual game loop
+/// I've added a return of bool type here so we can interrupt/stop the game from inside the actual game running function
+/// </summary>
+bool GameUpdateAndRender(game_input * Input, game_offscreen_buffer * Buffer, game_sound_buffer * SoundBuffer) {
+	local_persist int XOffset = 0;
+	local_persist int YOffset = 0;
 	local_persist int ToneHz = 440;
 
 	game_controller_input *Input0 = &Input->Controllers[0];
 
 	if (Input0->IsAnalog) {
 		// Use analog input tuning
-		ToneHz = 440 + (int)(220.0f*(Input0->LEndY));
+		ToneHz = 440 + (int)(330.0f*(Input0->LEndY));
 		XOffset -= (int)4.0f*(Input0->LEndX);
 		YOffset += (int)4.0f*(Input0->LEndY);
-
 	}
 	else {
 		// Use digital input tuning
 	}
 	if (Input0->A.EndedDown) {
-		YOffset += 1;
+		YOffset += 2;
 	}
 	if (Input0->B.EndedDown) {
 		XOffset += 2;
 	}
-
+	if (Input0->Back.EndedDown) {
+		return false;
+	}
 	//TODO(smzb): Allow sample offset here for more robust platform handling
 	OutputGameSound(SoundBuffer, ToneHz);
 	RenderGradient(Buffer, XOffset, YOffset);
+	return true;
 }
