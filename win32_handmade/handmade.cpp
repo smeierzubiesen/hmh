@@ -29,9 +29,9 @@ internal void RenderGradient(game_offscreen_buffer *Buffer, int XOffset, int YOf
 	}
 }
 
-internal void OutputGameSound(game_sound_buffer *SoundBuffer, int ToneHz) {
+internal void OutputGameSound(game_sound_buffer *SoundBuffer, int ToneHz, int16 ToneVolume) {
 	local_persist real32 tSine;
-	int16 ToneVolume = 5000; //NOTE(smzb): The volume of output
+	//int16 ToneVolume = 5000; //NOTE(smzb): The volume of output
 	int WavePeriod = SoundBuffer->SamplesPerSecond / ToneHz; //NOTE(smzb): The Wave-period describing the "duration" of one wave phase.
 	int16 *SampleOut = SoundBuffer->Samples;
 	for (int SampleIndex = 0; SampleIndex < SoundBuffer->SampleCount; ++SampleIndex) {
@@ -51,12 +51,13 @@ bool GameUpdateAndRender(game_input * Input, game_offscreen_buffer * Buffer, gam
 	local_persist int XOffset = 0;
 	local_persist int YOffset = 0;
 	local_persist int ToneHz = 440;
-
+	local_persist int16 ToneVolume = 5000;
 	game_controller_input *Input0 = &Input->Controllers[0];
 
 	if (Input0->IsAnalog) {
 		// Use analog input tuning
-		ToneHz = 440 + (int)(330.0f*(Input0->LEndY));
+		ToneHz = 440 + (int)(330.0f*(Input0->REndY));
+		ToneVolume = 5000 + (int)(5000.0f*(Input0->REndX));
 		XOffset -= (int)4.0f*(Input0->LEndX);
 		YOffset += (int)4.0f*(Input0->LEndY);
 	}
@@ -73,7 +74,7 @@ bool GameUpdateAndRender(game_input * Input, game_offscreen_buffer * Buffer, gam
 		return false;
 	}
 	//TODO(smzb): Allow sample offset here for more robust platform handling
-	OutputGameSound(SoundBuffer, ToneHz);
+	OutputGameSound(SoundBuffer, ToneHz, ToneVolume);
 	RenderGradient(Buffer, XOffset, YOffset);
 	return true;
 }

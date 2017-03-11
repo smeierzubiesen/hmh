@@ -505,33 +505,55 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 						int16 RStickY = (real32)Pad->sThumbRY;
 */
 						NewController->IsAnalog = true;
-						//TODO(smzb): see what casey does here, but I am assuming, that we will have to assign IsAnalog to both/all controllers
-						OldController->IsAnalog = true;
+						//TODO(smzb): see what Casey does here, but I am assuming, that we will have to assign IsAnalog to both/all controllers
+						//OldController->IsAnalog = true;
 						NewController->LStartX = OldController->LEndX;
 						NewController->LStartY = OldController->LEndY;
+						NewController->RStartX = OldController->REndX;
+						NewController->RStartY = OldController->REndY;
 
-						real32 x;
+						//NOTE(smzb): Left Stick
+						real32 lx;
 						if (Pad->sThumbLX < 0) {
-							x = (real32)Pad->sThumbLX / 32768.0f;
+							lx = (real32)Pad->sThumbLX / 32768.0f;
 						}
 						else {
-							x = (real32)Pad->sThumbLX / 32767.0f;
+							lx = (real32)Pad->sThumbLX / 32767.0f;
 						}
-						NewController->LMinX = NewController->LMaxX = NewController->LEndX = x;
+						NewController->LMinX = NewController->LMaxX = NewController->LEndX = lx;
 
-						real32 y;
+						real32 ly;
 						if (Pad->sThumbLY < 0) {
-							y = (real32)Pad->sThumbLY / 32768.0f;
+							ly = (real32)Pad->sThumbLY / 32768.0f;
 						}
 						else {
-							y = (real32)Pad->sThumbLY / 32767.0f;
+							ly = (real32)Pad->sThumbLY / 32767.0f;
 						}
-						NewController->LMinY = NewController->LMaxY = NewController->LEndY = y;
+						NewController->LMinY = NewController->LMaxY = NewController->LEndY = ly;
+
+						//NOTE(smzb): Right Stick
+						real32 rx;
+						if (Pad->sThumbRX < 0) {
+							rx = (real32)Pad->sThumbRX / 32768.0f;
+						}
+						else {
+							rx = (real32)Pad->sThumbRX / 32767.0f;
+						}
+						NewController->RMinX = NewController->RMaxX = NewController->REndX = rx;
+
+						real32 ry;
+						if (Pad->sThumbRY < 0) {
+							ry = (real32)Pad->sThumbRY / 32768.0f;
+						}
+						else {
+							ry = (real32)Pad->sThumbRY / 32767.0f;
+						}
+						NewController->RMinY = NewController->RMaxY = NewController->REndY = ry;
 						
-						Win32ProcessXInputButton(Pad->wButtons, &OldController->Y, &NewController->Y, XINPUT_GAMEPAD_Y);
 						Win32ProcessXInputButton(Pad->wButtons, &OldController->A, &NewController->A, XINPUT_GAMEPAD_A);
-						Win32ProcessXInputButton(Pad->wButtons, &OldController->X, &NewController->X, XINPUT_GAMEPAD_X);
 						Win32ProcessXInputButton(Pad->wButtons, &OldController->B, &NewController->B, XINPUT_GAMEPAD_B);
+						Win32ProcessXInputButton(Pad->wButtons, &OldController->X, &NewController->X, XINPUT_GAMEPAD_X);
+						Win32ProcessXInputButton(Pad->wButtons, &OldController->Y, &NewController->Y, XINPUT_GAMEPAD_Y);
 						Win32ProcessXInputButton(Pad->wButtons, &OldController->Start, &NewController->Start, XINPUT_GAMEPAD_START);
 						Win32ProcessXInputButton(Pad->wButtons, &OldController->Back, &NewController->Back, XINPUT_GAMEPAD_BACK);
 						Win32ProcessXInputButton(Pad->wButtons, &OldController->LShoulder, &NewController->LShoulder, XINPUT_GAMEPAD_LEFT_SHOULDER);

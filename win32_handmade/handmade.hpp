@@ -68,6 +68,7 @@ struct game_button_state {
 
 struct game_controller_input {
 	bool32 IsAnalog;
+	//Left Stick Object definition
 	real32 LStartX;
 	real32 LStartY;
 	real32 LMinX;
@@ -76,7 +77,16 @@ struct game_controller_input {
 	real32 LMaxY;
 	real32 LEndX;
 	real32 LEndY;
-	union {
+	//Right Stick Object Definition
+	real32 RStartX;
+	real32 RStartY;
+	real32 RMinX;
+	real32 RMinY;
+	real32 RMaxX;
+	real32 RMaxY;
+	real32 REndX;
+	real32 REndY;
+		union {
 		game_button_state Buttons[12];
 		struct {
 			game_button_state Up;
