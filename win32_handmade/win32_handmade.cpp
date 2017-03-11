@@ -501,12 +501,12 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 						bool32 Down = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_DOWN);
 						bool32 Left = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_LEFT);
 						bool32 Right = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_RIGHT);
-*/
+
 						int16 LStickX = (real32)Pad->sThumbLX;
 						int16 LStickY = (real32)Pad->sThumbLY;
 						int16 RStickX = (real32)Pad->sThumbRX;
 						int16 RStickY = (real32)Pad->sThumbRY;
-
+*/
 						NewController->IsAnalog = true;
 						NewController->LStartX = OldController->LEndX;
 						NewController->LStartY = OldController->LEndY;
