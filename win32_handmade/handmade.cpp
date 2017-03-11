@@ -1,10 +1,7 @@
-// handmade.cpp
-// compiles with -doc -FC -Zi win32_handmade.cpp handmade.cpp user32.lib gdi32.lib
-// see: build.bat for switches used in compilation
 /* ========================================================================
-$File: $
+$File: handmade.cpp
 $Date: $
-$Revision: 0.1.d11 $
+$Revision: 0.1.d13 $
 $Creator: Sebastian Meier zu Biesen $
 $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 ======================================================================== */
@@ -46,7 +43,30 @@ internal void OutputGameSound(game_sound_buffer *SoundBuffer, int ToneHz) {
 	}
 }
 
-void GameUpdateAndRender(game_offscreen_buffer *Buffer, game_sound_buffer *SoundBuffer, int XOffset, int YOffset, int ToneHz) {
+void GameUpdateAndRender(game_input *Input, game_offscreen_buffer *Buffer, game_sound_buffer *SoundBuffer) {
+	local_persist int XOffset = 1;
+	local_persist int YOffset = 1;
+	local_persist int ToneHz = 440;
+
+	game_controller_input *Input0 = &Input->Controllers[0];
+
+	if (Input0->IsAnalog) {
+		// Use analog input tuning
+		ToneHz = 440 + (int)(220.0f*(Input0->LEndY));
+		XOffset -= (int)4.0f*(Input0->LEndX);
+		YOffset += (int)4.0f*(Input0->LEndY);
+
+	}
+	else {
+		// Use digital input tuning
+	}
+	if (Input0->A.EndedDown) {
+		YOffset += 1;
+	}
+	if (Input0->B.EndedDown) {
+		XOffset += 2;
+	}
+
 	//TODO(smzb): Allow sample offset here for more robust platform handling
 	OutputGameSound(SoundBuffer, ToneHz);
 	RenderGradient(Buffer, XOffset, YOffset);
