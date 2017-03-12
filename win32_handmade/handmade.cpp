@@ -47,34 +47,39 @@ internal void OutputGameSound(game_sound_buffer *SoundBuffer, int ToneHz, int16 
 /// The actual game loop
 /// I've added a return of bool type here so we can interrupt/stop the game from inside the actual game running function
 /// </summary>
-bool GameUpdateAndRender(game_input * Input, game_offscreen_buffer * Buffer, game_sound_buffer * SoundBuffer) {
-	local_persist int XOffset = 0;
-	local_persist int YOffset = 0;
-	local_persist int ToneHz = 440;
-	local_persist int16 ToneVolume = 5000;
+bool GameUpdateAndRender(game_memory *Memory, game_input * Input, game_offscreen_buffer * Buffer, game_sound_buffer * SoundBuffer) {
+
+	game_state *GameState = (game_state *)Memory->PermanentStorage;
+	if (!Memory->IsInitialized) {
+		GameState->XOffset = 0;
+		GameState->YOffset = 0;
+		GameState->ToneHz = 440;
+		GameState->ToneVolume = 5000;
+	}
+
 	game_controller_input *Input0 = &Input->Controllers[0];
 
 	if (Input0->IsAnalog) {
 		// Use analog input tuning
-		ToneHz = 440 + (int)(330.0f*(Input0->REndY));
-		ToneVolume = 5000 + (int)(5000.0f*(Input0->REndX));
-		XOffset -= (int)4.0f*(Input0->LEndX);
-		YOffset += (int)4.0f*(Input0->LEndY);
+		GameState->ToneHz = 440 + (int)(330.0f*(Input0->REndY));
+		GameState->ToneVolume = 5000 + (int)(5000.0f*(Input0->REndX));
+		GameState->XOffset -= (int)4.0f*(Input0->LEndX);
+		GameState->YOffset += (int)4.0f*(Input0->LEndY);
 	}
 	else {
 		// Use digital input tuning
 	}
 	if (Input0->A.EndedDown) {
-		YOffset += 2;
+		GameState->YOffset += 2;
 	}
 	if (Input0->B.EndedDown) {
-		XOffset += 2;
+		GameState->XOffset += 2;
 	}
 	if (Input0->Back.EndedDown) {
 		return false;
 	}
 	//TODO(smzb): Allow sample offset here for more robust platform handling
-	OutputGameSound(SoundBuffer, ToneHz, ToneVolume);
-	RenderGradient(Buffer, XOffset, YOffset);
+	OutputGameSound(SoundBuffer, GameState->ToneHz, GameState->ToneVolume);
+	RenderGradient(Buffer, GameState->XOffset, GameState->YOffset);
 	return true;
 }

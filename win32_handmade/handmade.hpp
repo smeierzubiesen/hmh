@@ -21,6 +21,10 @@ $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 #define global_variable static
 
 #define ArrayCount(Array) (sizeof(Array) / sizeof((Array)[0]))
+#define Kilobytes(Value) ((Value)*1024)
+#define Megabytes(Value) (Kilobytes(Value)*1024)
+#define Gigabytes(Value) (Megabytes(Value)*1024)
+#define Terabytes(Value) (Gigabytes(Value)*1024)
 
 global_variable bool GlobalRunning;
 global_variable bool Debug = 0;
@@ -109,7 +113,22 @@ struct game_input {
 	game_controller_input Controllers[4];
 };
 
+struct game_memory {
+	bool32 IsInitialized;
+	uint64 PermanentStorageSize;
+	void *PermanentStorage;
+};
+
 ///Four things here : timing, controller/keyboard input, bitmap_buffer to use, sound_buffer to user
-bool GameUpdateAndRender(game_input *Input, game_offscreen_buffer *Buffer, game_sound_buffer *SoundBuffer);
+bool GameUpdateAndRender(game_memory *Memory, game_input *Input, game_offscreen_buffer *Buffer, game_sound_buffer *SoundBuffer);
+
+struct game_state {
+	int XOffset = 0;
+	int YOffset = 0;
+	int ToneHz = 440;
+	int16 ToneVolume = 5000;
+};
 
 #endif
+
+bool GameUpdateAndRender(game_memory * Memory, game_input * Input, game_offscreen_buffer * Buffer, game_sound_buffer * SoundBuffer);

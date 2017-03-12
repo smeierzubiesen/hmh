@@ -446,6 +446,12 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 			//NOTE(smzb): Timing Variable
 			LARGE_INTEGER LastCounter;
 			QueryPerformanceCounter(&LastCounter);
+			//NOTE(smzb): Game Memory allocation
+			game_memory GameMemory = {};
+			GameMemory.PermanentStorageSize = Megabytes(64);
+			GameMemory.PermanentStorage = VirtualAlloc(0, GameMemory.PermanentStorageSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+
+			
 			//NOTE(smzb): Sound stuff setup
 			win32_sound_output SoundOutput = {};
 			SoundOutput.SamplesPerSecond = 44100; //NOTE(smzb): Sample rate of Output
@@ -599,7 +605,7 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 				ScreenBuffer.Width = GlobalBitmapBuffer.Width;
 				ScreenBuffer.Height = GlobalBitmapBuffer.Height;;
 				ScreenBuffer.Pitch = GlobalBitmapBuffer.Pitch;
-				GlobalRunning = GameUpdateAndRender(NewInput, &ScreenBuffer, &SoundBuffer);
+				GlobalRunning = GameUpdateAndRender(&GameMemory, NewInput, &ScreenBuffer, &SoundBuffer);
 				if (SoundIsValid) { Win32FillSoundBuffer(&SoundOutput, &SoundBuffer, ByteToLock, BytesToWrite); }
 				HDC DeviceContext = GetDC(WindowHandle);
 				win32_window_dimensions Dimensions = Win32GetWindowDimensions(WindowHandle);
