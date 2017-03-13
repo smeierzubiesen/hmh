@@ -447,13 +447,19 @@ int CALLBACK WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandL
 			QueryPerformanceCounter(&LastCounter);
 			
 
-			//NOTE(smzb): Game Memory allocation
+#if HANDMADE_INTERNAL
+            LPVOID BaseAddress = (LPVOID)Terabytes((uint64)1);
+#else
+            LPVOID BaseAddress = 0;
+#endif
+
+            //NOTE(smzb): Game Memory allocation
 			game_memory GameMemory = {};
 			GameMemory.PermanentStorageSize = Megabytes(64);
-			GameMemory.PermanentStorage = VirtualAlloc(0, GameMemory.PermanentStorageSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-			
 			GameMemory.TransientStorageSize = Gigabytes((uint64)1);
-			GameMemory.TransientStorage = VirtualAlloc(0, GameMemory.TransientStorageSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+			uint64 TotalSize = GameMemory.PermanentStorageSize + GameMemory.TransientStorageSize;
+			GameMemory.PermanentStorage = VirtualAlloc(BaseAddress, TotalSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+			GameMemory.TransientStorage = ((uint8 *)GameMemory.PermanentStorage + GameMemory.PermanentStorageSize);
 			
 			//NOTE(smzb): Sound stuff setup
 			win32_sound_output SoundOutput = {};

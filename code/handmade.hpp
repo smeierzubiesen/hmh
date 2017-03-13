@@ -9,6 +9,16 @@ $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 #include <math.h>
 #include <stdint.h>
 
+/*
+ NOTE(smzb): These are set during build (@see build.bat)
+   HANDMADE_INTERNAL:
+    0 - Public build
+    1 - Internal only build (this should NEVER ship)
+   HANDMADE_SLOW:
+    0 - No Slow building allowed
+    1 - Lets be a bit slower in execution
+*/
+
 /// <summary>
 /// Pi as per google.com : pi
 /// </summary>
@@ -25,7 +35,7 @@ $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 #define Gigabytes(Value) (Megabytes(Value)*1024)
 #define Terabytes(Value) (Gigabytes(Value)*1024)
 
-#if DEBUG
+#if HANDMADE_SLOW
 #define Assert(Expression) if(!(Expression)) {*(int *)0 = 0;}
 #else
 #define Assert(Expression)
