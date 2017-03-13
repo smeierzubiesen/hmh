@@ -51,10 +51,12 @@ bool GameUpdateAndRender(game_memory *Memory, game_input * Input, game_offscreen
 
 	game_state *GameState = (game_state *)Memory->PermanentStorage;
 	if (!Memory->IsInitialized) {
-		GameState->XOffset = 0;
-		GameState->YOffset = 0;
+		//NOTE(smzb): anything needing initialized to 0 gets so done for free as the VirtualAlloc Call does this for us.
 		GameState->ToneHz = 440;
-		GameState->ToneVolume = 5000;
+		GameState->ToneVolume = 7000;
+
+		//TODO(smzb): might get moved to platform layer, rather than game layer
+		Memory->IsInitialized = true;
 	}
 
 	game_controller_input *Input0 = &Input->Controllers[0];
@@ -62,7 +64,7 @@ bool GameUpdateAndRender(game_memory *Memory, game_input * Input, game_offscreen
 	if (Input0->IsAnalog) {
 		// Use analog input tuning
 		GameState->ToneHz = 440 + (int)(330.0f*(Input0->REndY));
-		GameState->ToneVolume = 5000 + (int)(5000.0f*(Input0->REndX));
+		GameState->ToneVolume = 7000 + (int)(7000.0f*(Input0->REndX));
 		GameState->XOffset -= (int)4.0f*(Input0->LEndX);
 		GameState->YOffset += (int)4.0f*(Input0->LEndY);
 	}

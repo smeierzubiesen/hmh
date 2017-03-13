@@ -116,7 +116,11 @@ struct game_input {
 struct game_memory {
 	bool32 IsInitialized;
 	uint64 PermanentStorageSize;
+	//NOTE(smzb): REQUIRED: always set to zero, so if Platform doesn't do it, we need to.
 	void *PermanentStorage;
+	uint64 TransientStorageSize;
+	//NOTE(smzb): REQUIRED: always set to zero, so if Platform doesn't do it, we need to.
+	void *TransientStorage;
 };
 
 ///Four things here : timing, controller/keyboard input, bitmap_buffer to use, sound_buffer to user
