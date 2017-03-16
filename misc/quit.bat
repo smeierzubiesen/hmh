@@ -1,4 +1,5 @@
 @Echo off
 c:
+cd \
 subst w: /D
-call exit
+exit /B

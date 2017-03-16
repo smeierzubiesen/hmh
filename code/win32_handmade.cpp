@@ -66,6 +66,23 @@ global_variable x_input_set_state *XInputSetState_ = XInputSetStateStub;
 #define DIRECT_SOUND_CREATE(name) HRESULT WINAPI name(LPCGUID pcGuidDevice, LPDIRECTSOUND *ppDS, LPUNKNOWN pUnkOuter)
 typedef DIRECT_SOUND_CREATE(direct_sound_create);
 
+//NOTE(smzb): Debugging code for file I/O implementation
+#if defined(HANDMADE_INTERNAL)
+internal void *DEBUGPlatformReadEntireFile(char *Filename) {
+    return(0);
+}
+
+internal void *DEBUGPlatformFreeFileMemory(void *Memory) {
+    //something
+    return(0);
+}
+
+internal bool32 *DEBUGPlatformWriteEntireFile(char *Filename, uint32 *MemorySize, void *Memory) {
+    //something
+    return(0);
+}
+#endif
+
 /// <summary>
 /// Formats the debug output for timing stuff (this is only enabled, when `Debug==true`
 /// </summary>

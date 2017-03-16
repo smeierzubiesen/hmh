@@ -21,8 +21,11 @@ $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 
 /// <summary>
 /// Pi as per google.com : pi
+/// We only meed 39 digits, as taking pi to 39 digits allows you to measure
+/// the circumference of the observable universe to within
+/// the width of a single hydrogen atom.
 /// </summary>
-#define Pi32 3.14159265359f
+#define Pi32 3.1415926535897932384626433832795028841f
 
 #define internal static
 #define local_persist static
@@ -59,6 +62,12 @@ typedef double real64;
 #if !defined(HANDMADE_H)
 #define HANDMADE_H
 //NOTE(smzb): Services that the game provides to the platform layer
+
+#if HANDMADE_INTERNAL
+internal void *DEBUGPlatformReadEntireFile(char *Filename);
+internal void *DEBUGPlatformFreeFileMemory(void *Memory);
+internal bool32 *DEBUGPlatformWriteEntireFile(char *Filename, uint32 *MemorySize, void *Memory);
+#endif
 
 //NOTE(smzb): Services that the platform provides to the game
 

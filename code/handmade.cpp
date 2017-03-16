@@ -50,10 +50,17 @@ internal void OutputGameSound(game_sound_buffer *SoundBuffer, int ToneHz, int16 
 bool GameUpdateAndRender(game_memory *Memory, game_input * Input, game_offscreen_buffer * Buffer, game_sound_buffer * SoundBuffer) {
 	Assert(sizeof(game_state) <= Memory->PermanentStorageSize);
 	game_state *GameState = (game_state *)Memory->PermanentStorage;
-	if (!Memory->IsInitialized) {
+    if (!Memory->IsInitialized) {
 		//NOTE(smzb): anything needing initialized to 0 gets so done for free as the VirtualAlloc Call does this for us.
 		GameState->ToneHz = 440;
 		GameState->ToneVolume = 7000;
+
+        char *Filename = "test.bmp";
+
+        void *BitmapMemory = DEBUGPlatformReadEntireFile(Filename);
+        if (BitmapMemory) {
+            DEBUGPlatformFreeFileMemory(BitmapMemory);
+        }
 
 		//TODO(smzb): might get moved to platform layer, rather than game layer
 		Memory->IsInitialized = true;
