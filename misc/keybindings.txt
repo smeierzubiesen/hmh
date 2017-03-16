@@ -1,0 +1,62 @@
+Quick reference guide to emacs config
+-------------------------------------
+
+TAB            Cycles through completions
+
+ALT+X          Execute command in mini-buffer
+CTRL+G         Quit minibuffer
+(minibuffer is the bottom execution line in emacs)
+
+ALT+B          Switch to buffer in current window
+ALT+SHIFT+B    Switch to buffer in other window
+
+ALT+F          Open file in current window
+ALT+SHIFT+F    Open file in other window
+
+ALT+S          Save the file in current window
+ALT+R          Revert buffer to disk content
+
+ALT+M          Look for build.bat and execute (Compile)
+  ALT+N        Goto to next error after compilation
+  ALT+SHIFT+N  Goto to previous error after compilation
+  F9           Goto first error
+  F10          Goto last error
+  F11          Goto next error
+
+ALT+W          Switch to other window
+
+ALT+C          Toggle between .cpp and .hpp in current window
+F12
+ALT+SHIFT+C    Toggle between .cpp and .hpp in other window
+ALT+F12
+
+ALT+K          Kill current buffer (asks for saving file)
+
+CTRL+Arrows    Move cursor by larger increments (words, whitespace)
+
+CTRL+Space     Sets the mark
+CTRL+Tab       Reindent block
+CTRL+Q         Copy block
+CTRL+F         Paste block
+CTRL+W         Cut block
+ALT+Z          Delete marked block
+ALT+SHIFT+;    Jump back to original set block/mark
+
+ALT+U          Undo (use arrows to switch to "redo")
+
+ALT+J          Jump to function (by name)
+
+CTRL+S         Start Search
+  CTRL+S       Next occurence
+  CTRL+R       Previous ccurence
+
+ALT+O          Search+Replace
+ALT+L          Search+Replace inside pasted block
+
+ALT+[          Begin recording keyboard macro
+ALT+]          End recording keyboard macro
+ALT+'          Play keyboard macro
+
+ALT+.          Reflow comment
+
+ALT+G          Goto linenumber

@@ -19,14 +19,33 @@ $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
     1 - Lets be a bit slower in execution
 */
 
-/// <summary>
-/// Pi as per google.com : pi
-/// </summary>
-#define Pi32 3.14159265359f
+typedef uint8_t uint8;
+typedef uint16_t uint16;
+typedef uint32_t uint32;
+typedef uint64_t uint64;
+typedef int8_t int8;
+typedef int16_t int16;
+typedef int32_t int32;
+typedef int64_t int64;
+typedef int32 bool32;
+typedef float real32;
+typedef double real64;
 
 #define internal static
 #define local_persist static
 #define global_variable static
+
+/// <summary>
+/// Pi as per google.com : pi
+/// We only meed 39 digits, as taking pi to 39 digits allows you to measure
+/// the circumference of the observable universe to within
+/// the width of a single hydrogen atom.
+/// </summary>
+//#define Pi32 3.1415926535897932384626433832795028841f;
+#define Pi32 3.1415926535f
+
+global_variable bool GlobalRunning;
+global_variable bool Debug = 0;
 
 #define ArrayCount(Array) (sizeof(Array) / sizeof((Array)[0]))
 
@@ -41,24 +60,32 @@ $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 #define Assert(Expression)
 #endif
 
-global_variable bool GlobalRunning;
-global_variable bool Debug = 0;
-
-typedef uint8_t uint8;
-typedef uint16_t uint16;
-typedef uint32_t uint32;
-typedef uint64_t uint64;
-typedef int8_t int8;
-typedef int16_t int16;
-typedef int32_t int32;
-typedef int64_t int64;
-typedef int32 bool32;
-typedef float real32;
-typedef double real64;
+inline uint32
+SafeTruncateUInt64(uint64 Value) {
+//TODO(smzb): define some Max values (such as UInt32Max instead of 0xFFFFFFFF)
+    Assert(Value <= 0xFFFFFFFF);
+    uint32 Result = (uint32)Value;
+    return(Result);    
+}
 
 #if !defined(HANDMADE_H)
 #define HANDMADE_H
 //NOTE(smzb): Services that the game provides to the platform layer
+
+#if HANDMADE_INTERNAL
+/* IMPORTANT(smzb)
+
+  These functions are not for production code - they are blocking and
+  write doesn't protect against data loss
+ */
+struct debug_read_file_result {
+    uint32 ContentSize;
+    void *Content;
+};
+internal debug_read_file_result DEBUGPlatformReadEntireFile(char *Filename);
+internal void DEBUGPlatformFreeFileMemory(void *Memory);
+internal bool32 DEBUGPlatformWriteEntireFile(char *Filename, uint32 MemorySize, void *Memory);
+#endif
 
 //NOTE(smzb): Services that the platform provides to the game
 

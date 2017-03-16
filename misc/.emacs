@@ -9,6 +9,7 @@
 ; setting very high limits for undo buffers
 (setq undo-limit 20000000)
 (setq undo-strong-limit 40000000)
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 ; Determine the underlying operating system
 (setq casey-aquamacs (featurep 'aquamacs))
@@ -121,13 +122,19 @@
  (setq fixme-modes '(c++-mode c-mode emacs-lisp-mode))
  (make-face 'font-lock-fixme-face)
  (make-face 'font-lock-note-face)
+ (make-face 'font-lock-study-face)
+ (make-face 'font-lock-important-face)
  (mapc (lambda (mode)
 	 (font-lock-add-keywords
 	  mode
 	  '(("\\<\\(TODO\\)" 1 'font-lock-fixme-face t)
+	    ("\\<\\(STUDY\\)" 1 'font-lock-study-face t)
+	    ("\\<\\(IMPORTANT\\)" 1 'font-lock-important-face t)
             ("\\<\\(NOTE\\)" 1 'font-lock-note-face t))))
 	fixme-modes)
  (modify-face 'font-lock-fixme-face "Red" nil nil t nil t nil nil)
+ (modify-face 'font-lock-study-face "Yellow" nil nil t nil t nil nil)
+ (modify-face 'font-lock-important-face "Yellow" nil nil t nil t nil nil)
  (modify-face 'font-lock-note-face "Dark Green" nil nil t nil t nil nil)
 
 ; Accepted file extensions and their appropriate modes
@@ -570,8 +577,8 @@
     nil)
 (setq split-window-preferred-function 'casey-never-split-a-window)
 
-(add-to-list 'default-frame-alist '(font . "Liberation Mono-10"))
-(set-face-attribute 'default t :font "Liberation Mono-10")
+(add-to-list 'default-frame-alist '(font . "Liberation Mono-8"))
+(set-face-attribute 'default t :font "Liberation Mono-8")
 (set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
 (set-face-attribute 'font-lock-comment-face nil :foreground "gray50")
 (set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
