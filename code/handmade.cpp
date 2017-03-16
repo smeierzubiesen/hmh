@@ -21,9 +21,9 @@ RenderGradient(game_offscreen_buffer *Buffer, int XOffset, int YOffset) {
     for (int Y = 0; Y < Buffer->Height; ++Y) {
         uint32 *Pixel = (uint32 *)Row;
         for (int X = 0; X < Buffer->Width; ++X) {
-            uint8 Blue = (X + XOffset);
-            uint8 Green = (Y + YOffset);
-            uint8 Red = (Y + X);
+            uint8 Blue = (uint8)(X + XOffset);
+            uint8 Green = (uint8)(Y + YOffset);
+            uint8 Red = (uint8)(Y + X);
             *Pixel++ = ((Red << 16) | (Green << 8) | (Blue));
         }
         Row += Buffer->Pitch;
@@ -73,10 +73,10 @@ bool GameUpdateAndRender(game_memory *Memory, game_input * Input, game_offscreen
 
     if (Input0->IsAnalog) {
         // Use analog input tuning
-        GameState->ToneHz = 440 + (int)(330.0f*(Input0->REndY));
-        GameState->ToneVolume = 7000 + (int)(7000.0f*(Input0->REndX));
-        GameState->XOffset -= (int)4.0f*(Input0->LEndX);
-        GameState->YOffset += (int)4.0f*(Input0->LEndY);
+        GameState->ToneHz = 550 + (int)(440.0f*(Input0->REndY));
+        GameState->ToneVolume = (int16)(7000 + (int)(7000.0f*(Input0->REndX)));
+        GameState->XOffset -= (int)(4.0f*(Input0->LEndX));
+        GameState->YOffset += (int)(4.0f*(Input0->LEndY));
     }
     else {
         // Use digital input tuning
@@ -89,6 +89,9 @@ bool GameUpdateAndRender(game_memory *Memory, game_input * Input, game_offscreen
     }
     if (Input0->Back.EndedDown) {
         return false;
+    }
+    if (Input0->Down.EndedDown) {
+        GameState->XOffset += 2;
     }
     //TODO(smzb): Allow sample offset here for more robust platform handling
     OutputGameSound(SoundBuffer, GameState->ToneHz, GameState->ToneVolume);
