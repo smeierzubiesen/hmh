@@ -1,5 +1,3 @@
 @Echo off
-c:
-pushd \
-subst w: /D
+call c:\Projects\hmh\misc\desubst.bat
 exit /B

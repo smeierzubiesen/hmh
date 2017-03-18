@@ -1,4 +1,5 @@
 @Echo off
+@Echo Building win32_handmade.exe
 IF NOT EXIST ..\build mkdir ..\build
 pushd ..\build
 del /Q *.*
