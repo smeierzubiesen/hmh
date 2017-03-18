@@ -1,5 +1,5 @@
 @Echo off
 c:
-cd \
+pushd \
 subst w: /D
 exit /B
