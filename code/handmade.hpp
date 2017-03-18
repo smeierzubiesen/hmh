@@ -76,7 +76,7 @@ SafeTruncateUInt64(uint64 Value) {
 /* IMPORTANT(smzb)
 
   These functions are not for production code - they are blocking and
-  write doesn't protect against data loss
+  write doesn't protect against data loss!!!
  */
 struct debug_read_file_result {
     uint32 ContentSize;
@@ -152,7 +152,7 @@ struct game_controller_input {
 };
 
 struct game_input {
-	game_controller_input Controllers[4];
+	game_controller_input Controllers[5];
 };
 
 struct game_memory {

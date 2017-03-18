@@ -495,6 +495,7 @@ WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int Show
             
             if (Samples && GameMemory.PermanentStorage && GameMemory.TransientStorage)
             {
+
                 //XInput Stuff
                 game_input Input[2] = {};
                 game_input *NewInput = &Input[0];
@@ -502,8 +503,9 @@ WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int Show
                 while (GlobalRunning)
                 {
                     MSG Message;
+
                     //TODO(smzb): Make a ZEROing macro
-                    game_controller_input *KeyboardController = &NewInput->Controllers[0];
+                    game_controller_input *KeyboardController = &NewInput->Controllers[4];
                     game_controller_input NullController = {};
                     *KeyboardController = NullController;
                     while (PeekMessage(&Message, 0, 0, 0, PM_REMOVE)) {
@@ -516,11 +518,13 @@ WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int Show
                             case WM_KEYUP:
                             case WM_KEYDOWN:
                             {
+
                                 uint32 VKCode = (uint32)Message.wParam;
                                 bool32 WasDown = ((Message.lParam & (1 << 30)) != 0);
                                 bool32 IsDown = ((Message.lParam & (1 << 31)) == 0);
+                                KeyboardController->IsAnalog = false;
                                 if (WasDown != IsDown) {
-                                    if (VKCode == 'A')
+/*                                    if (VKCode == 'A')
                                     {
                                         Win32ProcessKeyboardEvent(&KeyboardController->Left, IsDown);
                                     }
@@ -544,7 +548,7 @@ WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int Show
                                     {
                                         Win32ProcessKeyboardEvent(&KeyboardController->RShoulder, IsDown);
                                     }
-                                    else if (VKCode == VK_UP)
+                                    else*/ if (VKCode == VK_UP)
                                     {
                                         Win32ProcessKeyboardEvent(&KeyboardController->Up, IsDown);
                                     }
@@ -562,7 +566,7 @@ WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int Show
                                     }
                                     else if (VKCode == VK_SPACE)
                                     {
-                                        // Do something
+                                        Win32ProcessKeyboardEvent(&KeyboardController->Start, IsDown);
                                     }
                                     else if (VKCode == VK_ESCAPE)
                                     {
@@ -582,7 +586,8 @@ WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int Show
                         }
                     }
                     DWORD dwResult;
-                    DWORD MaxControllerCount = XUSER_MAX_COUNT;
+                    //DWORD MaxControllerCount = XUSER_MAX_COUNT;
+                    DWORD MaxControllerCount = 5;
                     if (MaxControllerCount > ArrayCount(NewInput->Controllers)) {
                         MaxControllerCount = ArrayCount(NewInput->Controllers);
                     }

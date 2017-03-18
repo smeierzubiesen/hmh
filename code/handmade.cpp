@@ -70,6 +70,7 @@ bool GameUpdateAndRender(game_memory *Memory, game_input * Input, game_offscreen
     }
 
     game_controller_input *Input0 = &Input->Controllers[0];
+    game_controller_input *Input4 = &Input->Controllers[4];
 
     if (Input0->IsAnalog) {
         // Use analog input tuning
@@ -87,12 +88,14 @@ bool GameUpdateAndRender(game_memory *Memory, game_input * Input, game_offscreen
     if (Input0->B.EndedDown) {
         GameState->XOffset += 2;
     }
-    if (Input0->Back.EndedDown) {
+    if ((Input0->Back.EndedDown)||(Input4->Back.EndedDown)) {
         return false;
     }
-    if (Input0->Down.EndedDown) {
-        GameState->XOffset += 2;
+    if (Input4->Down.EndedDown) {
+        GameState->ToneVolume = (int16)0;
+        GameState->YOffset -= (int)(4.0f*Pi32);
     }
+
     //TODO(smzb): Allow sample offset here for more robust platform handling
     OutputGameSound(SoundBuffer, GameState->ToneHz, GameState->ToneVolume);
     RenderGradient(Buffer, GameState->XOffset, GameState->YOffset);
