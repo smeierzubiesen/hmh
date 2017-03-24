@@ -9,7 +9,6 @@
 ; setting very high limits for undo buffers
 (setq undo-limit 20000000)
 (setq undo-strong-limit 40000000)
-(defalias 'yes-or-no-p 'y-or-n-p)
 
 ; Determine the underlying operating system
 (setq casey-aquamacs (featurep 'aquamacs))
@@ -26,7 +25,26 @@
 (scroll-bar-mode -1)
 (setq shift-select-mode nil)
 (setq enable-local-variables nil)
-(setq casey-font "outline-DejaVu Sans Mono")
+; (setq casey-font "outline-DejaVu Sans Mono")
+(setq casey-font "outline-Liberation Mono")
+
+; Short Yes or No answers
+(defalias 'yes-or-no-p 'y-or-n-p)
+; Linenumbers (without leading zeros)
+(add-hook 'find-file-hook (lambda () (linum-mode 1)))
+(eval-after-load 'linum
+  '(progn
+     (defface linum-leading-zero
+       `((t :inherit 'linum
+            :foreground ,(face-attribute 'linum :background nil t)))
+       "Face for displaying leading zeroes for line numbers in display margin."
+       :group 'linum)
+
+     (defun linum-format-func (line)
+       (let ((w (length (number-to-string (count-lines (point-min) (point-max))))))
+	 (propertize (format (format "\u2502%%%dd\u2502" w) line) 'face 'linum)))
+
+     (setq linum-format 'linum-format-func)))
 
 (when casey-win32 
   (setq casey-makescript "build.bat")
@@ -192,7 +210,7 @@
                                     (access-label          . -4)
                                     (substatement-open     .  0)
                                     (statement-case-intro  .  4)
-                                    (statement-block-intro .  c-lineup-for)
+                                    (statement-block-intro .  4)
                                     (case-label            .  4)
                                     (block-open            .  0)
                                     (inline-open           .  0)
@@ -208,7 +226,7 @@
 (defun casey-big-fun-c-hook ()
   ; Set my style for the current buffer
   (c-add-style "BigFun" casey-big-fun-c-style t)
-  
+    
   ; 4-space tabs
   (setq tab-width 4
         indent-tabs-mode nil)
@@ -275,7 +293,7 @@
         ((string-match "[.]hin" buffer-file-name) (casey-source-format))
         ((string-match "[.]cin" buffer-file-name) (casey-source-format))
         ((string-match "[.]h" buffer-file-name) (casey-header-format))
-		((string-match "[.]hpp" buffer-file-name) (casey-header-format))
+	((string-match "[.]hpp" buffer-file-name) (casey-header-format))
         ((string-match "[.]cpp" buffer-file-name) (casey-source-format)))
 
   (defun casey-find-corresponding-file ()
@@ -359,7 +377,7 @@
   ; 4-space tabs
   (setq tab-width 4
         indent-tabs-mode nil)
-
+  
   ; Newline indents, semi-colon doesn't
   (define-key text-mode-map "\C-m" 'newline-and-indent)
 

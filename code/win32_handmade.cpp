@@ -10,35 +10,31 @@ $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 ======================================================================== */
 
 /*
-TODO(smzb): This is not a final win32 platform layer.
- - Saved Game locations
- - Getting a handle to the executable
- - Asset loading path(s)
- - Threading (how-to launch a thread)
- - Raw Input (support for multiple keyboards)
- - Sleep/time BeginPeriod
- - ClipCursor() (multi monitor support)
- - Full-screen support
- - WM_SETCURSOR (control cursor visibility)
- - QueryCancelAutoplay
- - WM_ACTIVATEAPP (for when we are not in focus)
- - Blit speed improvement
- - Hardware acceleration (OpenGL||Direct3D||both??)
- - GetKeyboardlayout() support (international keyboards)
-`part list of stuff to be done`
+  TODO(smzb): This is not a final win32 platform layer.
+  - Saved Game locations
+  - Getting a handle to the executable
+  - Asset loading path(s)
+  - Threading (how-to launch a thread)
+  - Raw Input (support for multiple keyboards)
+  - Sleep/time BeginPeriod
+  - ClipCursor() (multi monitor support)
+  - Full-screen support
+  - WM_SETCURSOR (control cursor visibility)
+  - QueryCancelAutoplay
+  - WM_ACTIVATEAPP (for when we are not in focus)
+  - Blit speed improvement
+  - Hardware acceleration (OpenGL||Direct3D||both??)
+  - GetKeyboardlayout() support (international keyboards)
+  `part list of stuff to be done`
 */
 
 #include "win32_handmade.hpp"
 
-/// <summary>
-/// The Global Bitmap Buffer
-/// </summary>
+/// <summary> The Global Bitmap Buffer </summary>
 global_variable win32_offscreen_buffer GlobalBitmapBuffer;
 
-/// <summary>
-/// The DSound Buffer to which we actually write sound.
-/// </summary>
-/// <see cref="DIRECT_SOUND_CREATE"/>
+/// <summary> The DSound Buffer to which we actually write sound.
+/// </summary> <see cref="DIRECT_SOUND_CREATE"/>
 global_variable LPDIRECTSOUNDBUFFER GlobalSoundBuffer;
 
 #if !defined(WIN32_HANDMADE_X_INPUT)
@@ -141,12 +137,10 @@ PrintDebugTime(real64 ms, real64 fps, real64 MCyclesPerFrame) {
     OutputDebugStringA(Buffer);
 }
 
-/// <summary>
-/// Load the XInput library for XBox Controller Support. Depending on OS version either 1.3 or 1.4 is loaded.
-/// </summary>
-/// <see cref="X_INPUT_GET_STATE"/>
-/// <see cref="X_INPUT_SET_STATE"/>
-/// <returns>void</returns>
+/// <summary> Load the XInput library for XBox Controller
+/// Support. Depending on OS version either 1.3 or 1.4 is loaded.
+/// </summary> <see cref="X_INPUT_GET_STATE"/> <see
+/// cref="X_INPUT_SET_STATE"/> <returns>void</returns>
 internal void Win32LoadXInput(void) {
     HMODULE XInputLibrary = LoadLibraryA("xinput1_4.dll");
     if (!XInputLibrary) {
@@ -161,14 +155,14 @@ internal void Win32LoadXInput(void) {
     }
 }
 
-/// <summary>
-/// PROTOTYPE: This function will load and initialize DirectSound to output sound to the default sound output channel.
-/// This should however still allow to run the game in the rare event, that DirectSound is not available.
-/// </summary>
-/// <param name="WindowHandle">A Handle to the MainWindow</param>
-/// <param name="SamplesPerSecond">How many samples per second? (aka SampleRate)</param>
-/// <param name="BufferSize">How big is our buffer? (int32) [default:1 second]</param>
-/// <returns>void</returns>
+/// <summary> PROTOTYPE: This function will load and initialize
+/// DirectSound to output sound to the default sound output channel.
+/// This should however still allow to run the game in the rare event,
+/// that DirectSound is not available.  </summary> <param
+/// name="WindowHandle">A Handle to the MainWindow</param> <param
+/// name="SamplesPerSecond">How many samples per second? (aka
+/// SampleRate)</param> <param name="BufferSize">How big is our
+/// buffer? (int32) [default:1 second]</param> <returns>void</returns>
 internal void
 Win32InitDirectSound(HWND WindowHandle, int32 SamplesPerSecond, int32 BufferSize) {
     //NOTE(smzb): Load DirectSound
@@ -231,6 +225,12 @@ Win32InitDirectSound(HWND WindowHandle, int32 SamplesPerSecond, int32 BufferSize
     }
 }
 
+/// <summary>
+/// Does what it says on the tin.
+/// Clears the sound buffer defined through the win32_sound_ouput struct
+/// </summary
+/// <param>win32_sound_output *</param>
+/// <returns>void</returns>
 internal void
 Win32ClearSoundBuffer(win32_sound_output *SoundOutput) {
     VOID *Region1;
@@ -525,30 +525,30 @@ WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int Show
                                 KeyboardController->IsAnalog = false;
                                 if (WasDown != IsDown) {
 /*                                    if (VKCode == 'A')
-                                    {
-                                        Win32ProcessKeyboardEvent(&KeyboardController->Left, IsDown);
-                                    }
-                                    else if (VKCode == 'S')
-                                    {
-                                        Win32ProcessKeyboardEvent(&KeyboardController->Down, IsDown);
-                                    }
-                                    else if (VKCode == 'W')
-                                    {
-                                        Win32ProcessKeyboardEvent(&KeyboardController->Up, IsDown);
-                                    }
-                                    else if (VKCode == 'D')
-                                    {
-                                        Win32ProcessKeyboardEvent(&KeyboardController->Right, IsDown);
-                                    }
-                                    else if (VKCode == 'Q')
-                                    {
-                                        Win32ProcessKeyboardEvent(&KeyboardController->LShoulder, IsDown);
-                                    }
-                                    else if (VKCode == 'E')
-                                    {
-                                        Win32ProcessKeyboardEvent(&KeyboardController->RShoulder, IsDown);
-                                    }
-                                    else*/ if (VKCode == VK_UP)
+                                      {
+                                      Win32ProcessKeyboardEvent(&KeyboardController->Left, IsDown);
+                                      }
+                                      else if (VKCode == 'S')
+                                      {
+                                      Win32ProcessKeyboardEvent(&KeyboardController->Down, IsDown);
+                                      }
+                                      else if (VKCode == 'W')
+                                      {
+                                      Win32ProcessKeyboardEvent(&KeyboardController->Up, IsDown);
+                                      }
+                                      else if (VKCode == 'D')
+                                      {
+                                      Win32ProcessKeyboardEvent(&KeyboardController->Right, IsDown);
+                                      }
+                                      else if (VKCode == 'Q')
+                                      {
+                                      Win32ProcessKeyboardEvent(&KeyboardController->LShoulder, IsDown);
+                                      }
+                                      else if (VKCode == 'E')
+                                      {
+                                      Win32ProcessKeyboardEvent(&KeyboardController->RShoulder, IsDown);
+                                      }
+                                      else*/ if (VKCode == VK_UP)
                                     {
                                         Win32ProcessKeyboardEvent(&KeyboardController->Up, IsDown);
                                     }

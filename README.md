@@ -53,16 +53,16 @@ This is my take on and progress of the above mentioned (lol)
    - Documentation is being generated
  - 29/01/17 : We are currently on Day 1 and have not actually started yet
    - Set up dev environnment.
-   - Changed approach from emacs based and cmd builds to [VS2015][] as I prefer it, but it's personal choice.
+   - Changed approach from emacs based and cmd builds to [VS2017][] as I prefer it, but it's personal choice.
 
 First of all I had to set up my dev environment.
-So simply install [VS2015][] (Community Edition is free and does everything we need it to)
+So simply install [VS2017][] (Community Edition is free and does everything we need it to)
 
 #### Step-by-step
 
-Simply open the solution in [VS2015][] Build and Run win32_handmade.exe
+Simply open the solution in [VS2017][] Build and Run win32_handmade.exe
 
   [Github Page]: https://smeierzubiesen.github.io/hmh/  "Handmade Hero Github Page"
   [Waffle.io]: https://waffle.io/smeierzubiesen/hmh     "Waffle.io Handmade Hero"
-  [VS2015]: https://www.visualstudio.com/downloads/     "Visual Studio 2015 Downloads"
+  [VS2017]: https://www.visualstudio.com/downloads/     "Visual Studio 2017 Downloads"
   [Molly Rocket]: https://mollyrocket.com               "Molly Rocket"

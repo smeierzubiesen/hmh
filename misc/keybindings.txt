@@ -61,3 +61,6 @@ ALT+'          Play keyboard macro
 ALT+.          Reflow comment
 
 ALT+G          Goto linenumber
+
+ALT+6          Turn word into UPPERCASE
+ALT+SHIFT+6    Capitalize Word
