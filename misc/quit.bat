@@ -4,7 +4,12 @@ IF NOT EXIST c:\temp\%~n0.bat goto :clone_me
 IF EXIST c:\temp\%~n0.bat goto :exit_me 
 :clone_me
 @Echo Cloning ...
+IF EXIST c:\temp\ goto :copy_script
+IF NOT EXIST c:\temp\ goto :create_temp
+:create_temp
 mkdir c:\temp > nul
+goto :copy_script
+:copy_script
 @Echo copying "%~f0" -> "c:\temp\%~n0.bat"
 copy "%~f0" "c:\temp\%~n0.bat"
 goto :call_clone

@@ -33,7 +33,7 @@ RenderGradient(game_offscreen_buffer *Buffer, int XOffset, int YOffset) {
 internal void
 OutputGameSound(game_sound_buffer *SoundBuffer, int ToneHz, int16 ToneVolume) {
     local_persist real32 tSine;
-    //int16 ToneVolume = 5000; //NOTE(smzb): The volume of output
+    //int16 ToneVolume = 5000; //NOTE(smzb): The volume of output. This has been moved into the gamestate
     int WavePeriod = SoundBuffer->SamplesPerSecond / ToneHz; //NOTE(smzb): The Wave-period describing the "duration" of one wave phase.
     int16 *SampleOut = SoundBuffer->Samples;
     for (int SampleIndex = 0; SampleIndex < SoundBuffer->SampleCount; ++SampleIndex) {
@@ -54,8 +54,8 @@ bool GameUpdateAndRender(game_memory *Memory, game_input * Input, game_offscreen
     game_state *GameState = (game_state *)Memory->PermanentStorage;
     if (!Memory->IsInitialized) {
         //NOTE(smzb): anything needing initialized to 0 gets so done for free as the VirtualAlloc Call does this for us.
-        GameState->ToneHz = 440;
-        GameState->ToneVolume = 7000;
+        GameState->ToneHz = 550;
+        GameState->ToneVolume = 9000;
 
         char *Filename = __FILE__;
 
@@ -70,12 +70,11 @@ bool GameUpdateAndRender(game_memory *Memory, game_input * Input, game_offscreen
     }
 
     game_controller_input *Input0 = &Input->Controllers[0];
-    game_controller_input *Input4 = &Input->Controllers[4];
 
     if (Input0->IsAnalog) {
         // Use analog input tuning
-        GameState->ToneHz = 550 + (int)(440.0f*(Input0->REndY));
-        GameState->ToneVolume = (int16)(7000 + (int)(7000.0f*(Input0->REndX)));
+        GameState->ToneHz = 550 + (int)(449.0f*(Input0->REndY));
+        GameState->ToneVolume = (int16)(9000 + (int)(9000.0f*(Input0->REndX)));
         GameState->XOffset -= (int)(4.0f*(Input0->LEndX));
         GameState->YOffset += (int)(4.0f*(Input0->LEndY));
     }
@@ -88,12 +87,8 @@ bool GameUpdateAndRender(game_memory *Memory, game_input * Input, game_offscreen
     if (Input0->B.EndedDown) {
         GameState->XOffset += 2;
     }
-    if ((Input0->Back.EndedDown)||(Input4->Back.EndedDown)) {
+    if (Input0->Back.EndedDown) {
         return false;
-    }
-    if (Input4->Down.EndedDown) {
-        GameState->ToneVolume = (int16)0;
-        GameState->YOffset -= (int)(4.0f*Pi32);
     }
 
     //TODO(smzb): Allow sample offset here for more robust platform handling

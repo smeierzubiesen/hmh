@@ -436,7 +436,7 @@ WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int Show
     //NOTE(smzb): Init of I/O and window.
     Win32LoadXInput();
     WNDCLASSA WindowClass = {};
-    Win32ResizeDIBSection(&GlobalBitmapBuffer, 640, 480);
+    Win32ResizeDIBSection(&GlobalBitmapBuffer, 1280, 720);
     WindowClass.style = CS_HREDRAW|CS_VREDRAW;
     WindowClass.lpfnWndProc = Win32MainWindowCallback;
     WindowClass.hInstance = Instance;
@@ -504,8 +504,8 @@ WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int Show
                 {
                     MSG Message;
 
-                    //TODO(smzb): Make a ZEROing macro
-                    game_controller_input *KeyboardController = &NewInput->Controllers[4];
+                    //TODO(smzb): Make a ZEROing macro 
+                    game_controller_input *KeyboardController = &NewInput->Controllers[0];
                     game_controller_input NullController = {};
                     *KeyboardController = NullController;
                     while (PeekMessage(&Message, 0, 0, 0, PM_REMOVE)) {
@@ -586,8 +586,7 @@ WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int Show
                         }
                     }
                     DWORD dwResult;
-                    //DWORD MaxControllerCount = XUSER_MAX_COUNT;
-                    DWORD MaxControllerCount = 5;
+                    DWORD MaxControllerCount = XUSER_MAX_COUNT;
                     if (MaxControllerCount > ArrayCount(NewInput->Controllers)) {
                         MaxControllerCount = ArrayCount(NewInput->Controllers);
                     }
