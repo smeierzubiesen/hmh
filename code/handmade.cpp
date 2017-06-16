@@ -21,9 +21,9 @@ RenderGradient(game_offscreen_buffer *Buffer, int XOffset, int YOffset) {
     for (int Y = 0; Y < Buffer->Height; ++Y) {
         uint32 *Pixel = (uint32 *)Row;
         for (int X = 0; X < Buffer->Width; ++X) {
-            uint8 Blue = (X + XOffset);
-            uint8 Green = (Y + YOffset);
-            uint8 Red = (Y + X);
+            uint8 Blue = (uint8)(X + XOffset);
+            uint8 Green = (uint8)(Y + YOffset);
+            uint8 Red = (uint8)(Y + X);
             *Pixel++ = ((Red << 16) | (Green << 8) | (Blue));
         }
         Row += Buffer->Pitch;
@@ -33,7 +33,7 @@ RenderGradient(game_offscreen_buffer *Buffer, int XOffset, int YOffset) {
 internal void
 OutputGameSound(game_sound_buffer *SoundBuffer, int ToneHz, int16 ToneVolume) {
     local_persist real32 tSine;
-    //int16 ToneVolume = 5000; //NOTE(smzb): The volume of output
+    //int16 ToneVolume = 5000; //NOTE(smzb): The volume of output. This has been moved into the gamestate
     int WavePeriod = SoundBuffer->SamplesPerSecond / ToneHz; //NOTE(smzb): The Wave-period describing the "duration" of one wave phase.
     int16 *SampleOut = SoundBuffer->Samples;
     for (int SampleIndex = 0; SampleIndex < SoundBuffer->SampleCount; ++SampleIndex) {
@@ -54,8 +54,8 @@ bool GameUpdateAndRender(game_memory *Memory, game_input * Input, game_offscreen
     game_state *GameState = (game_state *)Memory->PermanentStorage;
     if (!Memory->IsInitialized) {
         //NOTE(smzb): anything needing initialized to 0 gets so done for free as the VirtualAlloc Call does this for us.
-        GameState->ToneHz = 440;
-        GameState->ToneVolume = 7000;
+        GameState->ToneHz = 550;
+        GameState->ToneVolume = 9000;
 
         char *Filename = __FILE__;
 
@@ -73,10 +73,10 @@ bool GameUpdateAndRender(game_memory *Memory, game_input * Input, game_offscreen
 
     if (Input0->IsAnalog) {
         // Use analog input tuning
-        GameState->ToneHz = 440 + (int)(330.0f*(Input0->REndY));
-        GameState->ToneVolume = 7000 + (int)(7000.0f*(Input0->REndX));
-        GameState->XOffset -= (int)4.0f*(Input0->LEndX);
-        GameState->YOffset += (int)4.0f*(Input0->LEndY);
+        GameState->ToneHz = 550 + (int)(449.0f*(Input0->REndY));
+        GameState->ToneVolume = (int16)(9000 + (int)(9000.0f*(Input0->REndX)));
+        GameState->XOffset -= (int)(4.0f*(Input0->LEndX));
+        GameState->YOffset += (int)(4.0f*(Input0->LEndY));
     }
     else {
         // Use digital input tuning
@@ -90,6 +90,7 @@ bool GameUpdateAndRender(game_memory *Memory, game_input * Input, game_offscreen
     if (Input0->Back.EndedDown) {
         return false;
     }
+
     //TODO(smzb): Allow sample offset here for more robust platform handling
     OutputGameSound(SoundBuffer, GameState->ToneHz, GameState->ToneVolume);
     RenderGradient(Buffer, GameState->XOffset, GameState->YOffset);

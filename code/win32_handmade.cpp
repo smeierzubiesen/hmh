@@ -10,35 +10,31 @@ $Notice: (C) Copyright 2000-2016 by Joker Solutions, All Rights Reserved. $
 ======================================================================== */
 
 /*
-TODO(smzb): This is not a final win32 platform layer.
- - Saved Game locations
- - Getting a handle to the executable
- - Asset loading path(s)
- - Threading (how-to launch a thread)
- - Raw Input (support for multiple keyboards)
- - Sleep/time BeginPeriod
- - ClipCursor() (multi monitor support)
- - Full-screen support
- - WM_SETCURSOR (control cursor visibility)
- - QueryCancelAutoplay
- - WM_ACTIVATEAPP (for when we are not in focus)
- - Blit speed improvement
- - Hardware acceleration (OpenGL||Direct3D||both??)
- - GetKeyboardlayout() support (international keyboards)
-`part list of stuff to be done`
+  TODO(smzb): This is not a final win32 platform layer.
+  - Saved Game locations
+  - Getting a handle to the executable
+  - Asset loading path(s)
+  - Threading (how-to launch a thread)
+  - Raw Input (support for multiple keyboards)
+  - Sleep/time BeginPeriod
+  - ClipCursor() (multi monitor support)
+  - Full-screen support
+  - WM_SETCURSOR (control cursor visibility)
+  - QueryCancelAutoplay
+  - WM_ACTIVATEAPP (for when we are not in focus)
+  - Blit speed improvement
+  - Hardware acceleration (OpenGL||Direct3D||both??)
+  - GetKeyboardlayout() support (international keyboards)
+  `part list of stuff to be done`
 */
 
 #include "win32_handmade.hpp"
 
-/// <summary>
-/// The Global Bitmap Buffer
-/// </summary>
+/// <summary> The Global Bitmap Buffer </summary>
 global_variable win32_offscreen_buffer GlobalBitmapBuffer;
 
-/// <summary>
-/// The DSound Buffer to which we actually write sound.
-/// </summary>
-/// <see cref="DIRECT_SOUND_CREATE"/>
+/// <summary> The DSound Buffer to which we actually write sound.
+/// </summary> <see cref="DIRECT_SOUND_CREATE"/>
 global_variable LPDIRECTSOUNDBUFFER GlobalSoundBuffer;
 
 #if !defined(WIN32_HANDMADE_X_INPUT)
@@ -141,14 +137,11 @@ PrintDebugTime(real64 ms, real64 fps, real64 MCyclesPerFrame) {
     OutputDebugStringA(Buffer);
 }
 
-/// <summary>
-/// Load the XInput library for XBox Controller Support. Depending on OS version either 1.3 or 1.4 is loaded.
-/// </summary>
-/// <see cref="X_INPUT_GET_STATE"/>
-/// <see cref="X_INPUT_SET_STATE"/>
-/// <returns>void</returns>
-internal void
-Win32LoadXInput(void) {
+/// <summary> Load the XInput library for XBox Controller
+/// Support. Depending on OS version either 1.3 or 1.4 is loaded.
+/// </summary> <see cref="X_INPUT_GET_STATE"/> <see
+/// cref="X_INPUT_SET_STATE"/> <returns>void</returns>
+internal void Win32LoadXInput(void) {
     HMODULE XInputLibrary = LoadLibraryA("xinput1_4.dll");
     if (!XInputLibrary) {
         HMODULE XInputLibrary = LoadLibraryA("xinput1_3.dll");
@@ -162,14 +155,14 @@ Win32LoadXInput(void) {
     }
 }
 
-/// <summary>
-/// PROTOTYPE: This function will load and initialize DirectSound to output sound to the default sound output channel.
-/// This should however still allow to run the game in the rare event, that DirectSound is not available.
-/// </summary>
-/// <param name="WindowHandle">A Handle to the MainWindow</param>
-/// <param name="SamplesPerSecond">How many samples per second? (aka SampleRate)</param>
-/// <param name="BufferSize">How big is our buffer? (int32) [default:1 second]</param>
-/// <returns>void</returns>
+/// <summary> PROTOTYPE: This function will load and initialize
+/// DirectSound to output sound to the default sound output channel.
+/// This should however still allow to run the game in the rare event,
+/// that DirectSound is not available.  </summary> <param
+/// name="WindowHandle">A Handle to the MainWindow</param> <param
+/// name="SamplesPerSecond">How many samples per second? (aka
+/// SampleRate)</param> <param name="BufferSize">How big is our
+/// buffer? (int32) [default:1 second]</param> <returns>void</returns>
 internal void
 Win32InitDirectSound(HWND WindowHandle, int32 SamplesPerSecond, int32 BufferSize) {
     //NOTE(smzb): Load DirectSound
@@ -232,6 +225,12 @@ Win32InitDirectSound(HWND WindowHandle, int32 SamplesPerSecond, int32 BufferSize
     }
 }
 
+/// <summary>
+/// Does what it says on the tin.
+/// Clears the sound buffer defined through the win32_sound_ouput struct
+/// </summary
+/// <param>win32_sound_output *</param>
+/// <returns>void</returns>
 internal void
 Win32ClearSoundBuffer(win32_sound_output *SoundOutput) {
     VOID *Region1;
@@ -363,64 +362,7 @@ Win32MainWindowCallback(HWND Window, UINT Message, WPARAM WParam, LPARAM LParam)
         case WM_KEYUP:
         case WM_KEYDOWN:
         {
-            uint32 VKCode = WParam;
-            bool32 WasDown = ((LParam & (1 << 30)) != 0);
-            bool32 IsDown = ((LParam & (1 << 31)) == 0);
-            if (WasDown != IsDown) {
-                if (VKCode == 'A')
-                {
-                    // Do something
-                }
-                else if (VKCode == 'S')
-                {
-                    // Do something
-                }
-                else if (VKCode == 'W')
-                {
-                    // Do something
-                }
-                else if (VKCode == 'D')
-                {
-                    // Do something
-                }
-                else if (VKCode == 'Q')
-                {
-                    // Do something
-                }
-                else if (VKCode == 'E')
-                {
-                    // Do something
-                }
-                else if (VKCode == VK_UP)
-                {
-                    // Do something
-                }
-                else if (VKCode == VK_DOWN)
-                {
-                    // Do something
-                }
-                else if (VKCode == VK_LEFT)
-                {
-                    // Do something
-                }
-                else if (VKCode == VK_RIGHT)
-                {
-                    // Do something
-                }
-                else if (VKCode == VK_SPACE)
-                {
-                    // Do something
-                }
-                else if (VKCode == VK_ESCAPE)
-                {
-                    // Do something
-                }
-            }
-            //NOTE(smzb): Deal with Alt+F4 by setting the running loop to false.
-            bool32 AltKeyWasDown = (LParam & (1 << 29));
-            if ((VKCode == VK_F4) && AltKeyWasDown) {
-                GlobalRunning = false;
-            }
+            Assert(!"We received Keyboard input from a non-dispatch message! (this is BAD)");
         } break;
         case WM_SIZE:
         {
@@ -463,6 +405,12 @@ Win32MainWindowCallback(HWND Window, UINT Message, WPARAM WParam, LPARAM LParam)
 }
 
 internal void
+Win32ProcessKeyboardEvent(game_button_state *NewState, bool32 IsDown) {
+    NewState->EndedDown = IsDown;
+    ++NewState->HalfTransitionCount;
+}
+
+internal void
 Win32ProcessXInputButton(DWORD XInputButtonState, game_button_state *OldState, game_button_state *NewState, DWORD ButtonBit) {
     NewState->EndedDown = ((XInputButtonState & ButtonBit) == ButtonBit);
     NewState->HalfTransitionCount = (OldState->EndedDown != NewState->EndedDown) ? 1 : 0;
@@ -488,7 +436,7 @@ WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int Show
     //NOTE(smzb): Init of I/O and window.
     Win32LoadXInput();
     WNDCLASSA WindowClass = {};
-    Win32ResizeDIBSection(&GlobalBitmapBuffer, 640, 480);
+    Win32ResizeDIBSection(&GlobalBitmapBuffer, 1280, 720);
     WindowClass.style = CS_HREDRAW|CS_VREDRAW;
     WindowClass.lpfnWndProc = Win32MainWindowCallback;
     WindowClass.hInstance = Instance;
@@ -516,7 +464,6 @@ WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int Show
             //NOTE(smzb): Timing Variable
             LARGE_INTEGER LastCounter;
             QueryPerformanceCounter(&LastCounter);
-            
 
 #if HANDMADE_INTERNAL
             LPVOID BaseAddress = (LPVOID)Terabytes((uint64)1);
@@ -527,9 +474,9 @@ WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int Show
             //NOTE(smzb): Game Memory allocation
             game_memory GameMemory = {};
             GameMemory.PermanentStorageSize = Megabytes(64);
-            GameMemory.TransientStorageSize = Gigabytes((uint64)1);
+            GameMemory.TransientStorageSize = Gigabytes(1);
             uint64 TotalSize = GameMemory.PermanentStorageSize + GameMemory.TransientStorageSize;
-            GameMemory.PermanentStorage = VirtualAlloc(BaseAddress, TotalSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+            GameMemory.PermanentStorage = VirtualAlloc(BaseAddress, (size_t)TotalSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
             GameMemory.TransientStorage = ((uint8 *)GameMemory.PermanentStorage + GameMemory.PermanentStorageSize);
             
             //NOTE(smzb): Sound stuff setup
@@ -548,6 +495,7 @@ WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int Show
             
             if (Samples && GameMemory.PermanentStorage && GameMemory.TransientStorage)
             {
+
                 //XInput Stuff
                 game_input Input[2] = {};
                 game_input *NewInput = &Input[0];
@@ -555,21 +503,96 @@ WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int Show
                 while (GlobalRunning)
                 {
                     MSG Message;
+
+                    //TODO(smzb): Make a ZEROing macro 
+                    game_controller_input *KeyboardController = &NewInput->Controllers[0];
+                    game_controller_input NullController = {};
+                    *KeyboardController = NullController;
                     while (PeekMessage(&Message, 0, 0, 0, PM_REMOVE)) {
                         if (Message.message == WM_QUIT) {
                             GlobalRunning = false;
                         }
-                        TranslateMessage(&Message);
-                        DispatchMessage(&Message);
+                        switch (Message.message) {
+                            case WM_SYSKEYUP:
+                            case WM_SYSKEYDOWN:
+                            case WM_KEYUP:
+                            case WM_KEYDOWN:
+                            {
+
+                                uint32 VKCode = (uint32)Message.wParam;
+                                bool32 WasDown = ((Message.lParam & (1 << 30)) != 0);
+                                bool32 IsDown = ((Message.lParam & (1 << 31)) == 0);
+                                KeyboardController->IsAnalog = false;
+                                if (WasDown != IsDown) {
+/*                                    if (VKCode == 'A')
+                                      {
+                                      Win32ProcessKeyboardEvent(&KeyboardController->Left, IsDown);
+                                      }
+                                      else if (VKCode == 'S')
+                                      {
+                                      Win32ProcessKeyboardEvent(&KeyboardController->Down, IsDown);
+                                      }
+                                      else if (VKCode == 'W')
+                                      {
+                                      Win32ProcessKeyboardEvent(&KeyboardController->Up, IsDown);
+                                      }
+                                      else if (VKCode == 'D')
+                                      {
+                                      Win32ProcessKeyboardEvent(&KeyboardController->Right, IsDown);
+                                      }
+                                      else if (VKCode == 'Q')
+                                      {
+                                      Win32ProcessKeyboardEvent(&KeyboardController->LShoulder, IsDown);
+                                      }
+                                      else if (VKCode == 'E')
+                                      {
+                                      Win32ProcessKeyboardEvent(&KeyboardController->RShoulder, IsDown);
+                                      }
+                                      else*/ if (VKCode == VK_UP)
+                                    {
+                                        Win32ProcessKeyboardEvent(&KeyboardController->Up, IsDown);
+                                    }
+                                    else if (VKCode == VK_DOWN)
+                                    {
+                                        Win32ProcessKeyboardEvent(&KeyboardController->Down, IsDown);
+                                    }
+                                    else if (VKCode == VK_LEFT)
+                                    {
+                                        Win32ProcessKeyboardEvent(&KeyboardController->Left, IsDown);
+                                    }
+                                    else if (VKCode == VK_RIGHT)
+                                    {
+                                        Win32ProcessKeyboardEvent(&KeyboardController->Right, IsDown);
+                                    }
+                                    else if (VKCode == VK_SPACE)
+                                    {
+                                        Win32ProcessKeyboardEvent(&KeyboardController->Start, IsDown);
+                                    }
+                                    else if (VKCode == VK_ESCAPE)
+                                    {
+                                        Win32ProcessKeyboardEvent(&KeyboardController->Back, IsDown);
+                                    }
+                                }
+                                //NOTE(smzb): Deal with Alt+F4 by setting the running loop to false.
+                                bool32 AltKeyWasDown = (Message.lParam & (1 << 29));
+                                if ((VKCode == VK_F4) && AltKeyWasDown) {
+                                    GlobalRunning = false;
+                                }
+                            } break;
+                            default: {
+                                TranslateMessage(&Message);
+                                DispatchMessage(&Message);
+                            } break;
+                        }
                     }
                     DWORD dwResult;
-                    int MaxControllerCount = XUSER_MAX_COUNT;
+                    DWORD MaxControllerCount = XUSER_MAX_COUNT;
                     if (MaxControllerCount > ArrayCount(NewInput->Controllers)) {
                         MaxControllerCount = ArrayCount(NewInput->Controllers);
                     }
                     for (DWORD ControllerIndex = 0;
-                        ControllerIndex < MaxControllerCount;
-                        ++ControllerIndex)
+                         ControllerIndex < MaxControllerCount;
+                         ++ControllerIndex)
                     {
                         game_controller_input *OldController = &OldInput->Controllers[ControllerIndex];
                         game_controller_input *NewController = &NewInput->Controllers[ControllerIndex];
@@ -661,9 +684,9 @@ WinMain(HINSTANCE Instance, HINSTANCE hPrevInstance, LPSTR CommandLine, int Show
                     bool32 SoundIsValid = false;
                     DWORD PlayCursorPosition;
                     DWORD WriteCursorPosition;
-                    DWORD ByteToLock;
+                    DWORD ByteToLock = 0;
                     DWORD TargetCursorPosition;
-                    DWORD BytesToWrite;
+                    DWORD BytesToWrite = 0;
                     game_sound_buffer SoundBuffer = {};
                     game_offscreen_buffer ScreenBuffer = {};
                     if (SUCCEEDED(GlobalSoundBuffer->GetCurrentPosition(&PlayCursorPosition, &WriteCursorPosition)))
