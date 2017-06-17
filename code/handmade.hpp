@@ -37,7 +37,7 @@ typedef double real64;
 
 /// <summary>
 /// Pi as per google.com : pi
-/// We only meed 39 digits, as taking pi to 39 digits allows you to measure
+/// We only need 39 digits, as taking pi to 39 digits allows you to measure
 /// the circumference of the observable universe to within
 /// the width of a single hydrogen atom.
 /// </summary>
