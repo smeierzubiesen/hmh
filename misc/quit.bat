@@ -3,24 +3,28 @@
 IF NOT EXIST c:\temp\%~n0.bat goto :clone_me
 IF EXIST c:\temp\%~n0.bat goto :exit_me 
 :clone_me
-@Echo Cloning ...
+@Echo Cloning script ...
 IF EXIST c:\temp\ goto :copy_script
 IF NOT EXIST c:\temp\ goto :create_temp
 :create_temp
+@Echo Creating directory : C:\temp
 mkdir c:\temp > nul
 goto :copy_script
 :copy_script
-@Echo copying "%~f0" -> "c:\temp\%~n0.bat"
+@Echo copying %~f0 -> c:\temp\%~n0.bat
 copy "%~f0" "c:\temp\%~n0.bat"
 goto :call_clone
 :call_clone
+@Echo Starting cloned script
 call "c:\temp\%~n0.bat"
 goto :done
 :exit_me
+@Echo Closing down environment
 pushd c:\temp
 subst w: /D
 popd
 call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" -clean_env
+@Echo Deleting clone and exiting ...
 del "%~f0"&exit
 goto :done
 :error

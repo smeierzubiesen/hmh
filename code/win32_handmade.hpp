@@ -7,7 +7,7 @@
    ======================================================================== */
 
 #include <stdint.h>
-#include <dsound.h>
+#include <DSound.h>
 #include <Xinput.h>
 #include <Windows.h>
 
