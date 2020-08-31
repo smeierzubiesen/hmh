@@ -89,7 +89,7 @@ internal bool32 DEBUGPlatformWriteEntireFile(char *Filename, uint32 MemorySize, 
 
 //NOTE(smzb): Services that the platform provides to the game
 
-/// /// <summary>
+/// <summary>
 /// Width/Height and Memory information for the bitmap buffer
 /// </summary>
 struct game_offscreen_buffer {
