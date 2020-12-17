@@ -20,6 +20,9 @@ call "c:\temp\%~n0.bat"
 goto :done
 :exit_me
 @Echo Closing down environment
+pushd hmh\misc
+del quit.bat
+popd
 pushd c:\temp
 subst w: /D
 popd
