@@ -15,4 +15,6 @@ if %AddressWidth%==64 (
 @Echo Setting paths
 set PATH=w:\hmh\misc;%path%
 w:
+pushd .\hmh\misc\
+xcopy quit.batch quit.bat
 @Echo Development environment ready. Type 'quit' to close down the environment
