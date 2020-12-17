@@ -1,6 +1,6 @@
 @Echo off
 @Echo Creating work environment in w:
-subst w: C:\Users\smzb\source\repos\
+subst w: %USERPROFILE%\source\repos\
 for /f "skip=1 delims=" %%x in ('wmic cpu get addresswidth') do if not defined AddressWidth set AddressWidth=%%x
 if %AddressWidth%==64 (
   @Echo Initializing Visual Studio environment for 64 bit OS

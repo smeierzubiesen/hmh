@@ -45,7 +45,7 @@ typedef double real64;
 #define Pi32 3.1415926535f
 
 global_variable bool GlobalRunning;
-global_variable bool Debug = 0;
+global_variable bool Debug = 1;
 
 #define ArrayCount(Array) (sizeof(Array) / sizeof((Array)[0]))
 

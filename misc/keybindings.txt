@@ -24,6 +24,9 @@ ALT+M          Look for build.bat and execute (Compile)
   F10          Goto last error
   F11          Goto next error
 
+Alt+t	       Load Todo
+Alt+T          Load Log
+
 ALT+W          Switch to other window
 
 ALT+C          Toggle between .cpp and .hpp in current window

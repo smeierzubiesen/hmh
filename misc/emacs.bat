@@ -1,2 +1,2 @@
 @Echo off
-w:\emacs\bin\runemacs.exe -q -l w:\hmh\misc\.emacs %1
+w:\emacs\bin\emacs.exe -nw -q -l w:\hmh\misc\.emacs %1
