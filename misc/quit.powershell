@@ -1,0 +1,20 @@
+$workingDrive="W" ## Which drive do we create for our projects to work in
+$vsToolsDrive="E" ## This is normally "C" but some might choose to install their sdk's etc somewhere else
+$vsToolsVersion="2019" ## Whatever version of the buildtools you have installed
+function WhichVSClean() {
+  if ([System.Environment]::Is64BitOperatingSystem) 
+  {
+    $fullCmd=@"
+${vsToolsDrive}:\Program Files (x86)\Microsoft Visual Studio\${vsToolsVersion}\BuildTools\VC\Auxiliary\Build\vcvarsall.bat
+"@
+  } else {
+    $fullCmd=@"
+${vsToolsDrive}:\Program Files\Microsoft Visual Studio\${vsToolsVersion}\BuildTools\VC\Auxiliary\Build\vcvarsall.bat
+"@
+  }
+  return $fullCmd
+}
+Start-Process "$(WhichVSClean) -clean_env"
+Remove-Item "$PSCommandPath"
+subst ${workingDrive}: /D
+Exit-PSHostProcess
